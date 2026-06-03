@@ -43,7 +43,7 @@ const DEFAULTS: Settings = {
   builtBy: "Ayman Mahrous",
   whatsapp: "971588259848",
   telegram: "7895113378",
-  email: "ayman@pixelreel.studio",
+  email: "swimmingayman@gmail.com",
   whatsappFab: true,
   gaId: "",
   metaPixelId: "",
