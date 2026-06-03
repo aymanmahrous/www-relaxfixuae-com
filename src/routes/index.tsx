@@ -32,7 +32,10 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Relax Fix UAE — Creative AI Studio" },
       { property: "og:description", content: "تصميم يبيع. فيديو يأسر. مدعوم بالذكاء الاصطناعي." },
       { property: "og:url", content: "https://www.relaxfixuae.com/" },
-      { property: "og:image", content: heroBg },
+      { property: "og:image", content: "https://www.relaxfixuae.com/og-image.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { name: "twitter:image", content: "https://www.relaxfixuae.com/og-image.jpg" },
     ],
     links: [
       { rel: "canonical", href: "https://www.relaxfixuae.com/" },
