@@ -36,17 +36,27 @@ export function CheckoutButton({
         },
       });
       if ("error" in res) throw new Error(res.error);
-      const win = window.open(res.url, "_blank");
-      if (!win) {
-        // Popup blocked or running inside a sandboxed iframe — fall back to top-level navigation
-        try {
-          window.top!.location.href = res.url;
-        } catch {
+      // Try top-level navigation first (works in normal browsing and in
+      // Lovable preview where sandbox allows top-navigation-by-user-activation).
+      // Fall back to new tab, then same-frame navigation.
+      let navigated = false;
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = res.url;
+          navigated = true;
+        }
+      } catch {
+        // cross-origin block — fall through
+      }
+      if (!navigated) {
+        const win = window.open(res.url, "_blank");
+        if (!win) {
           window.location.href = res.url;
         }
       }
     } catch (e: any) {
       toast.error(e.message || "Checkout failed");
+    } finally {
       setBusy(false);
     }
   }
