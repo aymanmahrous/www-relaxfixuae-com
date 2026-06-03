@@ -1,0 +1,110 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+
+export type Service = { id: string; icon: string; titleEn: string; titleAr: string; descEn: string; descAr: string };
+export type Plan = { id: string; nameEn: string; nameAr: string; price: string; popular: boolean; featuresEn: string[]; featuresAr: string[] };
+export type Settings = {
+  brandEn: string;
+  brandAr: string;
+  builtBy: string;
+  whatsapp: string;
+  telegram: string;
+  email: string;
+  welcomeCredits: number;
+  accent: string;        // hex
+  uiScale: number;       // 0.85 - 1.25
+  defaultStyle: string;
+  defaultRatio: "1:1" | "9:16" | "16:9" | "4:5";
+  services: Service[];
+  plans: Plan[];
+};
+
+const DEFAULTS: Settings = {
+  brandEn: "Pixel & Reel",
+  brandAr: "بكسل آند ريل",
+  builtBy: "Ayman Mahrous",
+  whatsapp: "971588259848",
+  telegram: "7895113378",
+  email: "ayman@pixelreel.studio",
+  welcomeCredits: 5,
+  accent: "#ec4899",
+  uiScale: 1,
+  defaultStyle: "modern",
+  defaultRatio: "1:1",
+  services: [
+    { id: "s1", icon: "ImageIcon", titleEn: "Social Media Posts", titleAr: "منشورات السوشيال ميديا", descEn: "Scroll-stopping designs for Instagram, TikTok, X & Snap.", descAr: "تصاميم تُوقف التمرير لإنستغرام وتيك توك وإكس وسناب شات." },
+    { id: "s2", icon: "PenTool", titleEn: "Logo & Brand Identity", titleAr: "الشعار والهوية البصرية", descEn: "Memorable logos, color systems, and full guidelines.", descAr: "شعارات لا تُنسى، أنظمة ألوان، ودليل هوية متكامل." },
+    { id: "s3", icon: "Film", titleEn: "Video Editing & Montage", titleAr: "مونتاج وتحرير الفيديو", descEn: "Cut, merge, color grade, music & sound design.", descAr: "قص ودمج وتدرّج لوني وموسيقى وتصميم صوتي." },
+    { id: "s4", icon: "Sparkles", titleEn: "Motion Graphics", titleAr: "موشن جرافيك", descEn: "Animated logos, explainers & 3D motion.", descAr: "شعارات متحركة، فيديوهات تعريفية، وموشن ثلاثي الأبعاد." },
+    { id: "s5", icon: "Megaphone", titleEn: "Ad Campaigns", titleAr: "الحملات الإعلانية", descEn: "End-to-end creative for Meta, TikTok & Google Ads.", descAr: "إبداع متكامل لإعلانات ميتا وتيك توك وجوجل." },
+    { id: "s6", icon: "Camera", titleEn: "Product Photography", titleAr: "تصوير المنتجات", descEn: "Studio-grade shots & AI-powered retouching.", descAr: "تصوير بجودة الاستوديو ومعالجة بالذكاء الاصطناعي." },
+    { id: "s7", icon: "Package", titleEn: "Print & Packaging", titleAr: "الطباعة والتغليف", descEn: "Business cards, menus, brochures & box design.", descAr: "بطاقات أعمال، قوائم طعام، كتيبات، وتصميم العلب." },
+    { id: "s8", icon: "TrendingUp", titleEn: "Social Media Management", titleAr: "إدارة السوشيال ميديا", descEn: "Content planning, posting & growth strategy.", descAr: "تخطيط المحتوى، النشر، واستراتيجية النمو." },
+  ],
+  plans: [
+    { id: "p1", nameEn: "Starter", nameAr: "الباقة المبتدئة", price: "$49", popular: false,
+      featuresEn: ["10 social posts", "1 logo concept", "48h delivery", "Email support"],
+      featuresAr: ["10 منشورات سوشيال", "تصميم شعار واحد", "تسليم خلال 48 ساعة", "دعم عبر البريد"] },
+    { id: "p2", nameEn: "Pro", nameAr: "الباقة الاحترافية", price: "$199", popular: true,
+      featuresEn: ["30 social posts + stories", "Full brand identity", "5 video reels / month", "Priority delivery"],
+      featuresAr: ["30 منشوراً + ستوريز", "هوية بصرية متكاملة", "5 فيديوهات ريلز شهرياً", "تسليم بأولوية"] },
+    { id: "p3", nameEn: "Studio", nameAr: "باقة الاستوديو", price: "$499", popular: false,
+      featuresEn: ["Unlimited designs", "Full video production", "Dedicated art director", "24/7 support"],
+      featuresAr: ["تصاميم بلا حدود", "إنتاج فيديو متكامل", "مدير فني مخصص", "دعم على مدار الساعة"] },
+  ],
+};
+
+const KEY = "pr_settings_v2";
+
+const Ctx = createContext<{
+  settings: Settings;
+  update: (patch: Partial<Settings>) => void;
+  reset: () => void;
+} | null>(null);
+
+export function SettingsProvider({ children }: { children: ReactNode }) {
+  const [settings, setSettings] = useState<Settings>(DEFAULTS);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) setSettings({ ...DEFAULTS, ...JSON.parse(raw) });
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.style.setProperty("--accent-custom", settings.accent);
+    document.documentElement.style.fontSize = `${settings.uiScale * 100}%`;
+  }, [settings.accent, settings.uiScale]);
+
+  const update = (patch: Partial<Settings>) => {
+    setSettings((s) => {
+      const next = { ...s, ...patch };
+      try { localStorage.setItem(KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
+  const reset = () => {
+    localStorage.removeItem(KEY);
+    setSettings(DEFAULTS);
+  };
+
+  return <Ctx.Provider value={{ settings, update, reset }}>{children}</Ctx.Provider>;
+}
+
+export function useSettings() {
+  const c = useContext(Ctx);
+  if (!c) throw new Error("useSettings must be inside SettingsProvider");
+  return c;
+}
+
+export function waUrl(phone: string, text?: string) {
+  const num = phone.replace(/\D/g, "");
+  return `https://wa.me/${num}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
+}
+export function tgUrl(handle: string, text?: string) {
+  const clean = handle.replace(/^@/, "").trim();
+  // If looks like an ID/number, use phone-style link, otherwise username
+  const base = /^\+?\d{5,}$/.test(clean) ? `https://t.me/+${clean.replace(/^\+/, "")}` : `https://t.me/${clean}`;
+  return text ? `${base}?text=${encodeURIComponent(text)}` : base;
+}
