@@ -1,10 +1,14 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/site-header";
 import { useAuth, signOut } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
-import { LogOut, Package, CreditCard, ShieldCheck, ArrowRight } from "lucide-react";
+import { createPortalSession } from "@/lib/payments.functions";
+import { getStripeEnvironment } from "@/lib/stripe-client";
+import { toast } from "sonner";
+import { LogOut, Package, CreditCard, ShieldCheck, ArrowRight, Settings } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "My Dashboard — Pixel & Reel" }] }),
@@ -62,9 +66,12 @@ function DashboardPage() {
 
         <Section title={lang === "ar" ? "اشتراكاتي" : "My Subscriptions"}>
           {subs.length === 0 ? <Empty msg={lang === "ar" ? "لا توجد اشتراكات" : "No subscriptions yet"} />
-            : subs.map((s) => (
-              <Row key={s.id} title={s.price_id} sub={s.status} extra={s.current_period_end ? new Date(s.current_period_end).toLocaleDateString() : ""} />
-            ))}
+            : <>
+                {subs.map((s) => (
+                  <Row key={s.id} title={s.price_id} sub={s.status} extra={s.current_period_end ? new Date(s.current_period_end).toLocaleDateString() : ""} />
+                ))}
+                <ManagePortalButton />
+              </>}
         </Section>
 
         <Section title={lang === "ar" ? "طلباتي" : "My Orders"}>
@@ -112,3 +119,33 @@ function Row({ title, sub, extra }: { title: string; sub: string; extra?: string
 function Empty({ msg }: { msg: string }) {
   return <div className="rounded-xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">{msg}</div>;
 }
+
+function ManagePortalButton() {
+  const { lang } = useI18n();
+  const [busy, setBusy] = useState(false);
+  const portal = useServerFn(createPortalSession);
+  async function open() {
+    setBusy(true);
+    try {
+      const res = await portal({
+        data: {
+          environment: getStripeEnvironment(),
+          returnUrl: `${window.location.origin}/dashboard`,
+        },
+      });
+      if ("error" in res) throw new Error(res.error);
+      window.open(res.url, "_blank");
+    } catch (e: any) {
+      toast.error(e.message || "Failed to open portal");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <button onClick={open} disabled={busy}
+      className="mt-2 inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-semibold hover:bg-accent disabled:opacity-50">
+      <Settings className="h-4 w-4" /> {lang === "ar" ? "إدارة الاشتراك" : "Manage subscription"}
+    </button>
+  );
+}
+
