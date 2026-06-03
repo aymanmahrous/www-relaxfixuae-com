@@ -119,3 +119,33 @@ function Row({ title, sub, extra }: { title: string; sub: string; extra?: string
 function Empty({ msg }: { msg: string }) {
   return <div className="rounded-xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">{msg}</div>;
 }
+
+function ManagePortalButton() {
+  const { lang } = useI18n();
+  const [busy, setBusy] = useState(false);
+  const portal = useServerFn(createPortalSession);
+  async function open() {
+    setBusy(true);
+    try {
+      const res = await portal({
+        data: {
+          environment: getStripeEnvironment(),
+          returnUrl: `${window.location.origin}/dashboard`,
+        },
+      });
+      if ("error" in res) throw new Error(res.error);
+      window.open(res.url, "_blank");
+    } catch (e: any) {
+      toast.error(e.message || "Failed to open portal");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <button onClick={open} disabled={busy}
+      className="mt-2 inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-semibold hover:bg-accent disabled:opacity-50">
+      <Settings className="h-4 w-4" /> {lang === "ar" ? "إدارة الاشتراك" : "Manage subscription"}
+    </button>
+  );
+}
+
