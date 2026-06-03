@@ -87,6 +87,25 @@ const DEFAULTS: Settings = {
       featuresEn: ["Unlimited designs", "Full video production", "Dedicated art director", "24/7 support"],
       featuresAr: ["تصاميم بلا حدود", "إنتاج فيديو متكامل", "مدير فني مخصص", "دعم على مدار الساعة"] },
   ],
+  testimonials: [
+    { id: "t1", name: "Sara A.", role: "Founder, Bloom Café", rating: 5,
+      quoteEn: "The reels they made tripled our Instagram reach in two weeks.",
+      quoteAr: "الفيديوهات اللي عملوها ضاعفت وصولنا على إنستغرام 3 مرات في أسبوعين." },
+    { id: "t2", name: "Khalid M.", role: "CEO, NovaTech", rating: 5,
+      quoteEn: "Best branding investment we made. Delivered ahead of schedule.",
+      quoteAr: "أفضل استثمار في الهوية قمنا به. سلّموا قبل الموعد." },
+    { id: "t3", name: "Layla H.", role: "Marketing Lead, Oasis", rating: 5,
+      quoteEn: "Pixel-perfect designs and crystal-clear communication.",
+      quoteAr: "تصاميم بدقة عالية وتواصل واضح جداً." },
+  ],
+  partners: [
+    { id: "pa1", name: "Bloom Café" },
+    { id: "pa2", name: "NovaTech" },
+    { id: "pa3", name: "Oasis" },
+    { id: "pa4", name: "Aurora" },
+    { id: "pa5", name: "Helix" },
+    { id: "pa6", name: "Vertex" },
+  ],
 };
 
 const KEY = "pr_settings_v2";
