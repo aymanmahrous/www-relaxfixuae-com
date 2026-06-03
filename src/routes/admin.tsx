@@ -401,8 +401,29 @@ function SettingsTab() {
           <Field label="Email"><input className={input} value={settings.email} onChange={e => update({ email: e.target.value })} /></Field>
           <Field label="WhatsApp"><input className={input} placeholder="971588259848" value={settings.whatsapp} onChange={e => update({ whatsapp: e.target.value })} /></Field>
           <Field label="Telegram"><input className={input} value={settings.telegram} onChange={e => update({ telegram: e.target.value })} /></Field>
+          <Field label="WhatsApp floating button">
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={settings.whatsappFab} onChange={e => update({ whatsappFab: e.target.checked })} />
+              {lang === "ar" ? "إظهار الزر العائم" : "Show floating chat button"}
+            </label>
+          </Field>
         </div>
       </Section>
+
+      <Section title={lang === "ar" ? "التتبع والإعلانات (Analytics)" : "Tracking & ads"}>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Field label="Google Analytics ID (G-XXXX)">
+            <input className={input} placeholder="G-XXXXXXXXXX" value={settings.gaId} onChange={e => update({ gaId: e.target.value })} />
+          </Field>
+          <Field label="Meta Pixel ID (Facebook/Instagram)">
+            <input className={input} placeholder="1234567890" value={settings.metaPixelId} onChange={e => update({ metaPixelId: e.target.value })} />
+          </Field>
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {lang === "ar" ? "اتركها فارغة لتعطيل التتبع. تُحقن تلقائياً في جميع الصفحات." : "Leave empty to disable. Injected automatically on every page."}
+        </p>
+      </Section>
+
 
       <Section title={lang === "ar" ? "المظهر" : "Appearance"}>
         <div className="grid gap-4 sm:grid-cols-3">
