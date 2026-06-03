@@ -588,13 +588,35 @@ function Index() {
 
 
       <footer className="border-t border-border py-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <Sparkles className="h-4 w-4 text-brand-pink" />
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4">
+          <div className="flex items-center gap-2 text-base font-semibold">
+            <Sparkles className="h-5 w-5 text-brand-pink" />
             {brand}
           </div>
+
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
+            <a
+              href={`https://wa.me/${settings.whatsapp.replace(/\D/g, "")}`}
+              target="_blank" rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-2 text-sm font-medium text-foreground transition hover:border-brand-pink hover:text-brand-pink"
+            >
+              <span dir="ltr">+{settings.whatsapp.replace(/\D/g, "")}</span>
+            </a>
+            <a
+              href={`mailto:${settings.email}`}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-2 text-sm font-medium text-foreground transition hover:border-brand-purple hover:text-brand-purple"
+            >
+              <span dir="ltr">{settings.email}</span>
+            </a>
+          </div>
+
           <p className="text-center text-xs text-muted-foreground">
-            © {new Date().getFullYear()} {brand}. {t("footer_rights")} · {t("built_by")} <span className="font-semibold text-gradient">{settings.builtBy}</span> · 2026
+            © {new Date().getFullYear()} {brand} · {t("footer_rights")}
+          </p>
+          <p className="text-center text-sm font-semibold">
+            <span className="text-muted-foreground">Built by </span>
+            <span className="text-gradient">Ayman Mahrous</span>
+            <span className="text-muted-foreground"> · 2026</span>
           </p>
         </div>
       </footer>
