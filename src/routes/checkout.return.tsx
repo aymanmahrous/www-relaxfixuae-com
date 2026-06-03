@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { useI18n } from "@/lib/i18n";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/checkout/return")({
   head: () => ({ meta: [{ title: "Checkout — Pixel & Reel" }] }),
@@ -12,9 +12,17 @@ export const Route = createFileRoute("/checkout/return")({
 function ReturnPage() {
   const { lang } = useI18n();
   const navigate = useNavigate();
-  const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
-  const sessionId = params.get("session_id");
-  const ok = params.get("status") === "success" || !!sessionId;
+  const [mounted, setMounted] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [ok, setOk] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sid = params.get("session_id");
+    setSessionId(sid);
+    setOk(params.get("status") === "success" || !!sid);
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (ok) {
