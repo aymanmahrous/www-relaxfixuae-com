@@ -138,6 +138,21 @@ function AdminPage() {
             </div>
           </Section>
 
+          <Section title={t("a_offer")}>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label={t("a_offer_on")}>
+                <label className="mt-2 inline-flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={settings.offer.enabled} onChange={(e) => update({ offer: { ...settings.offer, enabled: e.target.checked } })} />
+                  {settings.offer.enabled ? (lang === "ar" ? "ظاهر" : "Visible") : (lang === "ar" ? "مخفي" : "Hidden")}
+                </label>
+              </Field>
+              <Field label={t("a_offer_code")}><input className={input} value={settings.offer.code} onChange={(e) => update({ offer: { ...settings.offer, code: e.target.value } })} /></Field>
+              <Field label={t("a_offer_title_en")}><input className={input} value={settings.offer.titleEn} onChange={(e) => update({ offer: { ...settings.offer, titleEn: e.target.value } })} /></Field>
+              <Field label={t("a_offer_title_ar")}><input dir="rtl" className={input} value={settings.offer.titleAr} onChange={(e) => update({ offer: { ...settings.offer, titleAr: e.target.value } })} /></Field>
+              <Field label={t("a_offer_discount")}><input type="number" min={0} max={100} className={input} value={settings.offer.discount} onChange={(e) => update({ offer: { ...settings.offer, discount: parseInt(e.target.value, 10) || 0 } })} /></Field>
+            </div>
+          </Section>
+
           <Section title={t("a_services")}>
             <div className="space-y-3">
               {settings.services.map((s) => (
