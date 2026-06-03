@@ -27,12 +27,28 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pixel & Reel — AI Creative Studio · 2026 by Ayman Mahrous" },
-      { name: "description", content: "AI-powered creative studio: social posts, brand identity, ads, motion graphics, and pro video editing. Arabic & English. 2026 edition by Ayman Mahrous." },
-      { property: "og:title", content: "Pixel & Reel — AI Creative Studio · 2026" },
-      { property: "og:description", content: "Design that sells. Video that captivates. Powered by AI." },
+      { title: "Relax Fix UAE — استوديو إبداعي بالذكاء الاصطناعي في الإمارات" },
+      { name: "description", content: "خدمات تصميم سوشيال ميديا، هوية بصرية، إعلانات، وفيديو احترافي بالذكاء الاصطناعي. خدمة عربية وإنجليزية في دبي وأبوظبي والإمارات." },
+      { property: "og:title", content: "Relax Fix UAE — Creative AI Studio" },
+      { property: "og:description", content: "تصميم يبيع. فيديو يأسر. مدعوم بالذكاء الاصطناعي." },
+      { property: "og:url", content: "https://www.relaxfixuae.com/" },
       { property: "og:image", content: heroBg },
     ],
+    links: [
+      { rel: "canonical", href: "https://www.relaxfixuae.com/" },
+    ],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        name: "Relax Fix UAE",
+        description: "AI-powered creative studio in the UAE",
+        url: "https://www.relaxfixuae.com",
+        areaServed: "AE",
+        address: { "@type": "PostalAddress", addressCountry: "AE" },
+      }),
+    }],
   }),
   component: Index,
 });
