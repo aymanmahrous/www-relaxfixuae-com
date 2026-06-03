@@ -34,21 +34,27 @@ export function SiteHeader() {
           )}
         </nav>
         <div className="flex items-center gap-2">
-          {isAdmin && (
+          {user && (
             <Link
               to="/admin"
-              className="inline-flex items-center gap-1 rounded-full bg-gradient-brand px-3 py-1.5 text-xs font-bold text-black shadow-lg shadow-brand-pink/30"
+              className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold shadow-lg transition hover:-translate-y-0.5 ${isAdmin ? "bg-gradient-brand text-black shadow-brand-pink/30" : "border border-brand-amber/60 bg-card/70 text-brand-amber shadow-brand-amber/10"}`}
               aria-label="Admin"
             >
               <Settings className="h-3.5 w-3.5" />
-              {lang === "ar" ? "لوحة" : "Admin"}
+              {lang === "ar" ? "لوحة التحكم" : "Control"}
             </Link>
           )}
           <button
             onClick={() => setLang(lang === "en" ? "ar" : "en")}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-medium backdrop-blur hover:bg-accent"
+            className="group inline-flex h-9 items-center gap-1 rounded-full border border-border bg-card/70 p-1 text-xs font-bold shadow-lg shadow-black/20 backdrop-blur transition hover:border-brand-pink/50"
+            aria-label={t("switch_lang")}
           >
-            <Languages className="h-3.5 w-3.5" /> {t("switch_lang")}
+            <span className="grid h-7 w-7 place-items-center rounded-full bg-accent text-muted-foreground transition group-hover:text-foreground">
+              <Languages className="h-3.5 w-3.5" />
+            </span>
+            <span className="grid h-7 min-w-9 place-items-center rounded-full bg-gradient-brand px-2 text-black">
+              {lang === "ar" ? "EN" : "AR"}
+            </span>
           </button>
           {user ? (
             <Link to="/dashboard" className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-semibold hover:bg-accent">
