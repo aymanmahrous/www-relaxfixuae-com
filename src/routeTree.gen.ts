@@ -16,7 +16,9 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ServicesSocialMediaSharjahRouteImport } from './routes/services.social-media-sharjah'
 import { Route as ServicesSocialMediaDubaiRouteImport } from './routes/services.social-media-dubai'
+import { Route as ServicesSocialMediaAbudhabiRouteImport } from './routes/services.social-media-abudhabi'
 import { Route as ServicesMotionGraphicsRouteImport } from './routes/services.motion-graphics'
 import { Route as ServicesLogoDesignRouteImport } from './routes/services.logo-design'
 import { Route as ServicesAdsDesignRouteImport } from './routes/services.ads-design'
@@ -59,10 +61,22 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesSocialMediaSharjahRoute =
+  ServicesSocialMediaSharjahRouteImport.update({
+    id: '/services/social-media-sharjah',
+    path: '/services/social-media-sharjah',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ServicesSocialMediaDubaiRoute =
   ServicesSocialMediaDubaiRouteImport.update({
     id: '/services/social-media-dubai',
     path: '/services/social-media-dubai',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ServicesSocialMediaAbudhabiRoute =
+  ServicesSocialMediaAbudhabiRouteImport.update({
+    id: '/services/social-media-abudhabi',
+    path: '/services/social-media-abudhabi',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ServicesMotionGraphicsRoute = ServicesMotionGraphicsRouteImport.update({
@@ -110,7 +124,9 @@ export interface FileRoutesByFullPath {
   '/services/ads-design': typeof ServicesAdsDesignRoute
   '/services/logo-design': typeof ServicesLogoDesignRoute
   '/services/motion-graphics': typeof ServicesMotionGraphicsRoute
+  '/services/social-media-abudhabi': typeof ServicesSocialMediaAbudhabiRoute
   '/services/social-media-dubai': typeof ServicesSocialMediaDubaiRoute
+  '/services/social-media-sharjah': typeof ServicesSocialMediaSharjahRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
@@ -126,7 +142,9 @@ export interface FileRoutesByTo {
   '/services/ads-design': typeof ServicesAdsDesignRoute
   '/services/logo-design': typeof ServicesLogoDesignRoute
   '/services/motion-graphics': typeof ServicesMotionGraphicsRoute
+  '/services/social-media-abudhabi': typeof ServicesSocialMediaAbudhabiRoute
   '/services/social-media-dubai': typeof ServicesSocialMediaDubaiRoute
+  '/services/social-media-sharjah': typeof ServicesSocialMediaSharjahRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
@@ -143,7 +161,9 @@ export interface FileRoutesById {
   '/services/ads-design': typeof ServicesAdsDesignRoute
   '/services/logo-design': typeof ServicesLogoDesignRoute
   '/services/motion-graphics': typeof ServicesMotionGraphicsRoute
+  '/services/social-media-abudhabi': typeof ServicesSocialMediaAbudhabiRoute
   '/services/social-media-dubai': typeof ServicesSocialMediaDubaiRoute
+  '/services/social-media-sharjah': typeof ServicesSocialMediaSharjahRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
@@ -161,7 +181,9 @@ export interface FileRouteTypes {
     | '/services/ads-design'
     | '/services/logo-design'
     | '/services/motion-graphics'
+    | '/services/social-media-abudhabi'
     | '/services/social-media-dubai'
+    | '/services/social-media-sharjah'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
   fileRoutesByTo: FileRoutesByTo
@@ -177,7 +199,9 @@ export interface FileRouteTypes {
     | '/services/ads-design'
     | '/services/logo-design'
     | '/services/motion-graphics'
+    | '/services/social-media-abudhabi'
     | '/services/social-media-dubai'
+    | '/services/social-media-sharjah'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
   id:
@@ -193,7 +217,9 @@ export interface FileRouteTypes {
     | '/services/ads-design'
     | '/services/logo-design'
     | '/services/motion-graphics'
+    | '/services/social-media-abudhabi'
     | '/services/social-media-dubai'
+    | '/services/social-media-sharjah'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
   fileRoutesById: FileRoutesById
@@ -210,7 +236,9 @@ export interface RootRouteChildren {
   ServicesAdsDesignRoute: typeof ServicesAdsDesignRoute
   ServicesLogoDesignRoute: typeof ServicesLogoDesignRoute
   ServicesMotionGraphicsRoute: typeof ServicesMotionGraphicsRoute
+  ServicesSocialMediaAbudhabiRoute: typeof ServicesSocialMediaAbudhabiRoute
   ServicesSocialMediaDubaiRoute: typeof ServicesSocialMediaDubaiRoute
+  ServicesSocialMediaSharjahRoute: typeof ServicesSocialMediaSharjahRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
@@ -266,11 +294,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/social-media-sharjah': {
+      id: '/services/social-media-sharjah'
+      path: '/services/social-media-sharjah'
+      fullPath: '/services/social-media-sharjah'
+      preLoaderRoute: typeof ServicesSocialMediaSharjahRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/social-media-dubai': {
       id: '/services/social-media-dubai'
       path: '/services/social-media-dubai'
       fullPath: '/services/social-media-dubai'
       preLoaderRoute: typeof ServicesSocialMediaDubaiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/social-media-abudhabi': {
+      id: '/services/social-media-abudhabi'
+      path: '/services/social-media-abudhabi'
+      fullPath: '/services/social-media-abudhabi'
+      preLoaderRoute: typeof ServicesSocialMediaAbudhabiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services/motion-graphics': {
@@ -330,7 +372,9 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesAdsDesignRoute: ServicesAdsDesignRoute,
   ServicesLogoDesignRoute: ServicesLogoDesignRoute,
   ServicesMotionGraphicsRoute: ServicesMotionGraphicsRoute,
+  ServicesSocialMediaAbudhabiRoute: ServicesSocialMediaAbudhabiRoute,
   ServicesSocialMediaDubaiRoute: ServicesSocialMediaDubaiRoute,
+  ServicesSocialMediaSharjahRoute: ServicesSocialMediaSharjahRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
