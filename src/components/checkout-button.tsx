@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { createCheckoutSession } from "@/lib/payments.functions";
 import { useAuth } from "@/hooks/use-auth";
+import { getStripeEnvironment } from "@/lib/stripe-client";
 import { CreditCard, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,6 +24,7 @@ export function CheckoutButton({
   async function go() {
     setBusy(true);
     try {
+      const environment = getStripeEnvironment();
       const res = await checkout({
         data: {
           priceId,
@@ -30,6 +32,7 @@ export function CheckoutButton({
           serviceSummary,
           userId: user?.id,
           customerEmail: user?.email,
+          environment,
         },
       });
       if ("error" in res) throw new Error(res.error);
