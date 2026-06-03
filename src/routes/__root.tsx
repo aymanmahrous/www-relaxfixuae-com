@@ -116,6 +116,8 @@ function RootShell({ children }: { children: ReactNode }) {
 import { I18nProvider } from "../lib/i18n";
 import { SettingsProvider } from "../lib/settings";
 import { Toaster } from "@/components/ui/sonner";
+import { WhatsAppFab } from "@/components/whatsapp-fab";
+import { AnalyticsInjector } from "@/components/analytics-injector";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -126,6 +128,8 @@ function RootComponent() {
         <I18nProvider>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
+          <WhatsAppFab />
+          <AnalyticsInjector />
           <Toaster position="top-center" theme="dark" />
         </I18nProvider>
       </SettingsProvider>

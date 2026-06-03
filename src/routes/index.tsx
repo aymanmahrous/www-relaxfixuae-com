@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/site-header";
 import { CheckoutButton } from "@/components/checkout-button";
 import { LeadForm } from "@/components/lead-form";
+import { TestimonialsSection } from "@/components/testimonials-section";
 import { useI18n } from "@/lib/i18n";
 import { useSettings, waUrl, tgUrl } from "@/lib/settings";
 import { useCredits } from "@/lib/credits";
@@ -509,7 +510,11 @@ function Index() {
         </div>
       </section>
 
+      <TestimonialsSection />
+
       <LeadForm />
+
+
 
 
       <footer className="border-t border-border py-10">
