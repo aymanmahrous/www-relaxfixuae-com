@@ -458,6 +458,9 @@ function Index() {
         </div>
       </section>
 
+      <LeadForm />
+
+
       <footer className="border-t border-border py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
           <div className="flex items-center gap-2 text-sm font-semibold">
