@@ -4,7 +4,7 @@ import { useSettings, waUrl } from "@/lib/settings";
 import { Languages, Sparkles, MessageCircle, Settings } from "lucide-react";
 
 export function SiteHeader() {
-  const { t, lang } = useI18n();
+  const { t, lang, setLang } = useI18n();
   const { settings } = useSettings();
   const brand = lang === "ar" ? settings.brandAr : settings.brandEn;
   return (
@@ -28,7 +28,7 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setLangBtn()}
+            onClick={() => setLang(lang === "en" ? "ar" : "en")}
             className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-medium backdrop-blur hover:bg-accent"
           >
             <Languages className="h-3.5 w-3.5" />
@@ -41,10 +41,4 @@ export function SiteHeader() {
       </div>
     </header>
   );
-
-  function setLangBtn() {
-    // local closure to avoid duplicate hook calls in markup
-    const next = lang === "en" ? "ar" : "en";
-    (window as any).__setLang?.(next);
-  }
 }
