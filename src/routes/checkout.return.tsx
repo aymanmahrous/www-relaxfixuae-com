@@ -13,7 +13,8 @@ function ReturnPage() {
   const { lang } = useI18n();
   const navigate = useNavigate();
   const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
-  const ok = params.get("status") === "success";
+  const sessionId = params.get("session_id");
+  const ok = params.get("status") === "success" || !!sessionId;
 
   useEffect(() => {
     if (ok) {
@@ -31,8 +32,13 @@ function ReturnPage() {
             <CheckCircle2 className="h-16 w-16 text-emerald-400" />
             <h1 className="mt-4 text-2xl font-bold">{lang === "ar" ? "تمّ الدفع بنجاح" : "Payment successful"}</h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              {lang === "ar" ? "نحوّلك إلى لوحتك الآن…" : "Redirecting to your dashboard…"}
+              {lang === "ar" ? "استلمنا تأكيد الدفع، نحوّلك إلى لوحتك الآن…" : "Payment confirmed, redirecting to your dashboard…"}
             </p>
+            {sessionId && (
+              <p className="mt-3 text-xs text-muted-foreground">
+                {lang === "ar" ? "رقم العملية:" : "Session:"} {sessionId.slice(-12)}
+              </p>
+            )}
           </>
         ) : (
           <>
