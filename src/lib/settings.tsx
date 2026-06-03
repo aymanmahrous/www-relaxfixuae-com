@@ -3,13 +3,15 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 export type Service = { id: string; icon: string; titleEn: string; titleAr: string; descEn: string; descAr: string };
 export type Plan = { id: string; nameEn: string; nameAr: string; price: string; priceId?: string; popular: boolean; featuresEn: string[]; featuresAr: string[] };
 export type AddOn = { id: string; nameEn: string; nameAr: string; price: string; priceId?: string; icon: string };
+export type Testimonial = { id: string; name: string; role: string; avatar?: string; quoteEn: string; quoteAr: string; rating: number };
+export type Partner = { id: string; name: string; logoUrl?: string };
 export type Offer = {
   enabled: boolean;
   titleEn: string;
   titleAr: string;
   code: string;
   discount: number;
-  expiresAt?: string; // ISO date — drives FOMO countdown banner
+  expiresAt?: string;
 };
 export type Settings = {
   brandEn: string;
@@ -18,15 +20,20 @@ export type Settings = {
   whatsapp: string;
   telegram: string;
   email: string;
+  whatsappFab: boolean;
+  gaId: string;
+  metaPixelId: string;
   welcomeCredits: number;
-  accent: string;        // hex
-  uiScale: number;       // 0.85 - 1.25
+  accent: string;
+  uiScale: number;
   defaultStyle: string;
   defaultRatio: "1:1" | "9:16" | "16:9" | "4:5";
   offer: Offer;
   services: Service[];
   plans: Plan[];
   addons: AddOn[];
+  testimonials: Testimonial[];
+  partners: Partner[];
 };
 
 
