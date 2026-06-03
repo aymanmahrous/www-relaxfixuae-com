@@ -2,6 +2,13 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 
 export type Service = { id: string; icon: string; titleEn: string; titleAr: string; descEn: string; descAr: string };
 export type Plan = { id: string; nameEn: string; nameAr: string; price: string; popular: boolean; featuresEn: string[]; featuresAr: string[] };
+export type Offer = {
+  enabled: boolean;
+  titleEn: string;
+  titleAr: string;
+  code: string;
+  discount: number;
+};
 export type Settings = {
   brandEn: string;
   brandAr: string;
@@ -14,6 +21,7 @@ export type Settings = {
   uiScale: number;       // 0.85 - 1.25
   defaultStyle: string;
   defaultRatio: "1:1" | "9:16" | "16:9" | "4:5";
+  offer: Offer;
   services: Service[];
   plans: Plan[];
 };
@@ -30,6 +38,13 @@ const DEFAULTS: Settings = {
   uiScale: 1,
   defaultStyle: "modern",
   defaultRatio: "1:1",
+  offer: {
+    enabled: true,
+    titleEn: "🔥 New Year Launch — 30% OFF first project + Free AI captions",
+    titleAr: "🔥 عرض الإطلاق — خصم 30% على أول مشروع + كابشن AI مجاناً",
+    code: "AYMAN30",
+    discount: 30,
+  },
   services: [
     { id: "s1", icon: "ImageIcon", titleEn: "Social Media Posts", titleAr: "منشورات السوشيال ميديا", descEn: "Scroll-stopping designs for Instagram, TikTok, X & Snap.", descAr: "تصاميم تُوقف التمرير لإنستغرام وتيك توك وإكس وسناب شات." },
     { id: "s2", icon: "PenTool", titleEn: "Logo & Brand Identity", titleAr: "الشعار والهوية البصرية", descEn: "Memorable logos, color systems, and full guidelines.", descAr: "شعارات لا تُنسى، أنظمة ألوان، ودليل هوية متكامل." },

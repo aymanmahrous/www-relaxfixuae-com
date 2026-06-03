@@ -84,16 +84,14 @@ function DesignPage() {
     a.click();
   }
 
-  async function shareWA(url: string) {
-    try {
-      const blob = await (await fetch(url)).blob();
-      await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]).catch(() => {});
-    } catch {}
-    window.open(waUrl(settings.whatsapp, `${brief}\n— ${settings.brandEn} · ${settings.builtBy}`), "_blank");
+  async function shareWA() {
+    const { shareDesignMessage } = await import("@/lib/orderMessage");
+    window.open(waUrl(settings.whatsapp, shareDesignMessage(settings, lang, brief, style, ratio)), "_blank");
   }
 
-  function shareTG() {
-    window.open(tgUrl(settings.telegram, `${brief}\n— ${settings.brandEn} · ${settings.builtBy}`), "_blank");
+  async function shareTG() {
+    const { shareDesignMessage } = await import("@/lib/orderMessage");
+    window.open(tgUrl(settings.telegram, shareDesignMessage(settings, lang, brief, style, ratio)), "_blank");
   }
 
   function copyText(s: string) {
@@ -222,7 +220,7 @@ function DesignPage() {
                       <button onClick={() => download(img.url, i)} className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-black hover:bg-white/90">
                         <Download className="h-3 w-3" /> {t("d_download")}
                       </button>
-                      <button onClick={() => shareWA(img.url)} className="inline-flex items-center gap-1 rounded-full bg-[#25D366] px-2.5 py-1 text-[11px] font-bold text-black">
+                      <button onClick={() => shareWA()} className="inline-flex items-center gap-1 rounded-full bg-[#25D366] px-2.5 py-1 text-[11px] font-bold text-black">
                         <MessageCircle className="h-3 w-3" /> WhatsApp
                       </button>
                       <button onClick={shareTG} className="inline-flex items-center gap-1 rounded-full bg-[#229ED9] px-2.5 py-1 text-[11px] font-bold text-white">

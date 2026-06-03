@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { useI18n } from "@/lib/i18n";
-import { Upload, Play, Scissors, Download } from "lucide-react";
+import { Upload, Play, Scissors, Download, Sparkles, Film, Zap, MessageCircle } from "lucide-react";
 import { useSettings, waUrl } from "@/lib/settings";
+import { videoRequestMessage } from "@/lib/orderMessage";
 
 export const Route = createFileRoute("/video")({
   head: () => ({
@@ -93,15 +94,34 @@ function VideoPage() {
               <div className="flex flex-wrap gap-2">
                 <button onClick={preview} className="inline-flex items-center gap-2 rounded-full bg-gradient-brand px-4 py-2 text-sm font-bold text-black"><Play className="h-4 w-4" />{t("v_preview")}</button>
                 <button onClick={downloadOriginal} className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-semibold"><Download className="h-4 w-4" />{t("v_export")}</button>
-                <a href={waUrl(settings.whatsapp, `${lang === "ar" ? "أحتاج مونتاج احترافي لفيديو" : "I need pro montage for a video"} (${name})`)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-black">
-                  <Scissors className="h-4 w-4" />{lang === "ar" ? "اطلب مونتاج احترافي" : "Request pro montage"}
-                </a>
               </div>
-              <p className="text-xs text-muted-foreground">
-                {lang === "ar"
-                  ? `قص ومعاينة فوريّة داخل المتصفح. للمونتاج الكامل (دمج عدة مقاطع، موسيقى، مؤثرات) — تواصل مع ${settings.builtBy}.`
-                  : `Instant in-browser trim & preview. For full montage (multi-clip, music, FX) reach ${settings.builtBy} directly.`}
-              </p>
+
+              <div className="rounded-2xl border border-brand-pink/30 bg-gradient-to-br from-brand-purple/10 to-brand-pink/10 p-4">
+                <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-amber">
+                  <Sparkles className="h-4 w-4" /> {t("v_ai_kicker")}
+                </div>
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {([
+                    { kind: "trim" as const, icon: Scissors, label: t("v_request_trim") },
+                    { kind: "montage" as const, icon: Film, label: t("v_request_montage") },
+                    { kind: "reel" as const, icon: Zap, label: t("v_request_reel") },
+                  ]).map(({ kind, icon: Icon, label }) => (
+                    <a key={kind}
+                      href={waUrl(settings.whatsapp, videoRequestMessage(settings, lang, { fileName: name, duration, start, end, kind }))}
+                      target="_blank" rel="noreferrer"
+                      className="group flex items-center gap-2 rounded-xl border border-border bg-card/60 p-3 text-sm font-semibold hover:border-brand-pink hover:bg-accent">
+                      <Icon className="h-4 w-4 text-brand-pink" />
+                      <span className="flex-1">{label}</span>
+                      <MessageCircle className="h-4 w-4 text-[#25D366]" />
+                    </a>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  {lang === "ar"
+                    ? `سيتم إرسال تفاصيل الفيديو (الاسم والمدة والقص) تلقائياً مع الطلب إلى ${settings.builtBy}.`
+                    : `Your video details (name, duration, cut) will be sent automatically with the request to ${settings.builtBy}.`}
+                </p>
+              </div>
             </div>
           )}
         </div>
