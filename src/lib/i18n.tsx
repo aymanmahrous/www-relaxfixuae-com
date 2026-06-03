@@ -82,12 +82,12 @@ export const dict = {
 
   testi_kicker: { en: "Loved by brands", ar: "تثق بنا العلامات" },
   testi_title: { en: "What our clients say", ar: "ماذا يقول عملاؤنا" },
-  t1: { en: "Sales jumped 3x after they redesigned our ads. Worth every riyal.", ar: "تضاعفت مبيعاتنا 3 مرات بعد إعادة تصميم إعلاناتنا. تستحق كل ريال." },
+  t1: { en: "Sales jumped 3x after they redesigned our ads. Worth every riyal.", ar: "تضاعفت مبيعاتنا ثلاثة أضعاف بعد إعادة تصميم إعلاناتنا. يستحقّون كل ريال." },
   t1_name: { en: "Sara A. — Boutique Owner", ar: "سارة أ. — صاحبة بوتيك" },
-  t2: { en: "The video montage they made for our launch went viral on TikTok.", ar: "الفيديو الذي صنعوه لإطلاق منتجنا انتشر بسرعة على تيك توك." },
+  t2: { en: "The video montage they made for our launch went viral on TikTok.", ar: "الفيديو الذي صنعوه لإطلاق منتجنا انتشر بشكل واسع على تيك توك." },
   t2_name: { en: "Khalid M. — Restaurant Founder", ar: "خالد م. — مؤسس مطعم" },
   t3: { en: "Best brand identity team I've worked with in years. Truly creative.", ar: "أفضل فريق هوية بصرية تعاملت معه منذ سنوات. إبداع حقيقي." },
-  t3_name: { en: "Layla H. — Tech Startup CEO", ar: "ليلى ح. — مؤسسة شركة ناشئة" },
+  t3_name: { en: "Layla H. — Tech Startup CEO", ar: "ليلى ح. — مديرة شركة ناشئة" },
 
   cta_title: { en: "Ready to make something amazing?", ar: "جاهز تصنع شيئاً مذهلاً؟" },
   cta_sub: { en: "Tell us about your project and get a free quote within 24 hours.", ar: "أخبرنا عن مشروعك واحصل على عرض سعر مجاني خلال 24 ساعة." },
