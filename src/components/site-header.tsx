@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@/lib/i18n";
-import { Languages, Sparkles } from "lucide-react";
+import { waLink } from "@/lib/contact";
+import { Languages, Sparkles, MessageCircle } from "lucide-react";
+
 
 export function SiteHeader() {
   const { t, lang, setLang } = useI18n();
@@ -18,8 +20,9 @@ export function SiteHeader() {
           <a href="/#services" className="text-muted-foreground transition hover:text-foreground">{t("nav_services")}</a>
           <a href="/#work" className="text-muted-foreground transition hover:text-foreground">{t("nav_work")}</a>
           <a href="/#pricing" className="text-muted-foreground transition hover:text-foreground">{t("nav_pricing")}</a>
-          <Link to="/design" className="text-muted-foreground transition hover:text-foreground">{t("nav_design")}</Link>
-          <Link to="/video" className="text-muted-foreground transition hover:text-foreground">{t("nav_video")}</Link>
+          <Link to="/design" className="text-muted-foreground transition hover:text-foreground">{t("designer_title")}</Link>
+          <Link to="/video" className="text-muted-foreground transition hover:text-foreground">{t("video_title")}</Link>
+
         </nav>
         <div className="flex items-center gap-2">
           <button
@@ -29,9 +32,10 @@ export function SiteHeader() {
             <Languages className="h-3.5 w-3.5" />
             {t("switch_lang")}
           </button>
-          <a href="/#contact" className="hidden rounded-full bg-gradient-brand px-4 py-1.5 text-xs font-bold text-black hover:opacity-90 sm:inline-flex">
-            {t("cta_order")}
+          <a href={waLink(t("cta_order"))} target="_blank" rel="noreferrer" className="hidden items-center gap-1 rounded-full bg-gradient-brand px-4 py-1.5 text-xs font-bold text-black hover:opacity-90 sm:inline-flex">
+            <MessageCircle className="h-3.5 w-3.5" /> {t("cta_order")}
           </a>
+
         </div>
       </div>
     </header>

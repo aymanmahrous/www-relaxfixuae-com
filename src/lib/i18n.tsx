@@ -97,10 +97,43 @@ export const dict = {
   footer_rights: { en: "All rights reserved.", ar: "جميع الحقوق محفوظة." },
 
   coming_soon: { en: "Coming soon", ar: "قريباً" },
-  designer_title: { en: "Post Designer", ar: "مصمم المنشورات" },
-  designer_sub: { en: "Pick a template and start designing.", ar: "اختر قالباً وابدأ التصميم." },
-  video_title: { en: "Video Editor", ar: "محرر الفيديو" },
-  video_sub: { en: "Cut, merge, and montage your videos.", ar: "قص ودمج ومونتاج الفيديوهات." },
+  designer_title: { en: "AI Post Designer", ar: "مصمم المنشورات بالذكاء الاصطناعي" },
+  designer_sub: { en: "Describe your idea — get 4 ready-to-publish designs in seconds.", ar: "اكتب فكرتك واحصل على 4 تصاميم جاهزة للنشر خلال ثوانٍ." },
+  video_title: { en: "Video Studio", ar: "استوديو الفيديو" },
+  video_sub: { en: "Upload, trim, and export clips for social.", ar: "ارفع وقص وصدّر مقاطعك للسوشيال." },
+
+  d_brief: { en: "Describe your post", ar: "صف منشورك" },
+  d_brief_ph: { en: "e.g. Friday 30% off Arabic coffee, warm cozy vibe", ar: "مثال: خصم الجمعة 30% على القهوة العربية بأجواء دافئة" },
+  d_style: { en: "Style", ar: "النمط" },
+  d_ratio: { en: "Format", ar: "المقاس" },
+  d_tone: { en: "Tone", ar: "النبرة" },
+  d_generate: { en: "Generate 4 designs", ar: "أنشئ 4 تصاميم" },
+  d_generating: { en: "Creating your designs…", ar: "جاري إنشاء تصاميمك…" },
+  d_download: { en: "Download", ar: "تنزيل" },
+  d_share_wa: { en: "Share WhatsApp", ar: "شارك واتساب" },
+  d_share_tg: { en: "Share Telegram", ar: "شارك تليجرام" },
+  d_caption: { en: "AI Caption & Hashtags", ar: "كابشن وهاشتاجات AI" },
+  d_gen_caption: { en: "Generate caption", ar: "اكتب الكابشن" },
+  d_copy: { en: "Copy", ar: "نسخ" },
+  d_copied: { en: "Copied!", ar: "تم النسخ!" },
+
+  credits_left: { en: "credits left", ar: "رصيد متبقي" },
+  welcome_credit_title: { en: "Welcome gift", ar: "هدية ترحيب" },
+  welcome_credit_sub: { en: "5 free AI generations on us — try the studio now.", ar: "لديك 5 محاولات مجانية — جرب الاستوديو الآن." },
+  out_of_credits: { en: "Out of credits. Contact us on WhatsApp to top up.", ar: "نفد رصيدك. تواصل عبر واتساب للشحن." },
+  try_free: { en: "Try free now", ar: "جرب مجاناً الآن" },
+
+  v_upload: { en: "Upload video", ar: "ارفع فيديو" },
+  v_start: { en: "Start (s)", ar: "البداية (ث)" },
+  v_end: { en: "End (s)", ar: "النهاية (ث)" },
+  v_preview: { en: "Preview trim", ar: "معاينة القص" },
+  v_export: { en: "Download original", ar: "حمّل الأصلي" },
+  v_no_file: { en: "No file selected", ar: "لم يتم اختيار ملف" },
+
+  pay_wa: { en: "Order on WhatsApp", ar: "اطلب عبر واتساب" },
+  pay_tg: { en: "Order on Telegram", ar: "اطلب عبر تليجرام" },
+
+  built_by: { en: "Built by", ar: "تصميم وتطوير" },
 };
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof dict) => string; dir: "ltr" | "rtl" };

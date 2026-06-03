@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { useI18n } from "@/lib/i18n";
+import { CONTACT, waLink, tgLink } from "@/lib/contact";
 import heroBg from "@/assets/hero-bg.jpg";
 import work1 from "@/assets/work-1.jpg";
 import work2 from "@/assets/work-2.jpg";
@@ -8,15 +9,15 @@ import work3 from "@/assets/work-3.jpg";
 import work4 from "@/assets/work-4.jpg";
 import {
   ArrowRight, ImageIcon, PenTool, Film, Sparkles, Megaphone, Camera,
-  Package, TrendingUp, Check, Star, MessageCircle, Mail, Play,
+  Package, TrendingUp, Check, Star, MessageCircle, Mail, Play, Send, Gift, Wand2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pixel & Reel — Creative Studio for Design & Video" },
-      { name: "description", content: "Award-winning creative studio: social posts, brand identity, ads, motion graphics, and pro video editing. Arabic & English." },
-      { property: "og:title", content: "Pixel & Reel — Creative Studio" },
+      { title: "Pixel & Reel — AI Creative Studio for Design & Video" },
+      { name: "description", content: "AI-powered creative studio: social posts, brand identity, ads, motion graphics, and pro video editing. Arabic & English. Built by Ayman Mahrous." },
+      { property: "og:title", content: "Pixel & Reel — AI Creative Studio" },
       { property: "og:description", content: "Design that sells. Video that captivates." },
       { property: "og:image", content: heroBg },
     ],
@@ -55,7 +56,7 @@ const testimonials = [
 ] as const;
 
 function Index() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
@@ -67,7 +68,7 @@ function Index() {
         <div className="absolute -left-32 top-20 -z-10 h-96 w-96 rounded-full bg-brand-pink/30 blur-3xl animate-float-slow" />
         <div className="absolute -right-32 bottom-0 -z-10 h-96 w-96 rounded-full bg-brand-purple/30 blur-3xl animate-float-slow" />
 
-        <div className="mx-auto max-w-6xl px-4 pb-24 pt-20 sm:pt-32 text-center">
+        <div className="mx-auto max-w-6xl px-4 pb-24 pt-20 sm:pt-28 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-brand-amber" />
             {t("hero_kicker")}
@@ -77,10 +78,20 @@ function Index() {
             <span className="block text-gradient">{t("hero_title_2")}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">{t("hero_sub")}</p>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <a href="#contact" className="group inline-flex items-center gap-2 rounded-full bg-gradient-brand px-6 py-3 text-sm font-semibold text-black glow transition-transform hover:scale-105">
-              {t("cta_order")} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" />
-            </a>
+
+          {/* Welcome credit banner */}
+          <div className="mx-auto mt-8 inline-flex max-w-md items-center gap-3 rounded-2xl border border-brand-amber/40 bg-gradient-to-r from-brand-amber/15 via-brand-pink/10 to-brand-purple/15 px-4 py-3 text-left rtl:text-right">
+            <Gift className="h-6 w-6 shrink-0 text-brand-amber" />
+            <div className="text-sm">
+              <p className="font-bold">{t("welcome_credit_title")}</p>
+              <p className="text-xs text-muted-foreground">{t("welcome_credit_sub")}</p>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link to="/design" className="group inline-flex items-center gap-2 rounded-full bg-gradient-brand px-6 py-3 text-sm font-semibold text-black glow transition-transform hover:scale-105">
+              <Wand2 className="h-4 w-4" /> {t("try_free")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+            </Link>
             <a href="#work" className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-card">
               <Play className="h-4 w-4" /> {t("cta_portfolio")}
             </a>
@@ -111,14 +122,19 @@ function Index() {
         </div>
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {services.map(({ icon: Icon, t: title, d }) => (
-            <div key={title} className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-brand-pink/50 hover:bg-accent">
+            <a
+              key={title}
+              href={waLink(`${lang === "ar" ? "أرغب في خدمة" : "I'd like:"} ${t(title)}`)}
+              target="_blank" rel="noreferrer"
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-brand-pink/50 hover:bg-accent"
+            >
               <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-brand opacity-0 blur-2xl transition-opacity group-hover:opacity-30" />
               <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-brand text-black">
                 <Icon className="h-5 w-5" />
               </div>
               <h3 className="relative mt-5 text-lg font-semibold">{t(title)}</h3>
               <p className="relative mt-2 text-sm text-muted-foreground">{t(d)}</p>
-            </div>
+            </a>
           ))}
         </div>
       </section>
@@ -132,7 +148,7 @@ function Index() {
               <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("work_title")}</h2>
             </div>
             <Link to="/design" className="inline-flex items-center gap-1 text-sm font-medium text-brand-pink hover:underline">
-              {t("nav_work")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+              {t("try_free")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
             </Link>
           </div>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -175,14 +191,24 @@ function Index() {
                   </li>
                 ))}
               </ul>
-              <a
-                href="#contact"
-                className={`mt-8 inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition ${
-                  p.popular ? "bg-gradient-brand text-black hover:opacity-90" : "border border-border bg-background hover:bg-accent"
-                }`}
-              >
-                {t("choose_plan")}
-              </a>
+              <div className="mt-8 space-y-2">
+                <a
+                  href={waLink(`${lang === "ar" ? "أريد باقة" : "I want the"} ${t(p.name)} (${p.price})`)}
+                  target="_blank" rel="noreferrer"
+                  className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition ${
+                    p.popular ? "bg-gradient-brand text-black hover:opacity-90" : "border border-border bg-background hover:bg-accent"
+                  }`}
+                >
+                  <MessageCircle className="h-4 w-4" /> {t("pay_wa")}
+                </a>
+                <a
+                  href={tgLink(`${lang === "ar" ? "أريد باقة" : "I want the"} ${t(p.name)} (${p.price})`)}
+                  target="_blank" rel="noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-xs font-semibold hover:bg-accent"
+                >
+                  <Send className="h-3.5 w-3.5" /> {t("pay_tg")}
+                </a>
+              </div>
             </div>
           ))}
         </div>
@@ -217,10 +243,13 @@ function Index() {
           <h2 className="relative text-3xl font-bold sm:text-5xl">{t("cta_title")}</h2>
           <p className="relative mx-auto mt-4 max-w-xl text-muted-foreground">{t("cta_sub")}</p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <a href="https://wa.me/0000000000" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-gradient-brand px-6 py-3 text-sm font-semibold text-black glow hover:opacity-90">
+            <a href={waLink(lang === "ar" ? "أرغب في طلب مشروع" : "I'd like to start a project")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-black glow hover:opacity-90">
               <MessageCircle className="h-4 w-4" /> {t("cta_whatsapp")}
             </a>
-            <a href="mailto:hello@pixelreel.studio" className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-accent">
+            <a href={tgLink(lang === "ar" ? "أرغب في طلب مشروع" : "I'd like to start a project")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#229ED9] px-6 py-3 text-sm font-semibold text-white hover:opacity-90">
+              <Send className="h-4 w-4" /> Telegram
+            </a>
+            <a href={`mailto:${CONTACT.email}`} className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-accent">
               <Mail className="h-4 w-4" /> {t("cta_email")}
             </a>
           </div>
@@ -233,9 +262,21 @@ function Index() {
             <Sparkles className="h-4 w-4 text-brand-pink" />
             {t("brand")}
           </div>
-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} {t("brand")}. {t("footer_rights")}</p>
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} {t("brand")}. {t("footer_rights")} · {t("built_by")} <span className="font-semibold text-gradient">{CONTACT.brandBy}</span>
+          </p>
         </div>
       </footer>
+
+      {/* Floating WhatsApp */}
+      <a
+        href={waLink(lang === "ar" ? "مرحباً، أرغب في الاستفسار" : "Hi, I'd like to ask about your services")}
+        target="_blank" rel="noreferrer"
+        aria-label="WhatsApp"
+        className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-black shadow-2xl shadow-black/40 transition hover:scale-110"
+      >
+        <MessageCircle className="h-6 w-6" />
+      </a>
     </div>
   );
 }
