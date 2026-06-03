@@ -93,14 +93,14 @@ function VideoPage() {
               <div className="flex flex-wrap gap-2">
                 <button onClick={preview} className="inline-flex items-center gap-2 rounded-full bg-gradient-brand px-4 py-2 text-sm font-bold text-black"><Play className="h-4 w-4" />{t("v_preview")}</button>
                 <button onClick={downloadOriginal} className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-semibold"><Download className="h-4 w-4" />{t("v_export")}</button>
-                <a href={waLink(`${lang === "ar" ? "أحتاج مونتاج احترافي لفيديو" : "I need pro montage for a video"} (${name})`)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-black">
+                <a href={waUrl(settings.whatsapp, `${lang === "ar" ? "أحتاج مونتاج احترافي لفيديو" : "I need pro montage for a video"} (${name})`)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-black">
                   <Scissors className="h-4 w-4" />{lang === "ar" ? "اطلب مونتاج احترافي" : "Request pro montage"}
                 </a>
               </div>
               <p className="text-xs text-muted-foreground">
                 {lang === "ar"
-                  ? `قص ومعاينة فوري داخل المتصفح. للمونتاج الكامل (دمج عدة مقاطع، موسيقى، تأثيرات) — تواصل مع ${CONTACT.brandBy}.`
-                  : `Instant in-browser trim & preview. For full montage (multi-clip, music, FX) reach ${CONTACT.brandBy} directly.`}
+                  ? `قص ومعاينة فوريّة داخل المتصفح. للمونتاج الكامل (دمج عدة مقاطع، موسيقى، مؤثرات) — تواصل مع ${settings.builtBy}.`
+                  : `Instant in-browser trim & preview. For full montage (multi-clip, music, FX) reach ${settings.builtBy} directly.`}
               </p>
             </div>
           )}
