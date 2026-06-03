@@ -1,3 +1,5 @@
+import { loadStripe, type Stripe } from "@stripe/stripe-js";
+
 export type StripeEnv = "sandbox" | "live";
 
 const clientToken = import.meta.env.VITE_PAYMENTS_CLIENT_TOKEN as string | undefined;
@@ -12,4 +14,13 @@ export function getStripeEnvironment(): StripeEnv {
 
 export function paymentsConfigured(): boolean {
   return !!clientToken && (clientToken.startsWith("pk_test_") || clientToken.startsWith("pk_live_"));
+}
+
+let stripePromise: Promise<Stripe | null> | null = null;
+export function getStripe(): Promise<Stripe | null> {
+  if (!stripePromise) {
+    getStripeEnvironment();
+    stripePromise = loadStripe(clientToken as string);
+  }
+  return stripePromise;
 }

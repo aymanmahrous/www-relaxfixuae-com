@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { createStripeClient, getStripeErrorMessage, type StripeEnv } from "@/lib/stripe.server";
 
-type CheckoutResult = { url: string } | { error: string };
+type CheckoutResult = { clientSecret: string } | { error: string };
 type PortalResult = { url: string } | { error: string };
 
 async function resolveOrCreateCustomer(
@@ -68,8 +68,8 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: price.id, quantity: data.quantity || 1 }],
         mode: isRecurring ? "subscription" : "payment",
-        success_url: `${data.returnUrl}?status=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${data.returnUrl}?status=cancelled`,
+        ui_mode: "embedded_page",
+        return_url: `${data.returnUrl}?session_id={CHECKOUT_SESSION_ID}`,
         ...(customerId && { customer: customerId }),
         ...(!isRecurring && {
           payment_intent_data: { description: product?.name || data.priceId },
@@ -85,7 +85,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           ? { subscription_data: { metadata: { userId: data.userId } } }
           : {}),
       });
-      return { url: session.url! };
+      return { clientSecret: session.client_secret ?? "" };
     } catch (error) {
       console.error("Stripe checkout error:", error);
       return { error: getStripeErrorMessage(error) };
