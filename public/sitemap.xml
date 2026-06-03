@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.relaxfixuae.com/</loc><priority>1.0</priority></url>
-  <url><loc>https://www.relaxfixuae.com/portfolio</loc><priority>0.8</priority></url>
-  <url><loc>https://www.relaxfixuae.com/design</loc><priority>0.8</priority></url>
-  <url><loc>https://www.relaxfixuae.com/video</loc><priority>0.8</priority></url>
+  <url><loc>https://www.relaxfixuae.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.relaxfixuae.com/services/social-media-dubai</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.relaxfixuae.com/services/logo-design</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.relaxfixuae.com/services/motion-graphics</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.relaxfixuae.com/services/ads-design</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.relaxfixuae.com/portfolio</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.relaxfixuae.com/design</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.relaxfixuae.com/video</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 </urlset>
