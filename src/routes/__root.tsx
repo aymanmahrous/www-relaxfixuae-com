@@ -130,6 +130,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
 import { AnalyticsInjector } from "@/components/analytics-injector";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
+import { ExitIntentPopup } from "@/components/exit-intent-popup";
+import { SocialProofToasts } from "@/components/social-proof-toasts";
+import { MobileStickyCTA } from "@/components/mobile-sticky-cta";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -142,6 +145,9 @@ function RootComponent() {
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
           <WhatsAppFab />
+          <MobileStickyCTA />
+          <ExitIntentPopup />
+          <SocialProofToasts />
           <AnalyticsInjector />
           <Toaster position="top-center" theme="dark" />
         </I18nProvider>
