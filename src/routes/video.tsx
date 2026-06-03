@@ -17,6 +17,7 @@ export const Route = createFileRoute("/video")({
 
 function VideoPage() {
   const { t, lang } = useI18n();
+  const { settings } = useSettings();
   const [url, setUrl] = useState<string | null>(null);
   const [name, setName] = useState<string>("");
   const [duration, setDuration] = useState(0);
