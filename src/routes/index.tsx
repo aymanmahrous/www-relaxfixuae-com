@@ -9,6 +9,7 @@ import { useSettings, waUrl, tgUrl } from "@/lib/settings";
 import { useCredits } from "@/lib/credits";
 import { generatePostImages } from "@/lib/ai.functions";
 import { genericMessage, serviceMessage, planMessage, promoMessage, shareDesignMessage } from "@/lib/orderMessage";
+import { Countdown } from "@/components/countdown";
 import heroBg from "@/assets/hero-bg.jpg";
 import work1 from "@/assets/work-1.jpg";
 import work2 from "@/assets/work-2.jpg";
@@ -116,6 +117,7 @@ function Index() {
             <span>·</span>
             <span>{lang === "ar" ? offer.titleAr : offer.titleEn}</span>
             <span className="rounded-full bg-black/40 px-2 py-0.5 text-xs font-bold text-brand-amber">{offer.code}</span>
+            {offer.expiresAt && <Countdown to={offer.expiresAt} lang={lang} />}
             <span className="inline-flex items-center gap-1 font-semibold text-brand-pink">{t("promo_cta")} <ArrowRight className="h-3 w-3 rtl:rotate-180" /></span>
           </span>
         </a>
