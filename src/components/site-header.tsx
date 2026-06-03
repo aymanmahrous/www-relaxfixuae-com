@@ -32,9 +32,10 @@ export function SiteHeader() {
             <Languages className="h-3.5 w-3.5" />
             {t("switch_lang")}
           </button>
-          <a href="/#contact" className="hidden rounded-full bg-gradient-brand px-4 py-1.5 text-xs font-bold text-black hover:opacity-90 sm:inline-flex">
-            {t("cta_order")}
+          <a href={waLink(t("cta_order"))} target="_blank" rel="noreferrer" className="hidden items-center gap-1 rounded-full bg-gradient-brand px-4 py-1.5 text-xs font-bold text-black hover:opacity-90 sm:inline-flex">
+            <MessageCircle className="h-3.5 w-3.5" /> {t("cta_order")}
           </a>
+
         </div>
       </div>
     </header>
