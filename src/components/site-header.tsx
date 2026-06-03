@@ -41,6 +41,12 @@ export function SiteHeader() {
               <Link to="/services/ads-design" className="block rounded-lg px-3 py-2 text-sm hover:bg-accent">
                 {lang === "ar" ? "تصميم اعلانات ممولة" : "Paid Ads Design"}
               </Link>
+              <Link to="/services/social-media-abudhabi" className="block rounded-lg px-3 py-2 text-sm hover:bg-accent">
+                {lang === "ar" ? "سوشيال ميديا - أبوظبي" : "Social Media — Abu Dhabi"}
+              </Link>
+              <Link to="/services/social-media-sharjah" className="block rounded-lg px-3 py-2 text-sm hover:bg-accent">
+                {lang === "ar" ? "سوشيال ميديا - الشارقة" : "Social Media — Sharjah"}
+              </Link>
             </div>
           </div>
           <Link to="/portfolio" className="text-muted-foreground transition hover:text-foreground">
