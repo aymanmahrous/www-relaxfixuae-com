@@ -35,7 +35,9 @@ function ReturnPage() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
       <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col items-center justify-center px-4 text-center">
-        {ok ? (
+        {!mounted ? (
+          <Loader2 className="h-16 w-16 animate-spin text-muted-foreground" />
+        ) : ok ? (
           <>
             <CheckCircle2 className="h-16 w-16 text-emerald-400" />
             <h1 className="mt-4 text-2xl font-bold">{lang === "ar" ? "تمّ الدفع بنجاح" : "Payment successful"}</h1>
