@@ -189,12 +189,13 @@ function Index() {
             </span>
           </span>
 
-          <h1 className="mx-auto mt-8 max-w-4xl font-display text-[2.75rem] font-extrabold leading-[0.95] tracking-tight sm:text-7xl">
+          <h1 className="mx-auto mt-8 max-w-4xl font-display text-[2.25rem] font-extrabold leading-[1] tracking-tight sm:text-6xl lg:text-7xl">
             <span className="block text-white">{t("hero_title_1")}</span>
             <span className="mt-1 block bg-gradient-to-r from-brand-amber via-brand-pink to-brand-purple bg-clip-text text-transparent">
               {t("hero_title_2")}
             </span>
           </h1>
+
 
           <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-white/50 sm:text-base">
             {t("hero_sub")}
