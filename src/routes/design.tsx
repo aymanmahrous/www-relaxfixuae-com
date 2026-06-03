@@ -84,16 +84,14 @@ function DesignPage() {
     a.click();
   }
 
-  async function shareWA(url: string) {
-    try {
-      const blob = await (await fetch(url)).blob();
-      await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]).catch(() => {});
-    } catch {}
-    window.open(waUrl(settings.whatsapp, `${brief}\n— ${settings.brandEn} · ${settings.builtBy}`), "_blank");
+  async function shareWA() {
+    const { shareDesignMessage } = await import("@/lib/orderMessage");
+    window.open(waUrl(settings.whatsapp, shareDesignMessage(settings, lang, brief, style, ratio)), "_blank");
   }
 
-  function shareTG() {
-    window.open(tgUrl(settings.telegram, `${brief}\n— ${settings.brandEn} · ${settings.builtBy}`), "_blank");
+  async function shareTG() {
+    const { shareDesignMessage } = await import("@/lib/orderMessage");
+    window.open(tgUrl(settings.telegram, shareDesignMessage(settings, lang, brief, style, ratio)), "_blank");
   }
 
   function copyText(s: string) {
