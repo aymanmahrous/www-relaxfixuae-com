@@ -510,7 +510,11 @@ function Index() {
         </div>
       </section>
 
+      <TestimonialsSection />
+
       <LeadForm />
+
+
 
 
       <footer className="border-t border-border py-10">
