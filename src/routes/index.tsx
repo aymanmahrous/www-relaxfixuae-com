@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { useI18n } from "@/lib/i18n";
-import { CONTACT, waLink, tgLink } from "@/lib/contact";
+import { useSettings, waUrl, tgUrl } from "@/lib/settings";
 import heroBg from "@/assets/hero-bg.jpg";
 import work1 from "@/assets/work-1.jpg";
 import work2 from "@/assets/work-2.jpg";
@@ -10,6 +10,7 @@ import work4 from "@/assets/work-4.jpg";
 import {
   ArrowRight, ImageIcon, PenTool, Film, Sparkles, Megaphone, Camera,
   Package, TrendingUp, Check, Star, MessageCircle, Mail, Play, Send, Gift, Wand2,
+  type LucideIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -25,16 +26,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const services = [
-  { icon: ImageIcon, t: "s_post_t", d: "s_post_d" },
-  { icon: PenTool, t: "s_logo_t", d: "s_logo_d" },
-  { icon: Film, t: "s_video_t", d: "s_video_d" },
-  { icon: Sparkles, t: "s_motion_t", d: "s_motion_d" },
-  { icon: Megaphone, t: "s_ads_t", d: "s_ads_d" },
-  { icon: Camera, t: "s_photo_t", d: "s_photo_d" },
-  { icon: Package, t: "s_print_t", d: "s_print_d" },
-  { icon: TrendingUp, t: "s_smm_t", d: "s_smm_d" },
-] as const;
+const ICONS: Record<string, LucideIcon> = { ImageIcon, PenTool, Film, Sparkles, Megaphone, Camera, Package, TrendingUp };
 
 const works = [
   { src: work1, tag: "Social" },
@@ -42,12 +34,6 @@ const works = [
   { src: work3, tag: "Branding" },
   { src: work4, tag: "Motion" },
 ];
-
-const plans = [
-  { name: "plan_starter", price: "$49", features: ["starter_f1", "starter_f2", "starter_f3", "starter_f4"], popular: false },
-  { name: "plan_pro", price: "$199", features: ["pro_f1", "pro_f2", "pro_f3", "pro_f4"], popular: true },
-  { name: "plan_studio", price: "$499", features: ["studio_f1", "studio_f2", "studio_f3", "studio_f4"], popular: false },
-] as const;
 
 const testimonials = [
   { quote: "t1", name: "t1_name" },
@@ -57,6 +43,9 @@ const testimonials = [
 
 function Index() {
   const { t, lang } = useI18n();
+  const { settings } = useSettings();
+  const brand = lang === "ar" ? settings.brandAr : settings.brandEn;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
@@ -79,12 +68,15 @@ function Index() {
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">{t("hero_sub")}</p>
 
-          {/* Welcome credit banner */}
-          <div className="mx-auto mt-8 inline-flex max-w-md items-center gap-3 rounded-2xl border border-brand-amber/40 bg-gradient-to-r from-brand-amber/15 via-brand-pink/10 to-brand-purple/15 px-4 py-3 text-left rtl:text-right">
+          <div className="mx-auto mt-8 inline-flex max-w-md items-center gap-3 rounded-2xl border border-brand-amber/40 bg-gradient-to-r from-brand-amber/15 via-brand-pink/10 to-brand-purple/15 px-4 py-3 text-start">
             <Gift className="h-6 w-6 shrink-0 text-brand-amber" />
             <div className="text-sm">
               <p className="font-bold">{t("welcome_credit_title")}</p>
-              <p className="text-xs text-muted-foreground">{t("welcome_credit_sub")}</p>
+              <p className="text-xs text-muted-foreground">
+                {lang === "ar"
+                  ? `لديك ${settings.welcomeCredits} محاولات مجانية بالذكاء الاصطناعي — جرّب الاستوديو الآن.`
+                  : `You have ${settings.welcomeCredits} free AI generations on us — try the studio now.`}
+              </p>
             </div>
           </div>
 
@@ -97,7 +89,6 @@ function Index() {
             </a>
           </div>
 
-          {/* Stats */}
           <div className="mx-auto mt-20 grid max-w-3xl grid-cols-2 gap-6 sm:grid-cols-4">
             {[
               { v: "500+", k: "stat_projects" },
@@ -121,21 +112,26 @@ function Index() {
           <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("services_title")}</h2>
         </div>
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map(({ icon: Icon, t: title, d }) => (
-            <a
-              key={title}
-              href={waLink(`${lang === "ar" ? "أرغب في خدمة" : "I'd like:"} ${t(title)}`)}
-              target="_blank" rel="noreferrer"
-              className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-brand-pink/50 hover:bg-accent"
-            >
-              <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-brand opacity-0 blur-2xl transition-opacity group-hover:opacity-30" />
-              <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-brand text-black">
-                <Icon className="h-5 w-5" />
-              </div>
-              <h3 className="relative mt-5 text-lg font-semibold">{t(title)}</h3>
-              <p className="relative mt-2 text-sm text-muted-foreground">{t(d)}</p>
-            </a>
-          ))}
+          {settings.services.map((srv) => {
+            const Icon = ICONS[srv.icon] ?? Sparkles;
+            const title = lang === "ar" ? srv.titleAr : srv.titleEn;
+            const desc = lang === "ar" ? srv.descAr : srv.descEn;
+            return (
+              <a
+                key={srv.id}
+                href={waUrl(settings.whatsapp, `${lang === "ar" ? "أرغب في خدمة" : "I'd like:"} ${title}`)}
+                target="_blank" rel="noreferrer"
+                className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-brand-pink/50 hover:bg-accent"
+              >
+                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-brand opacity-0 blur-2xl transition-opacity group-hover:opacity-30" />
+                <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-brand text-black">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="relative mt-5 text-lg font-semibold">{title}</h3>
+                <p className="relative mt-2 text-sm text-muted-foreground">{desc}</p>
+              </a>
+            );
+          })}
         </div>
       </section>
 
@@ -171,46 +167,44 @@ function Index() {
           <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{t("pricing_sub")}</p>
         </div>
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {plans.map((p) => (
-            <div key={p.name} className={`relative rounded-2xl border p-8 ${p.popular ? "border-brand-pink/60 bg-gradient-to-b from-brand-pink/10 to-card glow" : "border-border bg-card"}`}>
-              {p.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-brand px-3 py-1 text-xs font-bold text-black">
-                  {t("popular")}
-                </span>
-              )}
-              <h3 className="text-lg font-semibold">{t(p.name)}</h3>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-5xl font-bold">{p.price}</span>
-                <span className="text-sm text-muted-foreground">{t("per_month")}</span>
+          {settings.plans.map((p) => {
+            const name = lang === "ar" ? p.nameAr : p.nameEn;
+            const features = lang === "ar" ? p.featuresAr : p.featuresEn;
+            return (
+              <div key={p.id} className={`relative rounded-2xl border p-8 ${p.popular ? "border-brand-pink/60 bg-gradient-to-b from-brand-pink/10 to-card glow" : "border-border bg-card"}`}>
+                {p.popular && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-brand px-3 py-1 text-xs font-bold text-black">
+                    {t("popular")}
+                  </span>
+                )}
+                <h3 className="text-lg font-semibold">{name}</h3>
+                <div className="mt-4 flex items-baseline gap-1">
+                  <span className="text-5xl font-bold">{p.price}</span>
+                  <span className="text-sm text-muted-foreground">{t("per_month")}</span>
+                </div>
+                <ul className="mt-6 space-y-3">
+                  {features.map((f, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-amber" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-8 space-y-2">
+                  <a href={waUrl(settings.whatsapp, `${lang === "ar" ? "أريد باقة" : "I want the"} ${name} (${p.price})`)} target="_blank" rel="noreferrer"
+                    className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition ${
+                      p.popular ? "bg-gradient-brand text-black hover:opacity-90" : "border border-border bg-background hover:bg-accent"
+                    }`}>
+                    <MessageCircle className="h-4 w-4" /> {t("pay_wa")}
+                  </a>
+                  <a href={tgUrl(settings.telegram, `${lang === "ar" ? "أريد باقة" : "I want the"} ${name} (${p.price})`)} target="_blank" rel="noreferrer"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-xs font-semibold hover:bg-accent">
+                    <Send className="h-3.5 w-3.5" /> {t("pay_tg")}
+                  </a>
+                </div>
               </div>
-              <ul className="mt-6 space-y-3">
-                {p.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-amber" />
-                    <span>{t(f as never)}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-8 space-y-2">
-                <a
-                  href={waLink(`${lang === "ar" ? "أريد باقة" : "I want the"} ${t(p.name)} (${p.price})`)}
-                  target="_blank" rel="noreferrer"
-                  className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition ${
-                    p.popular ? "bg-gradient-brand text-black hover:opacity-90" : "border border-border bg-background hover:bg-accent"
-                  }`}
-                >
-                  <MessageCircle className="h-4 w-4" /> {t("pay_wa")}
-                </a>
-                <a
-                  href={tgLink(`${lang === "ar" ? "أريد باقة" : "I want the"} ${t(p.name)} (${p.price})`)}
-                  target="_blank" rel="noreferrer"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-xs font-semibold hover:bg-accent"
-                >
-                  <Send className="h-3.5 w-3.5" /> {t("pay_tg")}
-                </a>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -243,13 +237,13 @@ function Index() {
           <h2 className="relative text-3xl font-bold sm:text-5xl">{t("cta_title")}</h2>
           <p className="relative mx-auto mt-4 max-w-xl text-muted-foreground">{t("cta_sub")}</p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <a href={waLink(lang === "ar" ? "أرغب في طلب مشروع" : "I'd like to start a project")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-black glow hover:opacity-90">
+            <a href={waUrl(settings.whatsapp, lang === "ar" ? "أرغب في طلب مشروع" : "I'd like to start a project")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-black glow hover:opacity-90">
               <MessageCircle className="h-4 w-4" /> {t("cta_whatsapp")}
             </a>
-            <a href={tgLink(lang === "ar" ? "أرغب في طلب مشروع" : "I'd like to start a project")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#229ED9] px-6 py-3 text-sm font-semibold text-white hover:opacity-90">
+            <a href={tgUrl(settings.telegram, lang === "ar" ? "أرغب في طلب مشروع" : "I'd like to start a project")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#229ED9] px-6 py-3 text-sm font-semibold text-white hover:opacity-90">
               <Send className="h-4 w-4" /> Telegram
             </a>
-            <a href={`mailto:${CONTACT.email}`} className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-accent">
+            <a href={`mailto:${settings.email}`} className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-accent">
               <Mail className="h-4 w-4" /> {t("cta_email")}
             </a>
           </div>
@@ -260,17 +254,16 @@ function Index() {
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <Sparkles className="h-4 w-4 text-brand-pink" />
-            {t("brand")}
+            {brand}
           </div>
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} {t("brand")}. {t("footer_rights")} · {t("built_by")} <span className="font-semibold text-gradient">{CONTACT.brandBy}</span>
+            © {new Date().getFullYear()} {brand}. {t("footer_rights")} · {t("built_by")} <span className="font-semibold text-gradient">{settings.builtBy}</span>
           </p>
         </div>
       </footer>
 
-      {/* Floating WhatsApp */}
       <a
-        href={waLink(lang === "ar" ? "مرحباً، أرغب في الاستفسار" : "Hi, I'd like to ask about your services")}
+        href={waUrl(settings.whatsapp, lang === "ar" ? "مرحباً، أرغب في الاستفسار" : "Hi, I'd like to ask about your services")}
         target="_blank" rel="noreferrer"
         aria-label="WhatsApp"
         className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-black shadow-2xl shadow-black/40 transition hover:scale-110"
