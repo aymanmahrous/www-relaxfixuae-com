@@ -1023,7 +1023,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <label className="block"><span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>{children}</label>;
 }
-function Th({ children }: { children: React.ReactNode }) { return <th className="px-4 py-3 text-left font-semibold">{children}</th>; }
+function Th({ children }: { children?: React.ReactNode }) { return <th className="px-4 py-3 text-left font-semibold">{children}</th>; }
 function Td({ children, className = "" }: { children: React.ReactNode; className?: string }) { return <td className={`px-4 py-3 ${className}`}>{children}</td>; }
 function Empty({ msg }: { msg: string }) {
   return <div className="grid place-items-center rounded-2xl border border-dashed border-border bg-card/30 p-16 text-center text-muted-foreground">
