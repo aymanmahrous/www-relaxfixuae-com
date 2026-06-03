@@ -27,6 +27,7 @@ type Img = { url: string; style: string };
 
 function DesignPage() {
   const { t, lang } = useI18n();
+  const { settings } = useSettings();
   const { credits, spend } = useCredits();
   const genImages = useServerFn(generatePostImages);
   const genCaption = useServerFn(generateCaption);
