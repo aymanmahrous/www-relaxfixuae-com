@@ -36,7 +36,15 @@ export function CheckoutButton({
         },
       });
       if ("error" in res) throw new Error(res.error);
-      window.location.href = res.url;
+      const win = window.open(res.url, "_blank");
+      if (!win) {
+        // Popup blocked or running inside a sandboxed iframe — fall back to top-level navigation
+        try {
+          window.top!.location.href = res.url;
+        } catch {
+          window.location.href = res.url;
+        }
+      }
     } catch (e: any) {
       toast.error(e.message || "Checkout failed");
       setBusy(false);
