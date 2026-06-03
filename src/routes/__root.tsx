@@ -127,6 +127,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <SettingsProvider>
         <I18nProvider>
+          <PaymentTestModeBanner />
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
           <WhatsAppFab />
