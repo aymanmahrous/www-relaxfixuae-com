@@ -220,7 +220,7 @@ function DesignPage() {
                       <button onClick={() => download(img.url, i)} className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-black hover:bg-white/90">
                         <Download className="h-3 w-3" /> {t("d_download")}
                       </button>
-                      <button onClick={() => shareWA(img.url)} className="inline-flex items-center gap-1 rounded-full bg-[#25D366] px-2.5 py-1 text-[11px] font-bold text-black">
+                      <button onClick={() => shareWA()} className="inline-flex items-center gap-1 rounded-full bg-[#25D366] px-2.5 py-1 text-[11px] font-bold text-black">
                         <MessageCircle className="h-3 w-3" /> WhatsApp
                       </button>
                       <button onClick={shareTG} className="inline-flex items-center gap-1 rounded-full bg-[#229ED9] px-2.5 py-1 text-[11px] font-bold text-white">
