@@ -11,7 +11,7 @@ import { useCredits } from "@/lib/credits";
 import { generatePostImages } from "@/lib/ai.functions";
 import { genericMessage, serviceMessage, planMessage, promoMessage, shareDesignMessage } from "@/lib/orderMessage";
 import { Countdown } from "@/components/countdown";
-import heroBg from "@/assets/hero-bg.jpg";
+
 import work1 from "@/assets/work-1.jpg";
 import work2 from "@/assets/work-2.jpg";
 import work3 from "@/assets/work-3.jpg";
@@ -172,29 +172,50 @@ function Index() {
         </a>
       )}
 
-      {/* HERO */}
+      {/* HERO — Dark Studio Minimalist */}
       <section className="relative overflow-hidden">
-        <img src={heroBg} alt="" width={1920} height={1080} className="absolute inset-0 -z-10 h-full w-full object-cover opacity-50" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/40 via-background/80 to-background" />
-        <div className="absolute -left-32 top-20 -z-10 h-96 w-96 rounded-full bg-brand-pink/30 blur-3xl animate-float-slow" />
-        <div className="absolute -right-32 bottom-0 -z-10 h-96 w-96 rounded-full bg-brand-purple/30 blur-3xl animate-float-slow" />
+        <div className="absolute inset-0 -z-10 bg-background" />
+        <div className="absolute -left-32 top-32 -z-10 h-[28rem] w-[28rem] rounded-full bg-brand-purple/20 blur-[120px] animate-float-slow" />
+        <div className="absolute -right-32 bottom-0 -z-10 h-[28rem] w-[28rem] rounded-full bg-brand-pink/15 blur-[120px] animate-float-slow" />
 
-        <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:pt-24 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5 text-brand-amber" />
-            {t("hero_kicker")}
+        <div className="mx-auto max-w-6xl px-4 pb-24 pt-14 sm:pt-20 text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 backdrop-blur-md">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-amber opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-amber" />
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
+              {t("hero_kicker")}
+            </span>
           </span>
-          <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl">
-            <span className="block">{t("hero_title_1")}</span>
-            <span className="block text-gradient">{t("hero_title_2")}</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">{t("hero_sub")}</p>
 
-          <div className="mx-auto mt-8 inline-flex max-w-md items-center gap-3 rounded-2xl border border-brand-amber/40 bg-gradient-to-r from-brand-amber/15 via-brand-pink/10 to-brand-purple/15 px-4 py-3 text-start">
-            <Gift className="h-6 w-6 shrink-0 text-brand-amber" />
-            <div className="text-sm">
-              <p className="font-bold">{t("welcome_credit_title")}</p>
-              <p className="text-xs text-muted-foreground">
+          <h1 className="mx-auto mt-8 max-w-4xl font-display text-[2.25rem] font-extrabold leading-[1] tracking-tight sm:text-6xl lg:text-7xl">
+            <span className="block text-white">{t("hero_title_1")}</span>
+            <span className="mt-1 block bg-gradient-to-r from-brand-amber via-brand-pink to-brand-purple bg-clip-text text-transparent">
+              {t("hero_title_2")}
+            </span>
+          </h1>
+
+
+          <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-white/50 sm:text-base">
+            {t("hero_sub")}
+          </p>
+
+          <div className="mx-auto mt-10 flex w-full max-w-md items-start gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-5 text-start backdrop-blur-xl">
+            <div className="relative">
+              <div className="absolute -inset-2 -z-10 rounded-2xl bg-brand-amber/20 blur-2xl" />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-amber to-brand-pink shadow-lg shadow-brand-amber/20">
+                <Gift className="h-6 w-6 text-black" />
+              </div>
+            </div>
+            <div>
+              <h4 className="flex items-center gap-2 text-sm font-bold text-white">
+                {t("welcome_credit_title")}
+                <span className="rounded bg-brand-amber/20 px-1.5 py-0.5 text-[8px] uppercase tracking-tighter text-brand-amber">
+                  {lang === "ar" ? "جديد" : "New"}
+                </span>
+              </h4>
+              <p className="mt-1 text-xs leading-snug text-white/50">
                 {lang === "ar"
                   ? `لديك ${credits} محاولات مجانية بالذكاء الاصطناعي — جرّب الاستوديو الآن.`
                   : `You have ${credits} free AI generations on us — try the studio now.`}
@@ -203,10 +224,10 @@ function Index() {
           </div>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a href="#demo" className="group inline-flex items-center gap-2 rounded-full bg-gradient-brand px-6 py-3 text-sm font-semibold text-black glow transition-transform hover:scale-105">
+            <a href="#demo" className="group inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-brand-pink via-brand-purple to-brand-amber px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-brand-purple/20 transition-transform hover:scale-[1.02] active:scale-95">
               <Wand2 className="h-4 w-4" /> {t("try_free")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
             </a>
-            <a href="#work" className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-card">
+            <a href="#work" className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3.5 text-sm font-semibold text-white backdrop-blur hover:bg-white/[0.06]">
               <Play className="h-4 w-4" /> {t("cta_portfolio")}
             </a>
           </div>
@@ -219,13 +240,14 @@ function Index() {
               { v: "4.9★", k: "stat_rating" },
             ].map((s) => (
               <div key={s.k}>
-                <div className="text-3xl font-bold text-gradient sm:text-4xl">{s.v}</div>
-                <div className="mt-1 text-xs text-muted-foreground">{t(s.k as never)}</div>
+                <div className="font-display text-3xl font-bold text-gradient sm:text-4xl">{s.v}</div>
+                <div className="mt-1 text-xs text-white/40">{t(s.k as never)}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
 
       {/* LIVE AI DEMO */}
       <section id="demo" className="mx-auto max-w-6xl px-4 py-24">

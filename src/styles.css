@@ -33,29 +33,31 @@
   --color-brand-purple: var(--brand-purple);
   --color-brand-pink: var(--brand-pink);
   --color-brand-amber: var(--brand-amber);
+  --font-sans: "Plus Jakarta Sans", "Readex Pro", system-ui, -apple-system, sans-serif;
+  --font-display: "Syne", "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
 :root {
-  --radius: 0.875rem;
-  /* Dark vibrant creative-studio theme */
-  --background: oklch(0.13 0.02 280);
-  --foreground: oklch(0.98 0.005 280);
-  --card: oklch(0.18 0.025 280);
-  --card-foreground: oklch(0.98 0.005 280);
-  --popover: oklch(0.18 0.025 280);
-  --popover-foreground: oklch(0.98 0.005 280);
+  --radius: 1rem;
+  /* Dark Studio Minimalist — pure black canvas */
+  --background: oklch(0.04 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.075 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.075 0 0);
+  --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.7 0.25 330);
-  --primary-foreground: oklch(0.13 0.02 280);
-  --secondary: oklch(0.22 0.03 280);
-  --secondary-foreground: oklch(0.98 0.005 280);
-  --muted: oklch(0.22 0.03 280);
-  --muted-foreground: oklch(0.7 0.02 280);
-  --accent: oklch(0.25 0.05 320);
-  --accent-foreground: oklch(0.98 0.005 280);
+  --primary-foreground: oklch(0.04 0 0);
+  --secondary: oklch(0.12 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.12 0 0);
+  --muted-foreground: oklch(0.62 0 0);
+  --accent: oklch(0.14 0.01 320);
+  --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.65 0.25 27);
-  --destructive-foreground: oklch(0.98 0.005 280);
-  --border: oklch(0.28 0.03 280 / 60%);
-  --input: oklch(0.28 0.03 280);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
   --ring: oklch(0.7 0.25 330);
   --brand-purple: oklch(0.6 0.25 300);
   --brand-pink: oklch(0.7 0.27 350);
@@ -64,10 +66,18 @@
 
 @layer base {
   * { border-color: var(--color-border); }
+  html { font-family: var(--font-sans); }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
   }
 }
 
