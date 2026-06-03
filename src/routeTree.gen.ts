@@ -16,6 +16,10 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ServicesSocialMediaDubaiRouteImport } from './routes/services.social-media-dubai'
+import { Route as ServicesMotionGraphicsRouteImport } from './routes/services.motion-graphics'
+import { Route as ServicesLogoDesignRouteImport } from './routes/services.logo-design'
+import { Route as ServicesAdsDesignRouteImport } from './routes/services.ads-design'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
@@ -55,6 +59,27 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesSocialMediaDubaiRoute =
+  ServicesSocialMediaDubaiRouteImport.update({
+    id: '/services/social-media-dubai',
+    path: '/services/social-media-dubai',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ServicesMotionGraphicsRoute = ServicesMotionGraphicsRouteImport.update({
+  id: '/services/motion-graphics',
+  path: '/services/motion-graphics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesLogoDesignRoute = ServicesLogoDesignRouteImport.update({
+  id: '/services/logo-design',
+  path: '/services/logo-design',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesAdsDesignRoute = ServicesAdsDesignRouteImport.update({
+  id: '/services/ads-design',
+  path: '/services/ads-design',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
   id: '/checkout/return',
   path: '/checkout/return',
@@ -82,6 +107,10 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/video': typeof VideoRoute
   '/checkout/return': typeof CheckoutReturnRoute
+  '/services/ads-design': typeof ServicesAdsDesignRoute
+  '/services/logo-design': typeof ServicesLogoDesignRoute
+  '/services/motion-graphics': typeof ServicesMotionGraphicsRoute
+  '/services/social-media-dubai': typeof ServicesSocialMediaDubaiRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
@@ -94,6 +123,10 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/video': typeof VideoRoute
   '/checkout/return': typeof CheckoutReturnRoute
+  '/services/ads-design': typeof ServicesAdsDesignRoute
+  '/services/logo-design': typeof ServicesLogoDesignRoute
+  '/services/motion-graphics': typeof ServicesMotionGraphicsRoute
+  '/services/social-media-dubai': typeof ServicesSocialMediaDubaiRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
@@ -107,6 +140,10 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/video': typeof VideoRoute
   '/checkout/return': typeof CheckoutReturnRoute
+  '/services/ads-design': typeof ServicesAdsDesignRoute
+  '/services/logo-design': typeof ServicesLogoDesignRoute
+  '/services/motion-graphics': typeof ServicesMotionGraphicsRoute
+  '/services/social-media-dubai': typeof ServicesSocialMediaDubaiRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
@@ -121,6 +158,10 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/video'
     | '/checkout/return'
+    | '/services/ads-design'
+    | '/services/logo-design'
+    | '/services/motion-graphics'
+    | '/services/social-media-dubai'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
   fileRoutesByTo: FileRoutesByTo
@@ -133,6 +174,10 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/video'
     | '/checkout/return'
+    | '/services/ads-design'
+    | '/services/logo-design'
+    | '/services/motion-graphics'
+    | '/services/social-media-dubai'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
   id:
@@ -145,6 +190,10 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/video'
     | '/checkout/return'
+    | '/services/ads-design'
+    | '/services/logo-design'
+    | '/services/motion-graphics'
+    | '/services/social-media-dubai'
     | '/api/public/payments/webhook'
     | '/lovable/email/queue/process'
   fileRoutesById: FileRoutesById
@@ -158,6 +207,10 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   VideoRoute: typeof VideoRoute
   CheckoutReturnRoute: typeof CheckoutReturnRoute
+  ServicesAdsDesignRoute: typeof ServicesAdsDesignRoute
+  ServicesLogoDesignRoute: typeof ServicesLogoDesignRoute
+  ServicesMotionGraphicsRoute: typeof ServicesMotionGraphicsRoute
+  ServicesSocialMediaDubaiRoute: typeof ServicesSocialMediaDubaiRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
@@ -213,6 +266,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/social-media-dubai': {
+      id: '/services/social-media-dubai'
+      path: '/services/social-media-dubai'
+      fullPath: '/services/social-media-dubai'
+      preLoaderRoute: typeof ServicesSocialMediaDubaiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/motion-graphics': {
+      id: '/services/motion-graphics'
+      path: '/services/motion-graphics'
+      fullPath: '/services/motion-graphics'
+      preLoaderRoute: typeof ServicesMotionGraphicsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/logo-design': {
+      id: '/services/logo-design'
+      path: '/services/logo-design'
+      fullPath: '/services/logo-design'
+      preLoaderRoute: typeof ServicesLogoDesignRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/ads-design': {
+      id: '/services/ads-design'
+      path: '/services/ads-design'
+      fullPath: '/services/ads-design'
+      preLoaderRoute: typeof ServicesAdsDesignRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkout/return': {
       id: '/checkout/return'
       path: '/checkout/return'
@@ -246,6 +327,10 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   VideoRoute: VideoRoute,
   CheckoutReturnRoute: CheckoutReturnRoute,
+  ServicesAdsDesignRoute: ServicesAdsDesignRoute,
+  ServicesLogoDesignRoute: ServicesLogoDesignRoute,
+  ServicesMotionGraphicsRoute: ServicesMotionGraphicsRoute,
+  ServicesSocialMediaDubaiRoute: ServicesSocialMediaDubaiRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }

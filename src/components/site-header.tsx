@@ -24,9 +24,25 @@ export function SiteHeader() {
           <Link to="/" className="text-muted-foreground transition hover:text-foreground">
             {t("nav_home")}
           </Link>
-          <a href="/#services" className="text-muted-foreground transition hover:text-foreground">
-            {t("nav_services")}
-          </a>
+          <div className="group relative">
+            <a href="/#services" className="text-muted-foreground transition hover:text-foreground">
+              {t("nav_services")}
+            </a>
+            <div className="invisible absolute top-full left-1/2 z-50 mt-2 w-64 -translate-x-1/2 rounded-xl border border-border bg-popover p-2 opacity-0 shadow-2xl transition group-hover:visible group-hover:opacity-100">
+              <Link to="/services/social-media-dubai" className="block rounded-lg px-3 py-2 text-sm hover:bg-accent">
+                {lang === "ar" ? "تصميم سوشيال ميديا - دبي" : "Social Media Design — Dubai"}
+              </Link>
+              <Link to="/services/logo-design" className="block rounded-lg px-3 py-2 text-sm hover:bg-accent">
+                {lang === "ar" ? "تصميم لوقو وهوية بصرية" : "Logo & Branding"}
+              </Link>
+              <Link to="/services/motion-graphics" className="block rounded-lg px-3 py-2 text-sm hover:bg-accent">
+                {lang === "ar" ? "موشن جرافيك وفيديو" : "Motion Graphics"}
+              </Link>
+              <Link to="/services/ads-design" className="block rounded-lg px-3 py-2 text-sm hover:bg-accent">
+                {lang === "ar" ? "تصميم اعلانات ممولة" : "Paid Ads Design"}
+              </Link>
+            </div>
+          </div>
           <Link to="/portfolio" className="text-muted-foreground transition hover:text-foreground">
             {lang === "ar" ? "أعمالنا" : "Portfolio"}
           </Link>
