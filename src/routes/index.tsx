@@ -1,7 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/site-header";
 import { useI18n } from "@/lib/i18n";
 import { useSettings, waUrl, tgUrl } from "@/lib/settings";
+import { useCredits } from "@/lib/credits";
+import { generatePostImages } from "@/lib/ai.functions";
+import { genericMessage, serviceMessage, planMessage, promoMessage, shareDesignMessage } from "@/lib/orderMessage";
 import heroBg from "@/assets/hero-bg.jpg";
 import work1 from "@/assets/work-1.jpg";
 import work2 from "@/assets/work-2.jpg";
@@ -10,16 +15,18 @@ import work4 from "@/assets/work-4.jpg";
 import {
   ArrowRight, ImageIcon, PenTool, Film, Sparkles, Megaphone, Camera,
   Package, TrendingUp, Check, Star, MessageCircle, Mail, Play, Send, Gift, Wand2,
+  Loader2, MessageSquare, Palette, Send as Send2, Rocket, ChevronDown, Tag,
   type LucideIcon,
 } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pixel & Reel — AI Creative Studio for Design & Video" },
-      { name: "description", content: "AI-powered creative studio: social posts, brand identity, ads, motion graphics, and pro video editing. Arabic & English. Built by Ayman Mahrous." },
-      { property: "og:title", content: "Pixel & Reel — AI Creative Studio" },
-      { property: "og:description", content: "Design that sells. Video that captivates." },
+      { title: "Pixel & Reel — AI Creative Studio · 2026 by Ayman Mahrous" },
+      { name: "description", content: "AI-powered creative studio: social posts, brand identity, ads, motion graphics, and pro video editing. Arabic & English. 2026 edition by Ayman Mahrous." },
+      { property: "og:title", content: "Pixel & Reel — AI Creative Studio · 2026" },
+      { property: "og:description", content: "Design that sells. Video that captivates. Powered by AI." },
       { property: "og:image", content: heroBg },
     ],
   }),
@@ -41,14 +48,76 @@ const testimonials = [
   { quote: "t3", name: "t3_name" },
 ] as const;
 
+const faqs = [
+  ["faq_q1", "faq_a1"],
+  ["faq_q2", "faq_a2"],
+  ["faq_q3", "faq_a3"],
+  ["faq_q4", "faq_a4"],
+  ["faq_q5", "faq_a5"],
+] as const;
+
+const steps = [
+  { icon: MessageSquare, t: "step1_t", d: "step1_d" },
+  { icon: Palette, t: "step2_t", d: "step2_d" },
+  { icon: Send2, t: "step3_t", d: "step3_d" },
+  { icon: Rocket, t: "step4_t", d: "step4_d" },
+];
+
 function Index() {
   const { t, lang } = useI18n();
   const { settings } = useSettings();
+  const { credits, spend } = useCredits();
   const brand = lang === "ar" ? settings.brandAr : settings.brandEn;
+  const offer = settings.offer;
+
+  // Live AI demo state
+  const genImages = useServerFn(generatePostImages);
+  const [demoBrief, setDemoBrief] = useState("");
+  const [demoBusy, setDemoBusy] = useState(false);
+  const [demoImg, setDemoImg] = useState<string | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  async function runDemo(brief?: string) {
+    const b = (brief ?? demoBrief).trim();
+    if (!b) { toast.error(lang === "ar" ? "اكتب فكرة أولاً" : "Type an idea first"); return; }
+    if (credits < 1) { toast.error(t("out_of_credits")); return; }
+    setDemoBrief(b);
+    setDemoBusy(true);
+    setDemoImg(null);
+    try {
+      const res = await genImages({ data: { prompt: b, style: settings.defaultStyle, ratio: settings.defaultRatio, count: 1 } });
+      setDemoImg(res.images[0]?.url ?? null);
+      spend(1);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed");
+    } finally {
+      setDemoBusy(false);
+    }
+  }
+
+  const examples = [t("demo_ex_1"), t("demo_ex_2"), t("demo_ex_3"), t("demo_ex_4")];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
+
+      {/* OFFER BANNER */}
+      {offer.enabled && (
+        <a
+          href={waUrl(settings.whatsapp, promoMessage(settings, lang, offer.code, offer.discount))}
+          target="_blank" rel="noreferrer"
+          className="block border-b border-brand-amber/40 bg-gradient-to-r from-brand-amber/20 via-brand-pink/20 to-brand-purple/20 px-4 py-2.5 text-center text-sm font-medium hover:opacity-90"
+        >
+          <span className="inline-flex flex-wrap items-center justify-center gap-2">
+            <Tag className="h-4 w-4 text-brand-amber" />
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-amber">{t("promo_prefix")}</span>
+            <span>·</span>
+            <span>{lang === "ar" ? offer.titleAr : offer.titleEn}</span>
+            <span className="rounded-full bg-black/40 px-2 py-0.5 text-xs font-bold text-brand-amber">{offer.code}</span>
+            <span className="inline-flex items-center gap-1 font-semibold text-brand-pink">{t("promo_cta")} <ArrowRight className="h-3 w-3 rtl:rotate-180" /></span>
+          </span>
+        </a>
+      )}
 
       {/* HERO */}
       <section className="relative overflow-hidden">
@@ -57,7 +126,7 @@ function Index() {
         <div className="absolute -left-32 top-20 -z-10 h-96 w-96 rounded-full bg-brand-pink/30 blur-3xl animate-float-slow" />
         <div className="absolute -right-32 bottom-0 -z-10 h-96 w-96 rounded-full bg-brand-purple/30 blur-3xl animate-float-slow" />
 
-        <div className="mx-auto max-w-6xl px-4 pb-24 pt-20 sm:pt-28 text-center">
+        <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:pt-24 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-brand-amber" />
             {t("hero_kicker")}
@@ -74,16 +143,16 @@ function Index() {
               <p className="font-bold">{t("welcome_credit_title")}</p>
               <p className="text-xs text-muted-foreground">
                 {lang === "ar"
-                  ? `لديك ${settings.welcomeCredits} محاولات مجانية بالذكاء الاصطناعي — جرّب الاستوديو الآن.`
-                  : `You have ${settings.welcomeCredits} free AI generations on us — try the studio now.`}
+                  ? `لديك ${credits} محاولات مجانية بالذكاء الاصطناعي — جرّب الاستوديو الآن.`
+                  : `You have ${credits} free AI generations on us — try the studio now.`}
               </p>
             </div>
           </div>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link to="/design" className="group inline-flex items-center gap-2 rounded-full bg-gradient-brand px-6 py-3 text-sm font-semibold text-black glow transition-transform hover:scale-105">
+            <a href="#demo" className="group inline-flex items-center gap-2 rounded-full bg-gradient-brand px-6 py-3 text-sm font-semibold text-black glow transition-transform hover:scale-105">
               <Wand2 className="h-4 w-4" /> {t("try_free")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
-            </Link>
+            </a>
             <a href="#work" className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-card">
               <Play className="h-4 w-4" /> {t("cta_portfolio")}
             </a>
@@ -105,33 +174,143 @@ function Index() {
         </div>
       </section>
 
-      {/* SERVICES */}
-      <section id="services" className="mx-auto max-w-6xl px-4 py-24">
+      {/* LIVE AI DEMO */}
+      <section id="demo" className="mx-auto max-w-6xl px-4 py-24">
         <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("services_kicker")}</span>
-          <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("services_title")}</h2>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("demo_kicker")}</span>
+          <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("demo_title")}</h2>
+          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{t("demo_sub")}</p>
         </div>
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {settings.services.map((srv) => {
-            const Icon = ICONS[srv.icon] ?? Sparkles;
-            const title = lang === "ar" ? srv.titleAr : srv.titleEn;
-            const desc = lang === "ar" ? srv.descAr : srv.descEn;
-            return (
-              <a
-                key={srv.id}
-                href={waUrl(settings.whatsapp, `${lang === "ar" ? "أرغب في خدمة" : "I'd like:"} ${title}`)}
-                target="_blank" rel="noreferrer"
-                className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-brand-pink/50 hover:bg-accent"
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-2">
+          <div className="rounded-3xl border border-border bg-card p-6">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("demo_examples")}</div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {examples.map((ex, i) => (
+                <button key={i} onClick={() => runDemo(ex)} disabled={demoBusy}
+                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium hover:border-brand-pink hover:bg-accent disabled:opacity-50">
+                  {ex}
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={demoBrief}
+              onChange={(e) => setDemoBrief(e.target.value)}
+              placeholder={t("demo_placeholder")}
+              rows={3}
+              className="mt-4 w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink"
+            />
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button
+                onClick={() => runDemo()}
+                disabled={demoBusy}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-brand px-5 py-3 text-sm font-bold text-black glow disabled:opacity-50"
               >
-                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-brand opacity-0 blur-2xl transition-opacity group-hover:opacity-30" />
-                <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-brand text-black">
-                  <Icon className="h-5 w-5" />
+                {demoBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+                {demoBusy ? t("demo_btn_busy") : t("demo_btn")}
+              </button>
+              <Link to="/design" className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-accent">
+                {t("demo_open_studio")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+              </Link>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              {lang === "ar" ? `الرصيد المتبقّي: ${credits} محاولة` : `Credits remaining: ${credits}`}
+            </p>
+          </div>
+
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-purple/20 via-card to-brand-pink/10">
+            {!demoImg && !demoBusy && (
+              <div className="flex aspect-square items-center justify-center p-10 text-center">
+                <div>
+                  <Sparkles className="mx-auto h-12 w-12 text-brand-pink" />
+                  <p className="mt-4 text-sm text-muted-foreground">
+                    {lang === "ar" ? "هنا ستظهر معاينة الذكاء الاصطناعي الخاصّة بك" : "Your AI preview will appear here"}
+                  </p>
                 </div>
-                <h3 className="relative mt-5 text-lg font-semibold">{title}</h3>
-                <p className="relative mt-2 text-sm text-muted-foreground">{desc}</p>
-              </a>
-            );
-          })}
+              </div>
+            )}
+            {demoBusy && (
+              <div className="flex aspect-square items-center justify-center">
+                <div className="text-center">
+                  <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-pink" />
+                  <p className="mt-3 text-sm text-muted-foreground">{t("demo_btn_busy")}</p>
+                </div>
+              </div>
+            )}
+            {demoImg && (
+              <>
+                <img src={demoImg} alt="AI preview" className="aspect-square w-full object-cover" />
+                <div className="absolute inset-x-0 bottom-0 flex flex-wrap gap-2 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-4">
+                  <a href={waUrl(settings.whatsapp, shareDesignMessage(settings, lang, demoBrief, settings.defaultStyle, settings.defaultRatio))} target="_blank" rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366] px-3 py-1.5 text-xs font-bold text-black">
+                    <MessageCircle className="h-3.5 w-3.5" /> {t("demo_share")}
+                  </a>
+                  <a href={demoImg} download={`pixelreel-${Date.now()}.png`} className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-black">
+                    <ArrowRight className="h-3.5 w-3.5" /> {t("d_download")}
+                  </a>
+                  <Link to="/design" className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-3 py-1.5 text-xs font-bold text-white backdrop-blur">
+                    {t("demo_open_studio")}
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section id="services" className="border-y border-border bg-card/30 py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("services_kicker")}</span>
+            <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("services_title")}</h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">{t("services_sub")}</p>
+          </div>
+          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {settings.services.map((srv) => {
+              const Icon = ICONS[srv.icon] ?? Sparkles;
+              const title = lang === "ar" ? srv.titleAr : srv.titleEn;
+              const desc = lang === "ar" ? srv.descAr : srv.descEn;
+              return (
+                <a
+                  key={srv.id}
+                  href={waUrl(settings.whatsapp, serviceMessage(settings, lang, srv))}
+                  target="_blank" rel="noreferrer"
+                  className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-brand-pink/50 hover:bg-accent"
+                >
+                  <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-brand opacity-0 blur-2xl transition-opacity group-hover:opacity-30" />
+                  <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-brand text-black">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="relative mt-5 text-lg font-semibold">{title}</h3>
+                  <p className="relative mt-2 text-sm text-muted-foreground">{desc}</p>
+                  <span className="relative mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-pink">
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    {lang === "ar" ? "اطلب الآن عبر واتساب" : "Order on WhatsApp"}
+                    <ArrowRight className="h-3 w-3 rtl:rotate-180" />
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* PROCESS */}
+      <section className="mx-auto max-w-6xl px-4 py-24">
+        <div className="text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("process_kicker")}</span>
+          <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("process_title")}</h2>
+        </div>
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {steps.map((s, i) => (
+            <div key={i} className="relative rounded-2xl border border-border bg-card p-6">
+              <span className="absolute -top-3 left-6 rounded-full bg-gradient-brand px-3 py-1 text-xs font-bold text-black">0{i + 1}</span>
+              <s.icon className="h-7 w-7 text-brand-pink" />
+              <h3 className="mt-4 text-lg font-semibold">{t(s.t as never)}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{t(s.d as never)}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -191,13 +370,13 @@ function Index() {
                   ))}
                 </ul>
                 <div className="mt-8 space-y-2">
-                  <a href={waUrl(settings.whatsapp, `${lang === "ar" ? "أريد باقة" : "I want the"} ${name} (${p.price})`)} target="_blank" rel="noreferrer"
+                  <a href={waUrl(settings.whatsapp, planMessage(settings, lang, p))} target="_blank" rel="noreferrer"
                     className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition ${
                       p.popular ? "bg-gradient-brand text-black hover:opacity-90" : "border border-border bg-background hover:bg-accent"
                     }`}>
                     <MessageCircle className="h-4 w-4" /> {t("pay_wa")}
                   </a>
-                  <a href={tgUrl(settings.telegram, `${lang === "ar" ? "أريد باقة" : "I want the"} ${name} (${p.price})`)} target="_blank" rel="noreferrer"
+                  <a href={tgUrl(settings.telegram, planMessage(settings, lang, p))} target="_blank" rel="noreferrer"
                     className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-xs font-semibold hover:bg-accent">
                     <Send className="h-3.5 w-3.5" /> {t("pay_tg")}
                   </a>
@@ -229,6 +408,28 @@ function Index() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section className="mx-auto max-w-3xl px-4 py-24">
+        <div className="text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("faq_kicker")}</span>
+          <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("faq_title")}</h2>
+        </div>
+        <div className="mt-10 space-y-3">
+          {faqs.map(([qk, ak], i) => {
+            const open = openFaq === i;
+            return (
+              <div key={qk} className={`overflow-hidden rounded-2xl border bg-card transition ${open ? "border-brand-pink/60" : "border-border"}`}>
+                <button onClick={() => setOpenFaq(open ? null : i)} className="flex w-full items-center justify-between gap-3 p-5 text-start">
+                  <span className="font-semibold">{t(qk as never)}</span>
+                  <ChevronDown className={`h-5 w-5 shrink-0 text-brand-pink transition-transform ${open ? "rotate-180" : ""}`} />
+                </button>
+                {open && <p className="border-t border-border px-5 py-4 text-sm text-muted-foreground">{t(ak as never)}</p>}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
       {/* CTA */}
       <section id="contact" className="mx-auto max-w-5xl px-4 py-24">
         <div className="relative overflow-hidden rounded-3xl border border-brand-pink/40 bg-gradient-to-br from-brand-purple/20 via-brand-pink/10 to-brand-amber/10 p-10 text-center sm:p-16">
@@ -237,13 +438,13 @@ function Index() {
           <h2 className="relative text-3xl font-bold sm:text-5xl">{t("cta_title")}</h2>
           <p className="relative mx-auto mt-4 max-w-xl text-muted-foreground">{t("cta_sub")}</p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <a href={waUrl(settings.whatsapp, lang === "ar" ? "أرغب في طلب مشروع" : "I'd like to start a project")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-black glow hover:opacity-90">
+            <a href={waUrl(settings.whatsapp, genericMessage(settings, lang))} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-black glow hover:opacity-90">
               <MessageCircle className="h-4 w-4" /> {t("cta_whatsapp")}
             </a>
-            <a href={tgUrl(settings.telegram, lang === "ar" ? "أرغب في طلب مشروع" : "I'd like to start a project")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#229ED9] px-6 py-3 text-sm font-semibold text-white hover:opacity-90">
+            <a href={tgUrl(settings.telegram, genericMessage(settings, lang))} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#229ED9] px-6 py-3 text-sm font-semibold text-white hover:opacity-90">
               <Send className="h-4 w-4" /> Telegram
             </a>
-            <a href={`mailto:${settings.email}`} className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-accent">
+            <a href={`mailto:${settings.email}?subject=${encodeURIComponent("Project enquiry")}&body=${encodeURIComponent(genericMessage(settings, lang))}`} className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-accent">
               <Mail className="h-4 w-4" /> {t("cta_email")}
             </a>
           </div>
@@ -256,14 +457,14 @@ function Index() {
             <Sparkles className="h-4 w-4 text-brand-pink" />
             {brand}
           </div>
-          <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} {brand}. {t("footer_rights")} · {t("built_by")} <span className="font-semibold text-gradient">{settings.builtBy}</span>
+          <p className="text-center text-xs text-muted-foreground">
+            © {new Date().getFullYear()} {brand}. {t("footer_rights")} · {t("built_by")} <span className="font-semibold text-gradient">{settings.builtBy}</span> · 2026
           </p>
         </div>
       </footer>
 
       <a
-        href={waUrl(settings.whatsapp, lang === "ar" ? "مرحباً، أرغب في الاستفسار" : "Hi, I'd like to ask about your services")}
+        href={waUrl(settings.whatsapp, genericMessage(settings, lang))}
         target="_blank" rel="noreferrer"
         aria-label="WhatsApp"
         className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-black shadow-2xl shadow-black/40 transition hover:scale-110"
