@@ -85,16 +85,15 @@ function DesignPage() {
   }
 
   async function shareWA(url: string) {
-    // Browsers can't attach data URLs to wa.me; copy image then open chat with brief
     try {
       const blob = await (await fetch(url)).blob();
       await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]).catch(() => {});
     } catch {}
-    window.open(waLink(`${brief}\n— made with Pixel & Reel by ${CONTACT.brandBy}`), "_blank");
+    window.open(waUrl(settings.whatsapp, `${brief}\n— ${settings.brandEn} · ${settings.builtBy}`), "_blank");
   }
 
   function shareTG() {
-    window.open(tgLink(`${brief}\n— made with Pixel & Reel by ${CONTACT.brandBy}`), "_blank");
+    window.open(tgUrl(settings.telegram, `${brief}\n— ${settings.brandEn} · ${settings.builtBy}`), "_blank");
   }
 
   function copyText(s: string) {
