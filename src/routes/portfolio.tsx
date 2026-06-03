@@ -9,8 +9,14 @@ import { MessageCircle, Sparkles } from "lucide-react";
 export const Route = createFileRoute("/portfolio")({
   head: () => ({
     meta: [
-      { title: "Portfolio — Pixel & Reel" },
-      { name: "description", content: "Selected creative work: brand identity, social posts, motion graphics, and video edits." },
+      { title: "Portfolio — Relax Fix UAE" },
+      { name: "description", content: "Selected creative work from Relax Fix UAE: brand identity, social media posts, motion graphics, and professional video edits for UAE brands." },
+      { property: "og:title", content: "Portfolio — Relax Fix UAE" },
+      { property: "og:description", content: "Branding, social, video, and motion samples from our UAE creative studio." },
+      { property: "og:url", content: "https://www.relaxfixuae.com/portfolio" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://www.relaxfixuae.com/portfolio" },
     ],
   }),
   component: PortfolioPage,
@@ -84,7 +90,7 @@ function PortfolioPage() {
                   </div>
                   <div className="p-4">
                     <div className="text-xs uppercase text-brand-amber">{item.category}</div>
-                    <h3 className="mt-1 font-semibold">{title}</h3>
+                    <h2 className="mt-1 font-semibold">{title}</h2>
                     {desc && <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{desc}</p>}
                   </div>
                 </div>

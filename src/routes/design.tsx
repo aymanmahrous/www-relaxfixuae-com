@@ -12,8 +12,14 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/design")({
   head: () => ({
     meta: [
-      { title: "AI Post Designer — Pixel & Reel" },
-      { name: "description", content: "Generate 4 ready-to-publish social designs in seconds with AI." },
+      { title: "AI Post Designer — Relax Fix UAE" },
+      { name: "description", content: "Generate 4 ready-to-publish social media designs in seconds with AI. Arabic and English captions, multiple styles and aspect ratios for UAE brands." },
+      { property: "og:title", content: "AI Post Designer — Relax Fix UAE" },
+      { property: "og:description", content: "Type your idea and get 4 pro designs plus bilingual captions in seconds." },
+      { property: "og:url", content: "https://www.relaxfixuae.com/design" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://www.relaxfixuae.com/design" },
     ],
   }),
   component: DesignPage,
@@ -162,7 +168,7 @@ function DesignPage() {
             <div className="border-t border-border pt-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("d_caption")}</span>
-                <select value={tone} onChange={(e) => setTone(e.target.value)} className="rounded-md border border-border bg-background px-2 py-1 text-xs">
+                <select aria-label={lang === "ar" ? "نبرة التعليق" : "Caption tone"} value={tone} onChange={(e) => setTone(e.target.value)} className="rounded-md border border-border bg-background px-2 py-1 text-xs">
                   {TONES.map((tn) => <option key={tn} value={tn}>{tn}</option>)}
                 </select>
               </div>
@@ -214,7 +220,7 @@ function DesignPage() {
                 {images.map((img, i) => (
                   <div key={i} className="group relative overflow-hidden rounded-2xl border border-border bg-card">
                     <div className={aspectClass}>
-                      <img src={img.url} alt={`design ${i + 1}`} className="h-full w-full object-cover" />
+                      <img src={img.url} alt={`AI generated social design ${i + 1} in ${style} style`} className="h-full w-full object-cover" />
                     </div>
                     <div className="absolute inset-x-0 bottom-0 flex flex-wrap gap-1 bg-gradient-to-t from-black/90 to-transparent p-2 opacity-0 transition group-hover:opacity-100">
                       <button onClick={() => download(img.url, i)} className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-black hover:bg-white/90">
