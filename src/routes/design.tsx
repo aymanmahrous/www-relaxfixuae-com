@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { useI18n } from "@/lib/i18n";
 import { useCredits } from "@/lib/credits";
 import { generatePostImages, generateCaption } from "@/lib/ai.functions";
-import { CONTACT, waLink, tgLink } from "@/lib/contact";
+import { useSettings, waUrl, tgUrl } from "@/lib/settings";
 import { Sparkles, Download, Loader2, Wand2, Copy, MessageCircle, Send, Gift } from "lucide-react";
 import { toast } from "sonner";
 
@@ -27,6 +27,7 @@ type Img = { url: string; style: string };
 
 function DesignPage() {
   const { t, lang } = useI18n();
+  const { settings } = useSettings();
   const { credits, spend } = useCredits();
   const genImages = useServerFn(generatePostImages);
   const genCaption = useServerFn(generateCaption);
@@ -84,16 +85,15 @@ function DesignPage() {
   }
 
   async function shareWA(url: string) {
-    // Browsers can't attach data URLs to wa.me; copy image then open chat with brief
     try {
       const blob = await (await fetch(url)).blob();
       await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]).catch(() => {});
     } catch {}
-    window.open(waLink(`${brief}\n— made with Pixel & Reel by ${CONTACT.brandBy}`), "_blank");
+    window.open(waUrl(settings.whatsapp, `${brief}\n— ${settings.brandEn} · ${settings.builtBy}`), "_blank");
   }
 
   function shareTG() {
-    window.open(tgLink(`${brief}\n— made with Pixel & Reel by ${CONTACT.brandBy}`), "_blank");
+    window.open(tgUrl(settings.telegram, `${brief}\n— ${settings.brandEn} · ${settings.builtBy}`), "_blank");
   }
 
   function copyText(s: string) {

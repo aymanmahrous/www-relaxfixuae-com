@@ -114,6 +114,7 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 import { I18nProvider } from "../lib/i18n";
+import { SettingsProvider } from "../lib/settings";
 import { Toaster } from "@/components/ui/sonner";
 
 function RootComponent() {
@@ -121,11 +122,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <I18nProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-        <Toaster position="top-center" theme="dark" />
-      </I18nProvider>
+      <SettingsProvider>
+        <I18nProvider>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+          <Toaster position="top-center" theme="dark" />
+        </I18nProvider>
+      </SettingsProvider>
     </QueryClientProvider>
   );
 }
