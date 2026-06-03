@@ -66,9 +66,12 @@ function DashboardPage() {
 
         <Section title={lang === "ar" ? "اشتراكاتي" : "My Subscriptions"}>
           {subs.length === 0 ? <Empty msg={lang === "ar" ? "لا توجد اشتراكات" : "No subscriptions yet"} />
-            : subs.map((s) => (
-              <Row key={s.id} title={s.price_id} sub={s.status} extra={s.current_period_end ? new Date(s.current_period_end).toLocaleDateString() : ""} />
-            ))}
+            : <>
+                {subs.map((s) => (
+                  <Row key={s.id} title={s.price_id} sub={s.status} extra={s.current_period_end ? new Date(s.current_period_end).toLocaleDateString() : ""} />
+                ))}
+                <ManagePortalButton />
+              </>}
         </Section>
 
         <Section title={lang === "ar" ? "طلباتي" : "My Orders"}>
