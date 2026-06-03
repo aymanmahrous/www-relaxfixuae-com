@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 
 export function Countdown({ to, lang }: { to: string; lang: "ar" | "en" }) {
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
+    setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
+  if (now === null) return null;
   const ms = Math.max(0, new Date(to).getTime() - now);
   if (!ms || isNaN(ms)) return null;
   const d = Math.floor(ms / 86400000);
