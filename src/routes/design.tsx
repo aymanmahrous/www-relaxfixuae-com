@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { useI18n } from "@/lib/i18n";
 import { useCredits } from "@/lib/credits";
 import { generatePostImages, generateCaption } from "@/lib/ai.functions";
-import { CONTACT, waLink, tgLink } from "@/lib/contact";
+import { useSettings, waUrl, tgUrl } from "@/lib/settings";
 import { Sparkles, Download, Loader2, Wand2, Copy, MessageCircle, Send, Gift } from "lucide-react";
 import { toast } from "sonner";
 
