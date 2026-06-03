@@ -11,7 +11,7 @@ import { useCredits } from "@/lib/credits";
 import { generatePostImages } from "@/lib/ai.functions";
 import { genericMessage, serviceMessage, planMessage, promoMessage, shareDesignMessage } from "@/lib/orderMessage";
 import { Countdown } from "@/components/countdown";
-import heroBg from "@/assets/hero-bg.jpg";
+
 import work1 from "@/assets/work-1.jpg";
 import work2 from "@/assets/work-2.jpg";
 import work3 from "@/assets/work-3.jpg";
