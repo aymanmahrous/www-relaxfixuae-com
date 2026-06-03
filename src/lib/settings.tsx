@@ -2,12 +2,14 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 
 export type Service = { id: string; icon: string; titleEn: string; titleAr: string; descEn: string; descAr: string };
 export type Plan = { id: string; nameEn: string; nameAr: string; price: string; priceId?: string; popular: boolean; featuresEn: string[]; featuresAr: string[] };
+export type AddOn = { id: string; nameEn: string; nameAr: string; price: string; priceId?: string; icon: string };
 export type Offer = {
   enabled: boolean;
   titleEn: string;
   titleAr: string;
   code: string;
   discount: number;
+  expiresAt?: string; // ISO date — drives FOMO countdown banner
 };
 export type Settings = {
   brandEn: string;
@@ -24,7 +26,9 @@ export type Settings = {
   offer: Offer;
   services: Service[];
   plans: Plan[];
+  addons: AddOn[];
 };
+
 
 const DEFAULTS: Settings = {
   brandEn: "Pixel & Reel",
