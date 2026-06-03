@@ -34,6 +34,16 @@ export function SiteHeader() {
           )}
         </nav>
         <div className="flex items-center gap-2">
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="inline-flex items-center gap-1 rounded-full bg-gradient-brand px-3 py-1.5 text-xs font-bold text-black shadow-lg shadow-brand-pink/30"
+              aria-label="Admin"
+            >
+              <Settings className="h-3.5 w-3.5" />
+              {lang === "ar" ? "لوحة" : "Admin"}
+            </Link>
+          )}
           <button
             onClick={() => setLang(lang === "en" ? "ar" : "en")}
             className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-medium backdrop-blur hover:bg-accent"
