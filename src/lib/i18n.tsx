@@ -2,34 +2,106 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 
 export type Lang = "en" | "ar";
 
-type Dict = Record<string, { en: string; ar: string }>;
-
 export const dict = {
   brand: { en: "Pixel & Reel", ar: "بكسل آند ريل" },
+  tagline: { en: "Creative Studio", ar: "استوديو إبداعي" },
+
   nav_home: { en: "Home", ar: "الرئيسية" },
-  nav_design: { en: "Post Designer", ar: "مصمم المنشورات" },
-  nav_video: { en: "Video Editor", ar: "محرر الفيديو" },
   nav_services: { en: "Services", ar: "الخدمات" },
-  cta_start: { en: "Start Creating", ar: "ابدأ التصميم" },
-  cta_video: { en: "Open Video Editor", ar: "افتح محرر الفيديو" },
-  hero_kicker: { en: "Creative Studio", ar: "استوديو إبداعي" },
-  hero_title: { en: "Design posts and edit videos like a pro studio.", ar: "صمّم منشورات واصنع فيديوهات باحترافية استوديو." },
-  hero_sub: { en: "An all-in-one workspace for social ads, branded graphics, and pro-grade video cut, merge, and montage.", ar: "مساحة عمل متكاملة للإعلانات الاجتماعية والتصاميم الاحترافية وقص ودمج ومونتاج الفيديو." },
-  services_title: { en: "What we build", ar: "ما نقدمه" },
-  s1_t: { en: "Post Designer", ar: "مصمم المنشورات" },
-  s1_d: { en: "Templates, text layers, brand colors, and instant export for Instagram, X, and TikTok.", ar: "قوالب وطبقات نصية وألوان العلامة وتصدير فوري لإنستغرام وتويتر وتيك توك." },
-  s2_t: { en: "Image Design", ar: "تصميم الصور" },
-  s2_d: { en: "AI-assisted layouts, smart cropping, filters, and high-resolution exports.", ar: "تخطيطات بمساعدة الذكاء الاصطناعي وقص ذكي وفلاتر وتصدير عالي الدقة." },
-  s3_t: { en: "Video Editor", ar: "محرر الفيديو" },
-  s3_d: { en: "Cut, trim, merge clips, add music, transitions, and captions on a timeline.", ar: "قص ودمج المقاطع وإضافة الموسيقى والانتقالات والترجمة على خط زمني." },
+  nav_work: { en: "Work", ar: "أعمالنا" },
+  nav_pricing: { en: "Pricing", ar: "الأسعار" },
+  nav_design: { en: "Design", ar: "تصميم" },
+  nav_video: { en: "Video", ar: "فيديو" },
+  nav_contact: { en: "Contact", ar: "تواصل" },
+  switch_lang: { en: "العربية", ar: "English" },
+
+  hero_kicker: { en: "Award-winning creative studio", ar: "استوديو إبداعي حائز على جوائز" },
+  hero_title_1: { en: "Design that sells.", ar: "تصاميم تبيع." },
+  hero_title_2: { en: "Video that captivates.", ar: "فيديوهات تأسر." },
+  hero_sub: {
+    en: "We craft social posts, brand identities, ads, and pro video edits that turn scrolls into sales — in Arabic & English.",
+    ar: "نصمم منشورات السوشيال والهويات التجارية والإعلانات ومونتاج الفيديو الاحترافي لنحول التصفح إلى مبيعات — بالعربية والإنجليزية.",
+  },
+  cta_order: { en: "Order a Project", ar: "اطلب مشروعك" },
+  cta_portfolio: { en: "View Portfolio", ar: "شاهد الأعمال" },
+
+  stat_projects: { en: "Projects delivered", ar: "مشروع منفّذ" },
+  stat_clients: { en: "Happy clients", ar: "عميل سعيد" },
+  stat_years: { en: "Years experience", ar: "سنوات خبرة" },
+  stat_rating: { en: "Average rating", ar: "متوسط التقييم" },
+
+  services_kicker: { en: "What we do", ar: "ما نقدمه" },
+  services_title: { en: "Everything your brand needs", ar: "كل ما تحتاجه علامتك" },
+
+  s_post_t: { en: "Social Media Posts", ar: "منشورات السوشيال ميديا" },
+  s_post_d: { en: "Scroll-stopping designs for Instagram, TikTok, X & Snap.", ar: "تصاميم توقف التمرير لإنستغرام وتيك توك وتويتر وسناب." },
+  s_logo_t: { en: "Logo & Brand Identity", ar: "الشعار والهوية البصرية" },
+  s_logo_d: { en: "Memorable logos, color systems, and full guidelines.", ar: "شعارات لا تُنسى وأنظمة ألوان ودليل هوية كامل." },
+  s_video_t: { en: "Video Editing & Montage", ar: "مونتاج وتحرير الفيديو" },
+  s_video_d: { en: "Cut, merge, color grade, music & sound design.", ar: "قص ودمج وتدرج لوني وموسيقى وتصميم صوتي." },
+  s_motion_t: { en: "Motion Graphics", ar: "موشن جرافيك" },
+  s_motion_d: { en: "Animated logos, explainers & 3D motion.", ar: "شعارات متحركة وفيديوهات تعريفية وموشن ثلاثي الأبعاد." },
+  s_ads_t: { en: "Ad Campaigns", ar: "حملات إعلانية" },
+  s_ads_d: { en: "End-to-end creative for Meta, TikTok & Google Ads.", ar: "إبداع متكامل لإعلانات ميتا وتيك توك وجوجل." },
+  s_photo_t: { en: "Product Photography", ar: "تصوير المنتجات" },
+  s_photo_d: { en: "Studio-grade shots & AI-powered retouching.", ar: "تصوير بجودة الاستوديو ومعالجة بالذكاء الاصطناعي." },
+  s_print_t: { en: "Print & Packaging", ar: "الطباعة والتغليف" },
+  s_print_d: { en: "Business cards, menus, brochures & box design.", ar: "بطاقات أعمال ومنيوهات وكتيبات وتصميم العلب." },
+  s_smm_t: { en: "Social Media Management", ar: "إدارة السوشيال ميديا" },
+  s_smm_d: { en: "Content planning, posting & growth strategy.", ar: "تخطيط محتوى ونشر واستراتيجية نمو." },
+
+  work_kicker: { en: "Selected work", ar: "أعمال مختارة" },
+  work_title: { en: "Recent projects we're proud of", ar: "أحدث مشاريعنا التي نفخر بها" },
+
+  pricing_kicker: { en: "Simple pricing", ar: "أسعار بسيطة" },
+  pricing_title: { en: "Plans that grow with you", ar: "باقات تنمو معك" },
+  pricing_sub: { en: "Pay once or subscribe. Cancel anytime.", ar: "ادفع مرة أو اشترك. إلغاء في أي وقت." },
+
+  plan_starter: { en: "Starter", ar: "المبتدئ" },
+  plan_pro: { en: "Pro", ar: "الاحترافي" },
+  plan_studio: { en: "Studio", ar: "الاستوديو" },
+  popular: { en: "Most popular", ar: "الأكثر طلباً" },
+  per_month: { en: "/month", ar: "/شهرياً" },
+
+  starter_f1: { en: "10 social posts", ar: "10 منشورات سوشيال" },
+  starter_f2: { en: "1 logo concept", ar: "تصميم شعار واحد" },
+  starter_f3: { en: "48h delivery", ar: "تسليم خلال 48 ساعة" },
+  starter_f4: { en: "Email support", ar: "دعم عبر البريد" },
+
+  pro_f1: { en: "30 social posts + stories", ar: "30 منشور + ستوريز" },
+  pro_f2: { en: "Full brand identity", ar: "هوية بصرية كاملة" },
+  pro_f3: { en: "5 video reels / month", ar: "5 فيديوهات ريلز شهرياً" },
+  pro_f4: { en: "Priority delivery", ar: "تسليم بأولوية" },
+
+  studio_f1: { en: "Unlimited designs", ar: "تصاميم غير محدودة" },
+  studio_f2: { en: "Full video production", ar: "إنتاج فيديو متكامل" },
+  studio_f3: { en: "Dedicated art director", ar: "مدير فني مخصص" },
+  studio_f4: { en: "24/7 support", ar: "دعم على مدار الساعة" },
+
+  choose_plan: { en: "Choose Plan", ar: "اختر الباقة" },
+
+  testi_kicker: { en: "Loved by brands", ar: "تثق بنا العلامات" },
+  testi_title: { en: "What our clients say", ar: "ماذا يقول عملاؤنا" },
+  t1: { en: "Sales jumped 3x after they redesigned our ads. Worth every riyal.", ar: "تضاعفت مبيعاتنا 3 مرات بعد إعادة تصميم إعلاناتنا. تستحق كل ريال." },
+  t1_name: { en: "Sara A. — Boutique Owner", ar: "سارة أ. — صاحبة بوتيك" },
+  t2: { en: "The video montage they made for our launch went viral on TikTok.", ar: "الفيديو الذي صنعوه لإطلاق منتجنا انتشر بسرعة على تيك توك." },
+  t2_name: { en: "Khalid M. — Restaurant Founder", ar: "خالد م. — مؤسس مطعم" },
+  t3: { en: "Best brand identity team I've worked with in years. Truly creative.", ar: "أفضل فريق هوية بصرية تعاملت معه منذ سنوات. إبداع حقيقي." },
+  t3_name: { en: "Layla H. — Tech Startup CEO", ar: "ليلى ح. — مؤسسة شركة ناشئة" },
+
+  cta_title: { en: "Ready to make something amazing?", ar: "جاهز تصنع شيئاً مذهلاً؟" },
+  cta_sub: { en: "Tell us about your project and get a free quote within 24 hours.", ar: "أخبرنا عن مشروعك واحصل على عرض سعر مجاني خلال 24 ساعة." },
+  cta_whatsapp: { en: "Chat on WhatsApp", ar: "تواصل عبر واتساب" },
+  cta_email: { en: "Send Brief", ar: "أرسل التفاصيل" },
+
+  footer_rights: { en: "All rights reserved.", ar: "جميع الحقوق محفوظة." },
+
   coming_soon: { en: "Coming soon", ar: "قريباً" },
   designer_title: { en: "Post Designer", ar: "مصمم المنشورات" },
-  designer_sub: { en: "Pick a template and start designing. Full canvas editor coming soon.", ar: "اختر قالباً وابدأ التصميم. محرر اللوحة الكامل قادم قريباً." },
+  designer_sub: { en: "Pick a template and start designing.", ar: "اختر قالباً وابدأ التصميم." },
   video_title: { en: "Video Editor", ar: "محرر الفيديو" },
-  video_sub: { en: "Cut, merge, and montage your videos. Pro timeline editor coming soon.", ar: "قص ودمج ومونتاج الفيديوهات. محرر الخط الزمني الاحترافي قريباً." },
-  footer: { en: "Built for creators.", ar: "صُمم للمبدعين." },
-  switch_lang: { en: "العربية", ar: "English" },
-} satisfies Dict;
+  video_sub: { en: "Cut, merge, and montage your videos.", ar: "قص ودمج ومونتاج الفيديوهات." },
+};
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof dict) => string; dir: "ltr" | "rtl" };
 const I18nCtx = createContext<Ctx | null>(null);
