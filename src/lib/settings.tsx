@@ -73,8 +73,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof document === "undefined") return;
-    document.documentElement.style.setProperty("--accent-custom", settings.accent);
-    document.documentElement.style.fontSize = `${settings.uiScale * 100}%`;
+    const root = document.documentElement;
+    root.style.setProperty("--primary", settings.accent);
+    root.style.setProperty("--ring", settings.accent);
+    root.style.setProperty("--brand-pink", settings.accent);
+    root.style.fontSize = `${settings.uiScale * 100}%`;
   }, [settings.accent, settings.uiScale]);
 
   const update = (patch: Partial<Settings>) => {
