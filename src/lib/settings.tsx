@@ -2,12 +2,14 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 
 export type Service = { id: string; icon: string; titleEn: string; titleAr: string; descEn: string; descAr: string };
 export type Plan = { id: string; nameEn: string; nameAr: string; price: string; priceId?: string; popular: boolean; featuresEn: string[]; featuresAr: string[] };
+export type AddOn = { id: string; nameEn: string; nameAr: string; price: string; priceId?: string; icon: string };
 export type Offer = {
   enabled: boolean;
   titleEn: string;
   titleAr: string;
   code: string;
   discount: number;
+  expiresAt?: string; // ISO date — drives FOMO countdown banner
 };
 export type Settings = {
   brandEn: string;
@@ -24,7 +26,9 @@ export type Settings = {
   offer: Offer;
   services: Service[];
   plans: Plan[];
+  addons: AddOn[];
 };
+
 
 const DEFAULTS: Settings = {
   brandEn: "Pixel & Reel",
@@ -44,7 +48,14 @@ const DEFAULTS: Settings = {
     titleAr: "🔥 عرض الإطلاق — خصم 30% على أول مشروع + كابشن AI مجاناً",
     code: "AYMAN30",
     discount: 30,
+    expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
   },
+  addons: [
+    { id: "a1", icon: "Sparkles",  nameEn: "Extra Reel Video",     nameAr: "ريل فيديو إضافي",  price: "$15", priceId: "addon_reel" },
+    { id: "a2", icon: "PenTool",   nameEn: "Express Logo (24h)",   nameAr: "شعار سريع (24س)",  price: "$29", priceId: "addon_logo_express" },
+    { id: "a3", icon: "Megaphone", nameEn: "AI Captions Pack ×20", nameAr: "20 كابشن بالذكاء", price: "$5",  priceId: "addon_captions" },
+    { id: "a4", icon: "ImageIcon", nameEn: "Story Templates ×10",  nameAr: "10 قوالب ستوري",   price: "$12", priceId: "addon_stories" },
+  ],
   services: [
     { id: "s1", icon: "ImageIcon", titleEn: "Social Media Posts", titleAr: "منشورات السوشيال ميديا", descEn: "Scroll-stopping designs for Instagram, TikTok, X & Snap.", descAr: "تصاميم تُوقف التمرير لإنستغرام وتيك توك وإكس وسناب شات." },
     { id: "s2", icon: "PenTool", titleEn: "Logo & Brand Identity", titleAr: "الشعار والهوية البصرية", descEn: "Memorable logos, color systems, and full guidelines.", descAr: "شعارات لا تُنسى، أنظمة ألوان، ودليل هوية متكامل." },

@@ -9,6 +9,7 @@ import { useSettings, waUrl, tgUrl } from "@/lib/settings";
 import { useCredits } from "@/lib/credits";
 import { generatePostImages } from "@/lib/ai.functions";
 import { genericMessage, serviceMessage, planMessage, promoMessage, shareDesignMessage } from "@/lib/orderMessage";
+import { Countdown } from "@/components/countdown";
 import heroBg from "@/assets/hero-bg.jpg";
 import work1 from "@/assets/work-1.jpg";
 import work2 from "@/assets/work-2.jpg";
@@ -116,6 +117,7 @@ function Index() {
             <span>·</span>
             <span>{lang === "ar" ? offer.titleAr : offer.titleEn}</span>
             <span className="rounded-full bg-black/40 px-2 py-0.5 text-xs font-bold text-brand-amber">{offer.code}</span>
+            {offer.expiresAt && <Countdown to={offer.expiresAt} lang={lang} />}
             <span className="inline-flex items-center gap-1 font-semibold text-brand-pink">{t("promo_cta")} <ArrowRight className="h-3 w-3 rtl:rotate-180" /></span>
           </span>
         </a>
@@ -297,6 +299,54 @@ function Index() {
           </div>
         </div>
       </section>
+
+      {/* ADD-ONS — boost AOV */}
+      {settings.addons?.length > 0 && (
+        <section className="border-b border-border bg-background py-16">
+          <div className="mx-auto max-w-6xl px-4">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">
+                  {lang === "ar" ? "إضافات سريعة" : "Quick add-ons"}
+                </span>
+                <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+                  {lang === "ar" ? "أضف لمسة احترافية لمشروعك" : "Power-up your project"}
+                </h2>
+              </div>
+              <span className="text-xs text-muted-foreground">
+                {lang === "ar" ? "تسليم خلال 24-48 ساعة" : "Delivered in 24-48h"}
+              </span>
+            </div>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {settings.addons.map((a) => {
+                const Icon = ICONS[a.icon] ?? Sparkles;
+                const name = lang === "ar" ? a.nameAr : a.nameEn;
+                return (
+                  <a
+                    key={a.id}
+                    href={waUrl(settings.whatsapp, genericMessage(settings, lang, `${lang === "ar" ? "إضافة" : "Add-on"}: ${name} — ${a.price}`))}
+                    target="_blank" rel="noreferrer"
+                    className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4 transition hover:-translate-y-0.5 hover:border-brand-pink/50"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-brand text-black">
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold">{name}</div>
+                        <div className="text-xs text-brand-amber font-bold">{a.price}</div>
+                      </div>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground rtl:rotate-180 group-hover:text-brand-pink" />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+
 
       {/* PROCESS */}
       <section className="mx-auto max-w-6xl px-4 py-24">
