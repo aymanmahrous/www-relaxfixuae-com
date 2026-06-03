@@ -38,6 +38,13 @@ const DEFAULTS: Settings = {
   uiScale: 1,
   defaultStyle: "modern",
   defaultRatio: "1:1",
+  offer: {
+    enabled: true,
+    titleEn: "🔥 New Year Launch — 30% OFF first project + Free AI captions",
+    titleAr: "🔥 عرض الإطلاق — خصم 30% على أول مشروع + كابشن AI مجاناً",
+    code: "AYMAN30",
+    discount: 30,
+  },
   services: [
     { id: "s1", icon: "ImageIcon", titleEn: "Social Media Posts", titleAr: "منشورات السوشيال ميديا", descEn: "Scroll-stopping designs for Instagram, TikTok, X & Snap.", descAr: "تصاميم تُوقف التمرير لإنستغرام وتيك توك وإكس وسناب شات." },
     { id: "s2", icon: "PenTool", titleEn: "Logo & Brand Identity", titleAr: "الشعار والهوية البصرية", descEn: "Memorable logos, color systems, and full guidelines.", descAr: "شعارات لا تُنسى، أنظمة ألوان، ودليل هوية متكامل." },
