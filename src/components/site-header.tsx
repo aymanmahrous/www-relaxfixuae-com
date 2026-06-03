@@ -18,8 +18,9 @@ export function SiteHeader() {
           <a href="/#services" className="text-muted-foreground transition hover:text-foreground">{t("nav_services")}</a>
           <a href="/#work" className="text-muted-foreground transition hover:text-foreground">{t("nav_work")}</a>
           <a href="/#pricing" className="text-muted-foreground transition hover:text-foreground">{t("nav_pricing")}</a>
-          <Link to="/design" className="text-muted-foreground transition hover:text-foreground">{t("nav_design")}</Link>
-          <Link to="/video" className="text-muted-foreground transition hover:text-foreground">{t("nav_video")}</Link>
+          <Link to="/design" className="text-muted-foreground transition hover:text-foreground">{t("designer_title")}</Link>
+          <Link to="/video" className="text-muted-foreground transition hover:text-foreground">{t("video_title")}</Link>
+
         </nav>
         <div className="flex items-center gap-2">
           <button
