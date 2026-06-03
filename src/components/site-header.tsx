@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@/lib/i18n";
-import { Languages, Sparkles } from "lucide-react";
+import { waLink } from "@/lib/contact";
+import { Languages, Sparkles, MessageCircle } from "lucide-react";
+
 
 export function SiteHeader() {
   const { t, lang, setLang } = useI18n();
