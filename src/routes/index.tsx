@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/site-header";
+import { CheckoutButton } from "@/components/checkout-button";
+import { LeadForm } from "@/components/lead-form";
 import { useI18n } from "@/lib/i18n";
 import { useSettings, waUrl, tgUrl } from "@/lib/settings";
 import { useCredits } from "@/lib/credits";
@@ -370,11 +372,17 @@ function Index() {
                   ))}
                 </ul>
                 <div className="mt-8 space-y-2">
+                  {p.priceId && (
+                    <CheckoutButton
+                      priceId={p.priceId}
+                      label={lang === "ar" ? "ادفع ببطاقة الآن" : "Pay with card"}
+                      serviceSummary={name}
+                      className={p.popular ? "bg-gradient-brand text-black hover:opacity-90" : "bg-foreground text-background hover:opacity-90"}
+                    />
+                  )}
                   <a href={waUrl(settings.whatsapp, planMessage(settings, lang, p))} target="_blank" rel="noreferrer"
-                    className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition ${
-                      p.popular ? "bg-gradient-brand text-black hover:opacity-90" : "border border-border bg-background hover:bg-accent"
-                    }`}>
-                    <MessageCircle className="h-4 w-4" /> {t("pay_wa")}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-xs font-semibold hover:bg-accent">
+                    <MessageCircle className="h-3.5 w-3.5" /> {t("pay_wa")}
                   </a>
                   <a href={tgUrl(settings.telegram, planMessage(settings, lang, p))} target="_blank" rel="noreferrer"
                     className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-xs font-semibold hover:bg-accent">
@@ -450,6 +458,9 @@ function Index() {
           </div>
         </div>
       </section>
+
+      <LeadForm />
+
 
       <footer className="border-t border-border py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
