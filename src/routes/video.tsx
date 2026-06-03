@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { useI18n } from "@/lib/i18n";
 import { Upload, Play, Scissors, Download } from "lucide-react";
-import { CONTACT, waLink } from "@/lib/contact";
+import { useSettings, waUrl } from "@/lib/settings";
 
 export const Route = createFileRoute("/video")({
   head: () => ({
