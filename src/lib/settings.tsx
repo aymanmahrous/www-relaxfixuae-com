@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 export type Service = { id: string; icon: string; titleEn: string; titleAr: string; descEn: string; descAr: string };
-export type Plan = { id: string; nameEn: string; nameAr: string; price: string; popular: boolean; featuresEn: string[]; featuresAr: string[] };
+export type Plan = { id: string; nameEn: string; nameAr: string; price: string; priceId?: string; popular: boolean; featuresEn: string[]; featuresAr: string[] };
 export type Offer = {
   enabled: boolean;
   titleEn: string;
