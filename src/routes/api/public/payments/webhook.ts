@@ -16,6 +16,7 @@ function getSupabase(): any {
 async function handleCheckoutCompleted(session: any, env: StripeEnv) {
   const userId = session.metadata?.userId || null;
   const supabase = getSupabase();
+  const supabase: any = getSupabase();
   await supabase.from("orders").upsert(
     {
       user_id: userId,
