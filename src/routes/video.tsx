@@ -14,7 +14,7 @@ export const Route = createFileRoute("/video")({
 });
 
 function VideoPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const tools = [
     { icon: Scissors, label: { en: "Cut & Trim", ar: "قص واقتطاع" } },
     { icon: Combine, label: { en: "Merge Clips", ar: "دمج المقاطع" } },
@@ -32,7 +32,7 @@ function VideoPage() {
           {tools.map(({ icon: Icon, label }) => (
             <div key={label.en} className="rounded-xl border border-border bg-card p-5">
               <Icon className="h-6 w-6 text-primary" />
-              <p className="mt-3 font-medium">{useI18n().lang === "ar" ? label.ar : label.en}</p>
+              <p className="mt-3 font-medium">{lang === "ar" ? label.ar : label.en}</p>
               <p className="mt-1 text-xs text-muted-foreground">{t("coming_soon")}</p>
             </div>
           ))}
