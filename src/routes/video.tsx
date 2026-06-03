@@ -9,8 +9,14 @@ import { videoRequestMessage } from "@/lib/orderMessage";
 export const Route = createFileRoute("/video")({
   head: () => ({
     meta: [
-      { title: "Video Studio — Pixel & Reel" },
-      { name: "description", content: "Upload, trim and export your videos for social." },
+      { title: "Video Studio — Relax Fix UAE" },
+      { name: "description", content: "Upload, trim, and request professional video edits, reels, and montages. AI-assisted video production for UAE brands in Arabic and English." },
+      { property: "og:title", content: "Video Studio — Relax Fix UAE" },
+      { property: "og:description", content: "Trim your clip and request a pro reel, montage, or social cut from our team." },
+      { property: "og:url", content: "https://www.relaxfixuae.com/video" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://www.relaxfixuae.com/video" },
     ],
   }),
   component: VideoPage,

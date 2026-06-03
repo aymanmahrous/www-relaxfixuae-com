@@ -37,18 +37,47 @@ export const Route = createFileRoute("/")({
     links: [
       { rel: "canonical", href: "https://www.relaxfixuae.com/" },
     ],
-    scripts: [{
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        name: "Relax Fix UAE",
-        description: "AI-powered creative studio in the UAE",
-        url: "https://www.relaxfixuae.com",
-        areaServed: "AE",
-        address: { "@type": "PostalAddress", addressCountry: "AE" },
-      }),
-    }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Relax Fix UAE",
+          url: "https://www.relaxfixuae.com",
+          logo: "https://www.relaxfixuae.com/favicon.ico",
+          areaServed: "AE",
+          address: { "@type": "PostalAddress", addressCountry: "AE" },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Relax Fix UAE",
+          url: "https://www.relaxfixuae.com",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            { q: "How fast is delivery?", a: "Most posts are delivered within hours. Full brand identities within 3–5 days." },
+            { q: "Do you provide source files?", a: "Yes — Figma, PSD, AI, plus optimized PNG/JPG/MP4." },
+            { q: "Can I use AI generations commercially?", a: "Absolutely. Everything generated here is yours to publish and monetize." },
+            { q: "What if I don't like the result?", a: "Unlimited revisions on Pro & Studio plans. Money-back on first delivery if not happy." },
+            { q: "Do you write Arabic content?", a: "Yes — native Arabic copywriting, hashtags, and culturally-tuned visuals." },
+          ].map(({ q, a }) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: { "@type": "Answer", text: a },
+          })),
+        }),
+      },
+    ],
   }),
   component: Index,
 });
@@ -56,10 +85,10 @@ export const Route = createFileRoute("/")({
 const ICONS: Record<string, LucideIcon> = { ImageIcon, PenTool, Film, Sparkles, Megaphone, Camera, Package, TrendingUp };
 
 const works = [
-  { src: work1, tag: "Social" },
-  { src: work2, tag: "Video" },
-  { src: work3, tag: "Branding" },
-  { src: work4, tag: "Motion" },
+  { src: work1, tag: "Social", alt: "Social media post design sample" },
+  { src: work2, tag: "Video", alt: "Promotional video edit sample" },
+  { src: work3, tag: "Branding", alt: "Brand identity and logo design sample" },
+  { src: work4, tag: "Motion", alt: "Motion graphics animation sample" },
 ];
 
 const testimonials = [
@@ -398,7 +427,7 @@ function Index() {
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {works.map((w, i) => (
               <div key={i} className="group relative aspect-square overflow-hidden rounded-2xl border border-border">
-                <img src={w.src} alt={w.tag} width={800} height={800} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <img src={w.src} alt={w.alt} width={800} height={800} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent" />
                 <span className="absolute bottom-4 left-4 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">{w.tag}</span>
               </div>

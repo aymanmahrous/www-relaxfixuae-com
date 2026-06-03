@@ -1,0 +1,12 @@
+# Relax Fix UAE
+
+> AI-powered creative studio in the UAE. Social media designs, brand identity, ads, and professional video editing — delivered fast in Arabic and English.
+
+Relax Fix UAE helps brands in Dubai, Abu Dhabi, and across the Emirates create high-converting social posts, logos, full ad campaigns, and short-form video using AI plus a human creative team.
+
+## Pages
+
+- [Home](/): Overview of services, live AI design demo, pricing, and testimonials.
+- [Portfolio](/portfolio): Selected work — branding, social posts, motion graphics, and video edits.
+- [AI Design Studio](/design): Generate 4 ready-to-publish social designs in seconds with AI.
+- [Video Studio](/video): Upload, trim, and request professional video edits and reels.

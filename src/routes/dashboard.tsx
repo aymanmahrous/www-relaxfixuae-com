@@ -11,7 +11,16 @@ import { toast } from "sonner";
 import { LogOut, Package, CreditCard, ShieldCheck, ArrowRight, Settings } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
-  head: () => ({ meta: [{ title: "My Dashboard — Pixel & Reel" }] }),
+  head: () => ({
+    meta: [
+      { title: "My Dashboard — Relax Fix UAE" },
+      { name: "description", content: "Manage your Relax Fix UAE account, view your orders, track active subscriptions, and update billing details — all in one place." },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://www.relaxfixuae.com/dashboard" },
+    ],
+  }),
   component: DashboardPage,
 });
 

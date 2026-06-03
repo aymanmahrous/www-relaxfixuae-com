@@ -40,16 +40,20 @@ export function LeadForm() {
           </p>
         </div>
         <form onSubmit={submit} className="mt-6 grid gap-3 sm:grid-cols-2">
-          <input className="rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink"
+          <label htmlFor="lead-name" className="sr-only">{lang === "ar" ? "الاسم" : "Your name"}</label>
+          <input id="lead-name" name="name" autoComplete="name" className="rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink"
             placeholder={lang === "ar" ? "الاسم" : "Your name"} value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
-          <input required minLength={3} className="rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink"
+          <label htmlFor="lead-contact" className="sr-only">{lang === "ar" ? "واتساب / بريد / تليجرام" : "WhatsApp / Email / Telegram"}</label>
+          <input id="lead-contact" name="contact" required minLength={3} className="rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink"
             placeholder={lang === "ar" ? "واتساب / بريد / تليجرام" : "WhatsApp / Email / Telegram"} value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} />
-          <select className="rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink sm:col-span-2"
+          <label htmlFor="lead-service" className="sr-only">{lang === "ar" ? "اختر الخدمة" : "Select a service"}</label>
+          <select id="lead-service" name="service" className="rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink sm:col-span-2"
             value={form.service} onChange={e => setForm({ ...form, service: e.target.value })}>
             <option value="">{lang === "ar" ? "اختر الخدمة" : "Select a service"}</option>
             {SERVICES.map(s => <option key={s}>{s}</option>)}
           </select>
-          <textarea rows={4} className="rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink sm:col-span-2"
+          <label htmlFor="lead-message" className="sr-only">{lang === "ar" ? "اشرح فكرتك (اختياري)" : "Tell us about your project (optional)"}</label>
+          <textarea id="lead-message" name="message" rows={4} className="rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink sm:col-span-2"
             placeholder={lang === "ar" ? "اشرح فكرتك (اختياري)" : "Tell us about your project (optional)"} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
           <div className="grid gap-2 sm:col-span-2 sm:grid-cols-2">
             <button type="submit" disabled={busy}
