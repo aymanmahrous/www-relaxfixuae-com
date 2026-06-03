@@ -2,6 +2,13 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 
 export type Service = { id: string; icon: string; titleEn: string; titleAr: string; descEn: string; descAr: string };
 export type Plan = { id: string; nameEn: string; nameAr: string; price: string; popular: boolean; featuresEn: string[]; featuresAr: string[] };
+export type Offer = {
+  enabled: boolean;
+  titleEn: string;
+  titleAr: string;
+  code: string;
+  discount: number;
+};
 export type Settings = {
   brandEn: string;
   brandAr: string;
@@ -14,6 +21,7 @@ export type Settings = {
   uiScale: number;       // 0.85 - 1.25
   defaultStyle: string;
   defaultRatio: "1:1" | "9:16" | "16:9" | "4:5";
+  offer: Offer;
   services: Service[];
   plans: Plan[];
 };
