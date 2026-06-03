@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { useI18n } from "@/lib/i18n";
 import { useSettings, type Service, type Plan } from "@/lib/settings";
+import { THEME_PRESETS } from "@/lib/themes";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Trash2, RotateCcw, Save, Settings as Cog, ShoppingCart, Users, Image as ImageIcon, MessageSquare, ShieldAlert, Upload, Eye, EyeOff, BarChart3 } from "lucide-react";
@@ -442,6 +443,27 @@ function SettingsTab() {
           <Field label="Title (EN)"><input className={input} value={settings.offer.titleEn} onChange={e => update({ offer: { ...settings.offer, titleEn: e.target.value } })} /></Field>
           <Field label="العنوان"><input className={input} dir="rtl" value={settings.offer.titleAr} onChange={e => update({ offer: { ...settings.offer, titleAr: e.target.value } })} /></Field>
           <Field label="Discount %"><input type="number" min={0} max={100} className={input} value={settings.offer.discount} onChange={e => update({ offer: { ...settings.offer, discount: parseInt(e.target.value, 10) || 0 } })} /></Field>
+          <Field label={lang === "ar" ? "تاريخ انتهاء العرض (عدّاد تنازلي)" : "Offer expires at (countdown)"}>
+            <input type="datetime-local" className={input}
+              value={settings.offer.expiresAt ? new Date(settings.offer.expiresAt).toISOString().slice(0, 16) : ""}
+              onChange={e => update({ offer: { ...settings.offer, expiresAt: e.target.value ? new Date(e.target.value).toISOString() : undefined } })} />
+          </Field>
+        </div>
+      </Section>
+
+      <Section title={lang === "ar" ? "🎨 قوالب جاهزة (نقرة واحدة)" : "🎨 Theme presets (one-click)"}>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+          {THEME_PRESETS.map(p => (
+            <button key={p.id}
+              onClick={() => { update({ accent: p.accent, uiScale: p.uiScale, defaultStyle: p.defaultStyle }); toast.success(lang === "ar" ? `تم تطبيق: ${p.nameAr}` : `Applied: ${p.nameEn}`); }}
+              className="group flex items-center gap-3 rounded-xl border border-border bg-background p-3 text-start transition hover:-translate-y-0.5 hover:border-brand-pink/50">
+              <span className="h-10 w-10 shrink-0 rounded-lg border border-border" style={{ background: `linear-gradient(135deg, ${p.accent}, ${p.accent}90)` }} />
+              <div className="min-w-0">
+                <div className="truncate text-sm font-semibold">{lang === "ar" ? p.nameAr : p.nameEn}</div>
+                <div className="truncate text-[10px] text-muted-foreground">{p.accent} · {p.defaultStyle}</div>
+              </div>
+            </button>
+          ))}
         </div>
       </Section>
 
