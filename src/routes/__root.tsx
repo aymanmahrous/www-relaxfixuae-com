@@ -118,6 +118,7 @@ import { SettingsProvider } from "../lib/settings";
 import { Toaster } from "@/components/ui/sonner";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
 import { AnalyticsInjector } from "@/components/analytics-injector";
+import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
