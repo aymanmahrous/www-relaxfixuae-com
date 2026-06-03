@@ -135,6 +135,7 @@ import { WhatsAppFab } from "@/components/whatsapp-fab";
 import { AnalyticsInjector } from "@/components/analytics-injector";
 import { ExitIntentPopup } from "@/components/exit-intent-popup";
 import { MobileStickyCTA } from "@/components/mobile-sticky-cta";
+import { SocialProofToasts } from "@/components/social-proof-toasts";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -148,6 +149,7 @@ function RootComponent() {
           <WhatsAppFab />
           <MobileStickyCTA />
           <ExitIntentPopup />
+          <SocialProofToasts />
           <AnalyticsInjector />
           <Toaster position="top-center" theme="dark" />
 
