@@ -44,8 +44,13 @@ function AdminPage() {
     if (!loading && !user) navigate({ to: "/auth" });
   }, [loading, user, navigate]);
 
+  const OWNER_EMAIL = "swimmingayman@gmail.com";
   async function claimAdmin() {
     if (!user) return;
+    if (user.email?.toLowerCase() !== OWNER_EMAIL) {
+      toast.error(lang === "ar" ? "هذا الإيميل غير مصرّح له" : "This email is not authorized");
+      return;
+    }
     setBootstrapping(true);
     const { count } = await supabase.from("user_roles").select("*", { count: "exact", head: true }).eq("role", "admin");
     if ((count ?? 0) === 0) {
