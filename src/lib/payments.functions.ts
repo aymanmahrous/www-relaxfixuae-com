@@ -1,7 +1,35 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
+import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { createStripeClient, getStripeErrorMessage, type StripeEnv } from "@/lib/stripe.server";
+
+/**
+ * Resolve the authenticated user id from the request's Authorization header.
+ * Returns null for unauthenticated/guest checkout. The client-supplied userId
+ * is ignored — only the verified session id is trusted.
+ */
+async function getAuthenticatedUserId(): Promise<string | null> {
+  try {
+    const req = getRequest();
+    const authHeader = req?.headers?.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) return null;
+    const token = authHeader.slice(7);
+    if (!token) return null;
+    const url = process.env.SUPABASE_URL;
+    const key = process.env.SUPABASE_PUBLISHABLE_KEY;
+    if (!url || !key) return null;
+    const sb = createClient(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
+    });
+    const { data, error } = await sb.auth.getClaims(token);
+    if (error || !data?.claims?.sub) return null;
+    return data.claims.sub as string;
+  } catch {
+    return null;
+  }
+}
 
 type CheckoutResult = { clientSecret: string } | { error: string };
 type PortalResult = { url: string } | { error: string };
@@ -61,9 +89,19 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const isRecurring = !!price.recurring;
       const product = price.product as any;
 
-      const customerId = (data.customerEmail || data.userId)
-        ? await resolveOrCreateCustomer(stripe, { email: data.customerEmail, userId: data.userId })
+      // SECURITY: bind userId to the verified session, ignore client-supplied userId.
+      // Recurring (subscription) flows REQUIRE an authenticated session so we can
+      // attribute the subscription to a real user via webhook metadata.
+      const sessionUserId = await getAuthenticatedUserId();
+      if (isRecurring && !sessionUserId) {
+        return { error: "Sign in required to subscribe" };
+      }
+      const verifiedUserId = sessionUserId ?? undefined;
+
+      const customerId = (data.customerEmail || verifiedUserId)
+        ? await resolveOrCreateCustomer(stripe, { email: data.customerEmail, userId: verifiedUserId })
         : undefined;
+
 
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: price.id, quantity: data.quantity || 1 }],
@@ -75,14 +113,14 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           payment_intent_data: { description: product?.name || data.priceId },
         }),
         metadata: {
-          userId: data.userId || "",
+          userId: verifiedUserId || "",
           price_id: data.priceId,
           product_id: product?.id || "",
           product_name: product?.name || "",
           service_summary: data.serviceSummary || "",
         },
-        ...(isRecurring && data.userId
-          ? { subscription_data: { metadata: { userId: data.userId } } }
+        ...(isRecurring && verifiedUserId
+          ? { subscription_data: { metadata: { userId: verifiedUserId } } }
           : {}),
       });
       return { clientSecret: session.client_secret ?? "" };

@@ -52,6 +52,9 @@ export function SiteHeader() {
           <Link to="/portfolio" className="text-muted-foreground transition hover:text-foreground">
             {lang === "ar" ? "أعمالنا" : "Portfolio"}
           </Link>
+          <Link to="/blog" className="text-muted-foreground transition hover:text-foreground">
+            {lang === "ar" ? "المدونة" : "Blog"}
+          </Link>
           <a href="/#pricing" className="text-muted-foreground transition hover:text-foreground">
             {t("nav_pricing")}
           </a>
