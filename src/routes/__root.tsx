@@ -110,6 +110,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Readex+Pro:wght@400;500;600;700&display=swap",
       },
     ],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "Relax Fix UAE",
+        url: "https://www.relaxfixuae.com",
+        logo: "https://www.relaxfixuae.com/favicon.ico",
+        description: "استوديو إبداعي بالذكاء الاصطناعي في الإمارات — تصميم سوشيال ميديا، هوية بصرية، إعلانات وفيديوهات.",
+        areaServed: { "@type": "Country", name: "United Arab Emirates" },
+        sameAs: [],
+      }),
+    }],
 
   }),
   shellComponent: RootShell,
