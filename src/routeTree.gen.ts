@@ -13,6 +13,7 @@ import { Route as VideoRouteImport } from './routes/video'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as DesignRouteImport } from './routes/design'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -44,6 +45,11 @@ const DesignRoute = DesignRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRoute
   '/dashboard': typeof DashboardRoute
   '/design': typeof DesignRoute
   '/portfolio': typeof PortfolioRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRoute
   '/dashboard': typeof DashboardRoute
   '/design': typeof DesignRoute
   '/portfolio': typeof PortfolioRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRoute
   '/dashboard': typeof DashboardRoute
   '/design': typeof DesignRoute
   '/portfolio': typeof PortfolioRoute
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/blog'
     | '/dashboard'
     | '/design'
     | '/portfolio'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/blog'
     | '/dashboard'
     | '/design'
     | '/portfolio'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/blog'
     | '/dashboard'
     | '/design'
     | '/portfolio'
@@ -228,6 +240,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
+  BlogRoute: typeof BlogRoute
   DashboardRoute: typeof DashboardRoute
   DesignRoute: typeof DesignRoute
   PortfolioRoute: typeof PortfolioRoute
@@ -271,6 +284,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -364,6 +384,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
+  BlogRoute: BlogRoute,
   DashboardRoute: DashboardRoute,
   DesignRoute: DesignRoute,
   PortfolioRoute: PortfolioRoute,
@@ -381,3 +402,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
