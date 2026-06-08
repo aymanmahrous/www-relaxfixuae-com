@@ -89,9 +89,19 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const isRecurring = !!price.recurring;
       const product = price.product as any;
 
-      const customerId = (data.customerEmail || data.userId)
-        ? await resolveOrCreateCustomer(stripe, { email: data.customerEmail, userId: data.userId })
+      // SECURITY: bind userId to the verified session, ignore client-supplied userId.
+      // Recurring (subscription) flows REQUIRE an authenticated session so we can
+      // attribute the subscription to a real user via webhook metadata.
+      const sessionUserId = await getAuthenticatedUserId();
+      if (isRecurring && !sessionUserId) {
+        return { error: "Sign in required to subscribe" };
+      }
+      const verifiedUserId = sessionUserId ?? undefined;
+
+      const customerId = (data.customerEmail || verifiedUserId)
+        ? await resolveOrCreateCustomer(stripe, { email: data.customerEmail, userId: verifiedUserId })
         : undefined;
+
 
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: price.id, quantity: data.quantity || 1 }],
