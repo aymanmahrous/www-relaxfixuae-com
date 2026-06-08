@@ -113,14 +113,14 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
           payment_intent_data: { description: product?.name || data.priceId },
         }),
         metadata: {
-          userId: data.userId || "",
+          userId: verifiedUserId || "",
           price_id: data.priceId,
           product_id: product?.id || "",
           product_name: product?.name || "",
           service_summary: data.serviceSummary || "",
         },
-        ...(isRecurring && data.userId
-          ? { subscription_data: { metadata: { userId: data.userId } } }
+        ...(isRecurring && verifiedUserId
+          ? { subscription_data: { metadata: { userId: verifiedUserId } } }
           : {}),
       });
       return { clientSecret: session.client_secret ?? "" };
