@@ -24,6 +24,7 @@ import { Route as ServicesMotionGraphicsRouteImport } from './routes/services.mo
 import { Route as ServicesLogoDesignRouteImport } from './routes/services.logo-design'
 import { Route as ServicesAdsDesignRouteImport } from './routes/services.ads-design'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
@@ -105,6 +106,11 @@ const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
   path: '/checkout/return',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -122,11 +128,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/design': typeof DesignRoute
   '/portfolio': typeof PortfolioRoute
   '/video': typeof VideoRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/services/ads-design': typeof ServicesAdsDesignRoute
   '/services/logo-design': typeof ServicesLogoDesignRoute
@@ -141,11 +148,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/design': typeof DesignRoute
   '/portfolio': typeof PortfolioRoute
   '/video': typeof VideoRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/services/ads-design': typeof ServicesAdsDesignRoute
   '/services/logo-design': typeof ServicesLogoDesignRoute
@@ -161,11 +169,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/design': typeof DesignRoute
   '/portfolio': typeof PortfolioRoute
   '/video': typeof VideoRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/services/ads-design': typeof ServicesAdsDesignRoute
   '/services/logo-design': typeof ServicesLogoDesignRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/design'
     | '/portfolio'
     | '/video'
+    | '/blog/$slug'
     | '/checkout/return'
     | '/services/ads-design'
     | '/services/logo-design'
@@ -206,6 +216,7 @@ export interface FileRouteTypes {
     | '/design'
     | '/portfolio'
     | '/video'
+    | '/blog/$slug'
     | '/checkout/return'
     | '/services/ads-design'
     | '/services/logo-design'
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
     | '/design'
     | '/portfolio'
     | '/video'
+    | '/blog/$slug'
     | '/checkout/return'
     | '/services/ads-design'
     | '/services/logo-design'
@@ -240,7 +252,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   DesignRoute: typeof DesignRoute
   PortfolioRoute: typeof PortfolioRoute
@@ -363,6 +375,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutReturnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
       path: '/lovable/email/queue/process'
@@ -380,11 +399,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   DashboardRoute: DashboardRoute,
   DesignRoute: DesignRoute,
   PortfolioRoute: PortfolioRoute,
