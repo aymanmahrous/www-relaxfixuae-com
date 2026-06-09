@@ -18,12 +18,15 @@ export const Route = createFileRoute("/sitemap.xml")({
         const today = new Date().toISOString().slice(0, 10);
         const staticEntries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0", lastmod: today },
+          { path: "/about", changefreq: "monthly", priority: "0.7" },
+          { path: "/contact", changefreq: "monthly", priority: "0.7" },
           { path: "/services/social-media-dubai", changefreq: "weekly", priority: "0.9" },
           { path: "/services/social-media-abudhabi", changefreq: "weekly", priority: "0.9" },
           { path: "/services/social-media-sharjah", changefreq: "weekly", priority: "0.9" },
           { path: "/services/logo-design", changefreq: "weekly", priority: "0.9" },
           { path: "/services/motion-graphics", changefreq: "weekly", priority: "0.9" },
           { path: "/services/ads-design", changefreq: "weekly", priority: "0.9" },
+          { path: "/services/branding-agency-uae", changefreq: "weekly", priority: "0.9" },
           { path: "/portfolio", changefreq: "weekly", priority: "0.8" },
           { path: "/design", changefreq: "weekly", priority: "0.7" },
           { path: "/video", changefreq: "weekly", priority: "0.7" },

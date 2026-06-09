@@ -10,19 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VideoRouteImport } from './routes/video'
+import { Route as SocialMediaDesignDubaiRouteImport } from './routes/social-media-design-dubai'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as MotionGraphicsAbuDhabiRouteImport } from './routes/motion-graphics-abu-dhabi'
+import { Route as LogoDesignUaeRouteImport } from './routes/logo-design-uae'
 import { Route as DesignRouteImport } from './routes/design'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesSocialMediaSharjahRouteImport } from './routes/services.social-media-sharjah'
 import { Route as ServicesSocialMediaDubaiRouteImport } from './routes/services.social-media-dubai'
 import { Route as ServicesSocialMediaAbudhabiRouteImport } from './routes/services.social-media-abudhabi'
 import { Route as ServicesMotionGraphicsRouteImport } from './routes/services.motion-graphics'
 import { Route as ServicesLogoDesignRouteImport } from './routes/services.logo-design'
+import { Route as ServicesBrandingAgencyUaeRouteImport } from './routes/services.branding-agency-uae'
 import { Route as ServicesAdsDesignRouteImport } from './routes/services.ads-design'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -32,6 +38,11 @@ import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/publi
 const VideoRoute = VideoRouteImport.update({
   id: '/video',
   path: '/video',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SocialMediaDesignDubaiRoute = SocialMediaDesignDubaiRouteImport.update({
+  id: '/social-media-design-dubai',
+  path: '/social-media-design-dubai',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -44,6 +55,16 @@ const PortfolioRoute = PortfolioRouteImport.update({
   path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MotionGraphicsAbuDhabiRoute = MotionGraphicsAbuDhabiRouteImport.update({
+  id: '/motion-graphics-abu-dhabi',
+  path: '/motion-graphics-abu-dhabi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LogoDesignUaeRoute = LogoDesignUaeRouteImport.update({
+  id: '/logo-design-uae',
+  path: '/logo-design-uae',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DesignRoute = DesignRouteImport.update({
   id: '/design',
   path: '/design',
@@ -52,6 +73,11 @@ const DesignRoute = DesignRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -67,6 +93,11 @@ const AuthRoute = AuthRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -102,6 +133,12 @@ const ServicesLogoDesignRoute = ServicesLogoDesignRouteImport.update({
   path: '/services/logo-design',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesBrandingAgencyUaeRoute =
+  ServicesBrandingAgencyUaeRouteImport.update({
+    id: '/services/branding-agency-uae',
+    path: '/services/branding-agency-uae',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ServicesAdsDesignRoute = ServicesAdsDesignRouteImport.update({
   id: '/services/ads-design',
   path: '/services/ads-design',
@@ -132,17 +169,23 @@ const ApiPublicPaymentsWebhookRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/design': typeof DesignRoute
+  '/logo-design-uae': typeof LogoDesignUaeRoute
+  '/motion-graphics-abu-dhabi': typeof MotionGraphicsAbuDhabiRoute
   '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/social-media-design-dubai': typeof SocialMediaDesignDubaiRoute
   '/video': typeof VideoRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/services/ads-design': typeof ServicesAdsDesignRoute
+  '/services/branding-agency-uae': typeof ServicesBrandingAgencyUaeRoute
   '/services/logo-design': typeof ServicesLogoDesignRoute
   '/services/motion-graphics': typeof ServicesMotionGraphicsRoute
   '/services/social-media-abudhabi': typeof ServicesSocialMediaAbudhabiRoute
@@ -153,17 +196,23 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/design': typeof DesignRoute
+  '/logo-design-uae': typeof LogoDesignUaeRoute
+  '/motion-graphics-abu-dhabi': typeof MotionGraphicsAbuDhabiRoute
   '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/social-media-design-dubai': typeof SocialMediaDesignDubaiRoute
   '/video': typeof VideoRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/services/ads-design': typeof ServicesAdsDesignRoute
+  '/services/branding-agency-uae': typeof ServicesBrandingAgencyUaeRoute
   '/services/logo-design': typeof ServicesLogoDesignRoute
   '/services/motion-graphics': typeof ServicesMotionGraphicsRoute
   '/services/social-media-abudhabi': typeof ServicesSocialMediaAbudhabiRoute
@@ -175,17 +224,23 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/design': typeof DesignRoute
+  '/logo-design-uae': typeof LogoDesignUaeRoute
+  '/motion-graphics-abu-dhabi': typeof MotionGraphicsAbuDhabiRoute
   '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/social-media-design-dubai': typeof SocialMediaDesignDubaiRoute
   '/video': typeof VideoRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/services/ads-design': typeof ServicesAdsDesignRoute
+  '/services/branding-agency-uae': typeof ServicesBrandingAgencyUaeRoute
   '/services/logo-design': typeof ServicesLogoDesignRoute
   '/services/motion-graphics': typeof ServicesMotionGraphicsRoute
   '/services/social-media-abudhabi': typeof ServicesSocialMediaAbudhabiRoute
@@ -198,17 +253,23 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/admin'
     | '/auth'
     | '/blog'
+    | '/contact'
     | '/dashboard'
     | '/design'
+    | '/logo-design-uae'
+    | '/motion-graphics-abu-dhabi'
     | '/portfolio'
     | '/sitemap.xml'
+    | '/social-media-design-dubai'
     | '/video'
     | '/blog/$slug'
     | '/checkout/return'
     | '/services/ads-design'
+    | '/services/branding-agency-uae'
     | '/services/logo-design'
     | '/services/motion-graphics'
     | '/services/social-media-abudhabi'
@@ -219,17 +280,23 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/admin'
     | '/auth'
     | '/blog'
+    | '/contact'
     | '/dashboard'
     | '/design'
+    | '/logo-design-uae'
+    | '/motion-graphics-abu-dhabi'
     | '/portfolio'
     | '/sitemap.xml'
+    | '/social-media-design-dubai'
     | '/video'
     | '/blog/$slug'
     | '/checkout/return'
     | '/services/ads-design'
+    | '/services/branding-agency-uae'
     | '/services/logo-design'
     | '/services/motion-graphics'
     | '/services/social-media-abudhabi'
@@ -240,17 +307,23 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/admin'
     | '/auth'
     | '/blog'
+    | '/contact'
     | '/dashboard'
     | '/design'
+    | '/logo-design-uae'
+    | '/motion-graphics-abu-dhabi'
     | '/portfolio'
     | '/sitemap.xml'
+    | '/social-media-design-dubai'
     | '/video'
     | '/blog/$slug'
     | '/checkout/return'
     | '/services/ads-design'
+    | '/services/branding-agency-uae'
     | '/services/logo-design'
     | '/services/motion-graphics'
     | '/services/social-media-abudhabi'
@@ -262,16 +335,22 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRouteWithChildren
+  ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   DesignRoute: typeof DesignRoute
+  LogoDesignUaeRoute: typeof LogoDesignUaeRoute
+  MotionGraphicsAbuDhabiRoute: typeof MotionGraphicsAbuDhabiRoute
   PortfolioRoute: typeof PortfolioRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SocialMediaDesignDubaiRoute: typeof SocialMediaDesignDubaiRoute
   VideoRoute: typeof VideoRoute
   CheckoutReturnRoute: typeof CheckoutReturnRoute
   ServicesAdsDesignRoute: typeof ServicesAdsDesignRoute
+  ServicesBrandingAgencyUaeRoute: typeof ServicesBrandingAgencyUaeRoute
   ServicesLogoDesignRoute: typeof ServicesLogoDesignRoute
   ServicesMotionGraphicsRoute: typeof ServicesMotionGraphicsRoute
   ServicesSocialMediaAbudhabiRoute: typeof ServicesSocialMediaAbudhabiRoute
@@ -290,6 +369,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VideoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/social-media-design-dubai': {
+      id: '/social-media-design-dubai'
+      path: '/social-media-design-dubai'
+      fullPath: '/social-media-design-dubai'
+      preLoaderRoute: typeof SocialMediaDesignDubaiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -304,6 +390,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/motion-graphics-abu-dhabi': {
+      id: '/motion-graphics-abu-dhabi'
+      path: '/motion-graphics-abu-dhabi'
+      fullPath: '/motion-graphics-abu-dhabi'
+      preLoaderRoute: typeof MotionGraphicsAbuDhabiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logo-design-uae': {
+      id: '/logo-design-uae'
+      path: '/logo-design-uae'
+      fullPath: '/logo-design-uae'
+      preLoaderRoute: typeof LogoDesignUaeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/design': {
       id: '/design'
       path: '/design'
@@ -316,6 +416,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -337,6 +444,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -379,6 +493,13 @@ declare module '@tanstack/react-router' {
       path: '/services/logo-design'
       fullPath: '/services/logo-design'
       preLoaderRoute: typeof ServicesLogoDesignRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/branding-agency-uae': {
+      id: '/services/branding-agency-uae'
+      path: '/services/branding-agency-uae'
+      fullPath: '/services/branding-agency-uae'
+      preLoaderRoute: typeof ServicesBrandingAgencyUaeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services/ads-design': {
@@ -431,16 +552,22 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
   BlogRoute: BlogRouteWithChildren,
+  ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   DesignRoute: DesignRoute,
+  LogoDesignUaeRoute: LogoDesignUaeRoute,
+  MotionGraphicsAbuDhabiRoute: MotionGraphicsAbuDhabiRoute,
   PortfolioRoute: PortfolioRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SocialMediaDesignDubaiRoute: SocialMediaDesignDubaiRoute,
   VideoRoute: VideoRoute,
   CheckoutReturnRoute: CheckoutReturnRoute,
   ServicesAdsDesignRoute: ServicesAdsDesignRoute,
+  ServicesBrandingAgencyUaeRoute: ServicesBrandingAgencyUaeRoute,
   ServicesLogoDesignRoute: ServicesLogoDesignRoute,
   ServicesMotionGraphicsRoute: ServicesMotionGraphicsRoute,
   ServicesSocialMediaAbudhabiRoute: ServicesSocialMediaAbudhabiRoute,
@@ -452,13 +579,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
