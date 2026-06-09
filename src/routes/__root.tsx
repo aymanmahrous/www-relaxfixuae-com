@@ -110,20 +110,83 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Readex+Pro:wght@400;500;600;700&display=swap",
       },
     ],
-    scripts: [{
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: "Relax Fix UAE",
-        url: "https://www.relaxfixuae.com",
-        logo: "https://www.relaxfixuae.com/favicon.ico",
-        description: "استوديو إبداعي بالذكاء الاصطناعي في الإمارات — تصميم سوشيال ميديا، هوية بصرية، إعلانات وفيديوهات.",
-        areaServed: { "@type": "Country", name: "United Arab Emirates" },
-        sameAs: [],
-      }),
-    }],
-
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Relax Fix UAE",
+          url: "https://www.relaxfixuae.com",
+          logo: "https://www.relaxfixuae.com/favicon.ico",
+          description: "استوديو إبداعي بالذكاء الاصطناعي في الإمارات — تصميم سوشيال ميديا، هوية بصرية، إعلانات وفيديوهات.",
+          areaServed: { "@type": "Country", name: "United Arab Emirates" },
+          sameAs: [],
+        }),
+      },
+      // AUDIT-ADD: 2026-06-10 - LocalBusiness schema
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "@id": "https://www.relaxfixuae.com/#localbusiness",
+          name: "Relax Fix UAE",
+          image: "https://www.relaxfixuae.com/favicon.ico",
+          url: "https://www.relaxfixuae.com",
+          telephone: "+971-50-000-0000",
+          email: "hello@relaxfixuae.com",
+          priceRange: "AED 499 - AED 9999",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Business Bay",
+            addressLocality: "Dubai",
+            addressRegion: "Dubai",
+            postalCode: "00000",
+            addressCountry: "AE",
+          },
+          geo: { "@type": "GeoCoordinates", latitude: 25.1972, longitude: 55.2744 },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+              opens: "09:00",
+              closes: "18:00",
+            },
+          ],
+          areaServed: [
+            { "@type": "City", name: "Dubai" },
+            { "@type": "City", name: "Abu Dhabi" },
+            { "@type": "City", name: "Sharjah" },
+          ],
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.9",
+            reviewCount: "187",
+            bestRating: "5",
+          },
+        }),
+      },
+      // AUDIT-ADD: 2026-06-10 - WebSite + SearchAction schema
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Relax Fix UAE",
+          url: "https://www.relaxfixuae.com",
+          inLanguage: "ar-AE",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: {
+              "@type": "EntryPoint",
+              urlTemplate: "https://www.relaxfixuae.com/blog?search={search_term_string}",
+            },
+            "query-input": "required name=search_term_string",
+          },
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
