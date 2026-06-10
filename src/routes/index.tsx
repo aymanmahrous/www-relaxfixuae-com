@@ -95,9 +95,9 @@ const works = [
 ];
 
 const testimonials = [
-  { quote: "t1", name: "t1_name" },
-  { quote: "t2", name: "t2_name" },
-  { quote: "t3", name: "t3_name" },
+  { quote: "t1", name: "t1_name", initials: "SA", bg: "#f59e0b" },
+  { quote: "t2", name: "t2_name", initials: "KM", bg: "#3b82f6" },
+  { quote: "t3", name: "t3_name", initials: "LH", bg: "#8b5cf6" },
 ] as const;
 
 const faqs = [
@@ -566,7 +566,16 @@ function Index() {
                   {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
                 </div>
                 <p className="mt-4 text-base leading-relaxed">"{t(q.quote)}"</p>
-                <p className="mt-4 text-sm text-muted-foreground">{t(q.name)}</p>
+                <div className="mt-5 flex items-center gap-3">
+                  <span
+                    aria-hidden
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-bold text-white"
+                    style={{ backgroundColor: q.bg }}
+                  >
+                    {q.initials}
+                  </span>
+                  <p className="text-sm text-muted-foreground">{t(q.name)}</p>
+                </div>
               </div>
             ))}
           </div>
