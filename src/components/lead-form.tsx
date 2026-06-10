@@ -15,11 +15,16 @@ export function LeadForm() {
     e.preventDefault();
     if (!form.contact.trim()) return;
     setBusy(true);
-    const { error } = await supabase.from("leads").insert({ ...form, source: "website" });
-    if (error) toast.error(error.message);
-    else {
+    try {
+      const { error } = await supabase.from("leads").insert({ ...form, source: "website" });
+      if (error) throw error;
       toast.success(lang === "ar" ? "تم استلام طلبك! سنتواصل معك قريباً." : "Got it! We'll be in touch shortly.");
       setForm({ name: "", contact: "", service: "", message: "" });
+    } catch (err: any) {
+      // Fallback: open WhatsApp with the form contents
+      const msg = `${form.name ? form.name + " — " : ""}${form.service ? form.service + " — " : ""}${form.contact ? "Contact: " + form.contact + " — " : ""}${form.message || ""}`;
+      toast.message(lang === "ar" ? "جاري التحويل إلى واتساب…" : "Opening WhatsApp…");
+      window.open(`https://wa.me/971588259848?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
     }
     setBusy(false);
   }
@@ -57,7 +62,7 @@ export function LeadForm() {
             placeholder={lang === "ar" ? "اشرح فكرتك (اختياري)" : "Tell us about your project (optional)"} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
           <div className="grid gap-2 sm:col-span-2 sm:grid-cols-2">
             <button type="submit" disabled={busy}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-brand px-6 py-3 text-sm font-bold text-black disabled:opacity-50">
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-gradient-brand px-6 py-3 text-base font-bold text-black disabled:opacity-50">
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               {lang === "ar" ? "إرسال الطلب" : "Send request"}
             </button>

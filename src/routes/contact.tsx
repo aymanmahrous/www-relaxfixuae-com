@@ -155,11 +155,11 @@ function ContactPage() {
                 <div className="text-sm text-muted-foreground">رد فوري</div>
               </div>
             </a>
-            <a href="mailto:hello@relaxfixuae.com" className="flex items-center gap-3 rounded-xl border border-border bg-card/60 p-4 transition hover:border-brand-pink/60">
+            <a href="mailto:info@pixelandreel.ae" className="flex items-center gap-3 rounded-xl border border-border bg-card/60 p-4 transition hover:border-brand-pink/60">
               <Mail className="h-6 w-6 text-brand-pink" />
               <div>
                 <div className="font-bold">البريد الإلكتروني</div>
-                <div className="text-sm text-muted-foreground">hello@relaxfixuae.com</div>
+                <div className="text-sm text-muted-foreground">info@pixelandreel.ae</div>
               </div>
             </a>
             <div className="flex items-center gap-3 rounded-xl border border-border bg-card/60 p-4">

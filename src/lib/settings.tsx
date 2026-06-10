@@ -43,7 +43,7 @@ const DEFAULTS: Settings = {
   builtBy: "Ayman Mahrous",
   whatsapp: "971588259848",
   telegram: "7895113378",
-  email: "swimmingayman@gmail.com",
+  email: "info@pixelandreel.ae",
   whatsappFab: true,
   gaId: "",
   metaPixelId: "",
@@ -54,8 +54,8 @@ const DEFAULTS: Settings = {
   defaultRatio: "1:1",
   offer: {
     enabled: true,
-    titleEn: "🔥 New Year Launch — 30% OFF first project + Free AI captions",
-    titleAr: "🔥 عرض الإطلاق — خصم 30% على أول مشروع + كابشن AI مجاناً",
+    titleEn: "🔥 Limited Offer — 30% OFF your first project · Use code AYMAN30",
+    titleAr: "🔥 عرض محدود — خصم 30% على أول مشروع · استخدم كود AYMAN30",
     code: "AYMAN30",
     discount: 30,
     expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
@@ -89,12 +89,15 @@ const DEFAULTS: Settings = {
   ],
   testimonials: [
     { id: "t1", name: "Sara A.", role: "Founder, Bloom Café", rating: 5,
+      avatar: "initials:SA:#f59e0b",
       quoteEn: "The reels they made tripled our Instagram reach in two weeks.",
       quoteAr: "الفيديوهات اللي عملوها ضاعفت وصولنا على إنستغرام 3 مرات في أسبوعين." },
     { id: "t2", name: "Khalid M.", role: "CEO, NovaTech", rating: 5,
+      avatar: "initials:KM:#3b82f6",
       quoteEn: "Best branding investment we made. Delivered ahead of schedule.",
       quoteAr: "أفضل استثمار في الهوية قمنا به. سلّموا قبل الموعد." },
     { id: "t3", name: "Layla H.", role: "Marketing Lead, Oasis", rating: 5,
+      avatar: "initials:LH:#8b5cf6",
       quoteEn: "Pixel-perfect designs and crystal-clear communication.",
       quoteAr: "تصاميم بدقة عالية وتواصل واضح جداً." },
   ],
@@ -108,7 +111,7 @@ const DEFAULTS: Settings = {
   ],
 };
 
-const KEY = "pr_settings_v2";
+const KEY = "pr_settings_v3";
 
 const Ctx = createContext<{
   settings: Settings;

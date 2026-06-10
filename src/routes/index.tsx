@@ -73,6 +73,11 @@ export const Route = createFileRoute("/")({
             { q: "Can I use AI generations commercially?", a: "Absolutely. Everything generated here is yours to publish and monetize." },
             { q: "What if I don't like the result?", a: "Unlimited revisions on Pro & Studio plans. Money-back on first delivery if not happy." },
             { q: "Do you write Arabic content?", a: "Yes — native Arabic copywriting, hashtags, and culturally-tuned visuals." },
+            { q: "Do you work with startups and small businesses?", a: "Absolutely — most of our clients are growing brands and small businesses across the UAE." },
+            { q: "Can I order a one-time project without a subscription?", a: "Yes. All our services are available as one-time orders via WhatsApp or the contact form." },
+            { q: "Do you offer revisions?", a: "Yes. All plans include at least 2 free revision rounds." },
+            { q: "Which platforms do you design for?", a: "Instagram, TikTok, Snapchat, X (Twitter), Facebook, and LinkedIn." },
+            { q: "How do I send my brief?", a: "You can WhatsApp us a voice note, text, or images — in Arabic or English." },
           ].map(({ q, a }) => ({
             "@type": "Question",
             name: q,
@@ -95,9 +100,9 @@ const works = [
 ];
 
 const testimonials = [
-  { quote: "t1", name: "t1_name" },
-  { quote: "t2", name: "t2_name" },
-  { quote: "t3", name: "t3_name" },
+  { quote: "t1", name: "t1_name", initials: "SA", bg: "#f59e0b" },
+  { quote: "t2", name: "t2_name", initials: "KM", bg: "#3b82f6" },
+  { quote: "t3", name: "t3_name", initials: "LH", bg: "#8b5cf6" },
 ] as const;
 
 const faqs = [
@@ -106,6 +111,11 @@ const faqs = [
   ["faq_q3", "faq_a3"],
   ["faq_q4", "faq_a4"],
   ["faq_q5", "faq_a5"],
+  ["faq_q6", "faq_a6"],
+  ["faq_q7", "faq_a7"],
+  ["faq_q8", "faq_a8"],
+  ["faq_q9", "faq_a9"],
+  ["faq_q10", "faq_a10"],
 ] as const;
 
 const steps = [
@@ -371,6 +381,37 @@ function Index() {
         </div>
       </section>
 
+      {/* WHO WE ARE — About section */}
+      <section id="about" className="border-b border-border bg-background py-20">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 md:grid-cols-2 md:items-center">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">
+              {lang === "ar" ? "من نحن" : "Who we are"}
+            </span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+              {lang === "ar" ? "استوديو إماراتي يدمج الإبداع البشري بالذكاء الاصطناعي" : "A UAE studio blending human craft with AI"}
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+              {lang === "ar"
+                ? "Pixel & Reel استوديو إبداعي مقره الإمارات، يجمع بين قوة الذكاء الاصطناعي وخبرة المصممين. نساعد العلامات التجارية في دبي وأبوظبي والشارقة على إنشاء محتوى يبيع — من منشورات السوشيال ميديا إلى الهويات البصرية الكاملة. أسّسه أيمن محروس، ويقدّم فريقنا نتائج سريعة، اقتصادية، واحترافية باللغتين العربية والإنجليزية."
+                : "Pixel & Reel is a UAE-based creative studio powered by AI and human expertise. We help brands across Dubai, Abu Dhabi, and Sharjah create content that converts — from social posts to full brand identities. Founded by Ayman Mahrous, our team delivers fast, affordable, and professional results in both Arabic and English."}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3">
+            {[
+              { v: "500+", k: lang === "ar" ? "مشروع" : "Projects" },
+              { v: "120+", k: lang === "ar" ? "عميل" : "Clients" },
+              { v: "8", k: lang === "ar" ? "سنوات خبرة" : "Years experience" },
+            ].map((s) => (
+              <div key={s.k} className="rounded-2xl border border-border bg-card p-6 text-center">
+                <div className="font-display text-4xl font-bold text-gradient">{s.v}</div>
+                <div className="mt-2 text-sm text-muted-foreground">{s.k}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ADD-ONS — boost AOV */}
       {settings.addons?.length > 0 && (
         <section className="border-b border-border bg-background py-16">
@@ -530,7 +571,16 @@ function Index() {
                   {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
                 </div>
                 <p className="mt-4 text-base leading-relaxed">"{t(q.quote)}"</p>
-                <p className="mt-4 text-sm text-muted-foreground">{t(q.name)}</p>
+                <div className="mt-5 flex items-center gap-3">
+                  <span
+                    aria-hidden
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-bold text-white"
+                    style={{ backgroundColor: q.bg }}
+                  >
+                    {q.initials}
+                  </span>
+                  <p className="text-sm text-muted-foreground">{t(q.name)}</p>
+                </div>
               </div>
             ))}
           </div>
