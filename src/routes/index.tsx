@@ -376,11 +376,41 @@ function Index() {
         </div>
       </section>
 
+      {/* WHO WE ARE — About section */}
+      <section id="about" className="border-b border-border bg-background py-20">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 md:grid-cols-2 md:items-center">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">
+              {lang === "ar" ? "من نحن" : "Who we are"}
+            </span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+              {lang === "ar" ? "استوديو إماراتي يدمج الإبداع البشري بالذكاء الاصطناعي" : "A UAE studio blending human craft with AI"}
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+              {lang === "ar"
+                ? "Pixel & Reel استوديو إبداعي مقره الإمارات، يجمع بين قوة الذكاء الاصطناعي وخبرة المصممين. نساعد العلامات التجارية في دبي وأبوظبي والشارقة على إنشاء محتوى يبيع — من منشورات السوشيال ميديا إلى الهويات البصرية الكاملة. أسّسه أيمن محروس، ويقدّم فريقنا نتائج سريعة، اقتصادية، واحترافية باللغتين العربية والإنجليزية."
+                : "Pixel & Reel is a UAE-based creative studio powered by AI and human expertise. We help brands across Dubai, Abu Dhabi, and Sharjah create content that converts — from social posts to full brand identities. Founded by Ayman Mahrous, our team delivers fast, affordable, and professional results in both Arabic and English."}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3">
+            {[
+              { v: "500+", k: lang === "ar" ? "مشروع" : "Projects" },
+              { v: "120+", k: lang === "ar" ? "عميل" : "Clients" },
+              { v: "8", k: lang === "ar" ? "سنوات خبرة" : "Years experience" },
+            ].map((s) => (
+              <div key={s.k} className="rounded-2xl border border-border bg-card p-6 text-center">
+                <div className="font-display text-4xl font-bold text-gradient">{s.v}</div>
+                <div className="mt-2 text-sm text-muted-foreground">{s.k}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ADD-ONS — boost AOV */}
       {settings.addons?.length > 0 && (
         <section className="border-b border-border bg-background py-16">
           <div className="mx-auto max-w-6xl px-4">
-            <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">
                   {lang === "ar" ? "إضافات سريعة" : "Quick add-ons"}
