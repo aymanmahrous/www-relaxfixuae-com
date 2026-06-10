@@ -1,15 +1,19 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSettings, waUrl } from "@/lib/settings";
 import { useAuth, signOut } from "@/hooks/use-auth";
-import { Languages, Sparkles, MessageCircle, Settings, User, LogIn } from "lucide-react";
+import { Languages, Sparkles, MessageCircle, Settings, User, LogIn, Menu, X } from "lucide-react";
 
 export function SiteHeader() {
   const { t, lang, setLang } = useI18n();
   const { settings } = useSettings();
   const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
   const brand = lang === "ar" ? settings.brandAr : settings.brandEn;
+
+  const close = () => setOpen(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
@@ -65,26 +69,13 @@ export function SiteHeader() {
             {t("video_title")}
           </Link>
           {isAdmin && (
-            <Link
-              to="/admin"
-              className="inline-flex items-center gap-1 text-brand-amber transition hover:text-foreground"
-            >
+            <Link to="/admin" className="inline-flex items-center gap-1 text-brand-amber transition hover:text-foreground">
               <Settings className="h-3.5 w-3.5" />
               {t("admin")}
             </Link>
           )}
         </nav>
         <div className="flex items-center gap-2">
-          {user && (
-            <Link
-              to="/admin"
-              className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold shadow-lg transition hover:-translate-y-0.5 ${isAdmin ? "bg-gradient-brand text-black shadow-brand-pink/30" : "border border-brand-amber/60 bg-card/70 text-brand-amber shadow-brand-amber/10"}`}
-              aria-label="Admin"
-            >
-              <Settings className="h-3.5 w-3.5" />
-              {lang === "ar" ? "لوحة التحكم" : "Control"}
-            </Link>
-          )}
           <button
             onClick={() => setLang(lang === "en" ? "ar" : "en")}
             className="group inline-flex h-9 items-center gap-1 rounded-full border border-border bg-card/70 p-1 text-xs font-bold shadow-lg shadow-black/20 backdrop-blur transition hover:border-brand-pink/50"
@@ -98,17 +89,11 @@ export function SiteHeader() {
             </span>
           </button>
           {user ? (
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-semibold hover:bg-accent"
-            >
+            <Link to="/dashboard" className="hidden items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-semibold hover:bg-accent sm:inline-flex">
               <User className="h-3.5 w-3.5" /> {lang === "ar" ? "حسابي" : "Account"}
             </Link>
           ) : (
-            <Link
-              to="/auth"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-semibold hover:bg-accent"
-            >
+            <Link to="/auth" className="hidden items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-semibold hover:bg-accent sm:inline-flex">
               <LogIn className="h-3.5 w-3.5" /> {lang === "ar" ? "دخول" : "Sign in"}
             </Link>
           )}
@@ -120,8 +105,55 @@ export function SiteHeader() {
           >
             <MessageCircle className="h-3.5 w-3.5" /> {t("cta_order")}
           </a>
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/70 md:hidden"
+            aria-label="Menu"
+            aria-expanded={open}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile drawer */}
+      {open && (
+        <div className="border-t border-border bg-background md:hidden">
+          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3 text-base">
+            <Link to="/" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{t("nav_home")}</Link>
+            <a href="/#services" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{t("nav_services")}</a>
+            <Link to="/services/social-media-dubai" onClick={close} className="rounded-lg px-3 py-3 pl-6 text-sm text-muted-foreground hover:bg-accent">{lang === "ar" ? "سوشيال ميديا - دبي" : "Social Media — Dubai"}</Link>
+            <Link to="/services/logo-design" onClick={close} className="rounded-lg px-3 py-3 pl-6 text-sm text-muted-foreground hover:bg-accent">{lang === "ar" ? "لوقو وهوية" : "Logo & Branding"}</Link>
+            <Link to="/services/motion-graphics" onClick={close} className="rounded-lg px-3 py-3 pl-6 text-sm text-muted-foreground hover:bg-accent">{lang === "ar" ? "موشن جرافيك" : "Motion Graphics"}</Link>
+            <Link to="/services/ads-design" onClick={close} className="rounded-lg px-3 py-3 pl-6 text-sm text-muted-foreground hover:bg-accent">{lang === "ar" ? "إعلانات ممولة" : "Paid Ads"}</Link>
+            <Link to="/portfolio" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{lang === "ar" ? "أعمالنا" : "Portfolio"}</Link>
+            <Link to="/blog" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{lang === "ar" ? "المدونة" : "Blog"}</Link>
+            <a href="/#pricing" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{t("nav_pricing")}</a>
+            <Link to="/about" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{lang === "ar" ? "من نحن" : "About"}</Link>
+            <Link to="/contact" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{lang === "ar" ? "تواصل" : "Contact"}</Link>
+            <Link to="/design" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{t("designer_title")}</Link>
+            <Link to="/video" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{t("video_title")}</Link>
+            {user ? (
+              <Link to="/dashboard" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{lang === "ar" ? "حسابي" : "Account"}</Link>
+            ) : (
+              <Link to="/auth" onClick={close} className="rounded-lg px-3 py-3 hover:bg-accent">{lang === "ar" ? "دخول" : "Sign in"}</Link>
+            )}
+            {isAdmin && (
+              <Link to="/admin" onClick={close} className="rounded-lg px-3 py-3 text-brand-amber hover:bg-accent">{t("admin")}</Link>
+            )}
+            <a
+              href={waUrl(settings.whatsapp, t("cta_order"))}
+              target="_blank"
+              rel="noreferrer"
+              onClick={close}
+              className="mt-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-gradient-brand px-4 py-3 text-base font-bold text-black"
+            >
+              <MessageCircle className="h-4 w-4" /> {t("cta_order")}
+            </a>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
