@@ -411,6 +411,7 @@ function Index() {
       {settings.addons?.length > 0 && (
         <section className="border-b border-border bg-background py-16">
           <div className="mx-auto max-w-6xl px-4">
+            <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">
                   {lang === "ar" ? "إضافات سريعة" : "Quick add-ons"}
