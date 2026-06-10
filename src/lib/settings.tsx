@@ -111,7 +111,7 @@ const DEFAULTS: Settings = {
   ],
 };
 
-const KEY = "pr_settings_v2";
+const KEY = "pr_settings_v3";
 
 const Ctx = createContext<{
   settings: Settings;
