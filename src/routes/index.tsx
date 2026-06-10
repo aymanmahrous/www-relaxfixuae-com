@@ -106,6 +106,11 @@ const faqs = [
   ["faq_q3", "faq_a3"],
   ["faq_q4", "faq_a4"],
   ["faq_q5", "faq_a5"],
+  ["faq_q6", "faq_a6"],
+  ["faq_q7", "faq_a7"],
+  ["faq_q8", "faq_a8"],
+  ["faq_q9", "faq_a9"],
+  ["faq_q10", "faq_a10"],
 ] as const;
 
 const steps = [
