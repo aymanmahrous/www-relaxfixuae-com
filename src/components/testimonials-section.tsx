@@ -38,10 +38,23 @@ export function TestimonialsSection() {
                     "{lang === "ar" ? t.quoteAr : t.quoteEn}"
                   </p>
                   <div className="flex items-center gap-3">
-                    {t.avatar ? (
-                      <img src={t.avatar} alt={t.name} className="h-10 w-10 rounded-full object-cover" />
+                    {t.avatar && t.avatar.startsWith("initials:") ? (
+                      (() => {
+                        const [, initials, color] = t.avatar.split(":");
+                        return (
+                          <div
+                            className="flex h-12 w-12 items-center justify-center rounded-full text-base font-bold text-white"
+                            style={{ backgroundColor: color || "#ec4899" }}
+                            aria-hidden
+                          >
+                            {initials || t.name.charAt(0)}
+                          </div>
+                        );
+                      })()
+                    ) : t.avatar ? (
+                      <img src={t.avatar} alt={t.name} className="h-12 w-12 rounded-full object-cover" />
                     ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-brand text-sm font-bold text-black">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-brand text-base font-bold text-black">
                         {t.name.charAt(0)}
                       </div>
                     )}

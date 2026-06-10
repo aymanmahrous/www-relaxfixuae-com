@@ -73,6 +73,11 @@ export const Route = createFileRoute("/")({
             { q: "Can I use AI generations commercially?", a: "Absolutely. Everything generated here is yours to publish and monetize." },
             { q: "What if I don't like the result?", a: "Unlimited revisions on Pro & Studio plans. Money-back on first delivery if not happy." },
             { q: "Do you write Arabic content?", a: "Yes — native Arabic copywriting, hashtags, and culturally-tuned visuals." },
+            { q: "Do you work with startups and small businesses?", a: "Absolutely — most of our clients are growing brands and small businesses across the UAE." },
+            { q: "Can I order a one-time project without a subscription?", a: "Yes. All our services are available as one-time orders via WhatsApp or the contact form." },
+            { q: "Do you offer revisions?", a: "Yes. All plans include at least 2 free revision rounds." },
+            { q: "Which platforms do you design for?", a: "Instagram, TikTok, Snapchat, X (Twitter), Facebook, and LinkedIn." },
+            { q: "How do I send my brief?", a: "You can WhatsApp us a voice note, text, or images — in Arabic or English." },
           ].map(({ q, a }) => ({
             "@type": "Question",
             name: q,
