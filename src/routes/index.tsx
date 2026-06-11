@@ -1,684 +1,370 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { SiteHeader } from "@/components/site-header";
-import { CheckoutButton } from "@/components/checkout-button";
-import { LeadForm } from "@/components/lead-form";
-import { TestimonialsSection } from "@/components/testimonials-section";
-import { useI18n } from "@/lib/i18n";
-import { useSettings, waUrl, tgUrl } from "@/lib/settings";
-import { useCredits } from "@/lib/credits";
-import { generatePostImages } from "@/lib/ai.functions";
-import { genericMessage, serviceMessage, planMessage, promoMessage, shareDesignMessage } from "@/lib/orderMessage";
-import { Countdown } from "@/components/countdown";
 
-import work1 from "@/assets/work-1.jpg";
-import work2 from "@/assets/work-2.jpg";
-import work3 from "@/assets/work-3.jpg";
-import work4 from "@/assets/work-4.jpg";
-import {
-  ArrowRight, ImageIcon, PenTool, Film, Sparkles, Megaphone, Camera,
-  Package, TrendingUp, Check, Star, MessageCircle, Mail, Play, Send, Gift, Wand2,
-  Loader2, MessageSquare, Palette, Send as Send2, Rocket, ChevronDown, Tag,
-  type LucideIcon,
-} from "lucide-react";
-import { toast } from "sonner";
+type ThemeKey = "proskill" | "luxury" | "minimal";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Relax Fix UAE — استوديو إبداعي بالذكاء الاصطناعي في الإمارات" },
-      { name: "description", content: "خدمات تصميم سوشيال ميديا، هوية بصرية، إعلانات، وفيديو احترافي بالذكاء الاصطناعي. خدمة عربية وإنجليزية في دبي وأبوظبي والإمارات." },
-      { property: "og:title", content: "Relax Fix UAE — Creative AI Studio" },
-      { property: "og:description", content: "تصميم يبيع. فيديو يأسر. مدعوم بالذكاء الاصطناعي." },
-      { property: "og:url", content: "https://www.relaxfixuae.com/" },
-      { property: "og:image", content: "https://www.relaxfixuae.com/og-image.jpg" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      { name: "twitter:image", content: "https://www.relaxfixuae.com/og-image.jpg" },
-    ],
-    links: [
-      { rel: "canonical", href: "https://www.relaxfixuae.com/" },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "Relax Fix UAE",
-          url: "https://www.relaxfixuae.com",
-          logo: "https://www.relaxfixuae.com/favicon.ico",
-          areaServed: "AE",
-          address: { "@type": "PostalAddress", addressCountry: "AE" },
-        }),
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "Relax Fix UAE",
-          url: "https://www.relaxfixuae.com",
-        }),
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: [
-            { q: "How fast is delivery?", a: "Most posts are delivered within hours. Full brand identities within 3–5 days." },
-            { q: "Do you provide source files?", a: "Yes — Figma, PSD, AI, plus optimized PNG/JPG/MP4." },
-            { q: "Can I use AI generations commercially?", a: "Absolutely. Everything generated here is yours to publish and monetize." },
-            { q: "What if I don't like the result?", a: "Unlimited revisions on Pro & Studio plans. Money-back on first delivery if not happy." },
-            { q: "Do you write Arabic content?", a: "Yes — native Arabic copywriting, hashtags, and culturally-tuned visuals." },
-            { q: "Do you work with startups and small businesses?", a: "Absolutely — most of our clients are growing brands and small businesses across the UAE." },
-            { q: "Can I order a one-time project without a subscription?", a: "Yes. All our services are available as one-time orders via WhatsApp or the contact form." },
-            { q: "Do you offer revisions?", a: "Yes. All plans include at least 2 free revision rounds." },
-            { q: "Which platforms do you design for?", a: "Instagram, TikTok, Snapchat, X (Twitter), Facebook, and LinkedIn." },
-            { q: "How do I send my brief?", a: "You can WhatsApp us a voice note, text, or images — in Arabic or English." },
-          ].map(({ q, a }) => ({
-            "@type": "Question",
-            name: q,
-            acceptedAnswer: { "@type": "Answer", text: a },
-          })),
-        }),
-      },
-    ],
-  }),
-  component: Index,
-});
+type SiteSettings = {
+  theme: ThemeKey;
+  heroTitle: string;
+  heroSubtitle: string;
+  primaryColor: string;
+  accentColor: string;
+  showIcons: boolean;
+};
 
-const ICONS: Record<string, LucideIcon> = { ImageIcon, PenTool, Film, Sparkles, Megaphone, Camera, Package, TrendingUp };
+const THEMES: Record<ThemeKey, Partial<SiteSettings>> = {
+  proskill: {
+    primaryColor: "#0f172a", // أزرق غامق
+    accentColor: "#2563eb", // أزرق
+    heroTitle: "Premium Digital-Like Home Services in Abu Dhabi",
+    heroSubtitle:
+      "Organized, modern, and fast home services experience that feels like a top digital agency.",
+  },
+  luxury: {
+    primaryColor: "#050816", // أسود فاخر
+    accentColor: "#facc15", // ذهبي
+    heroTitle: "Luxury Home Maintenance for VIP Clients",
+    heroSubtitle:
+      "Discreet, high-end, and reliable services tailored for premium properties in Abu Dhabi.",
+  },
+  minimal: {
+    primaryColor: "#ffffff",
+    accentColor: "#111827",
+    heroTitle: "Simple. Fast. Reliable Home Services.",
+    heroSubtitle:
+      "Clean, minimal, and focused experience that gets customers to contact you in seconds.",
+  },
+};
 
-const works = [
-  { src: work1, tag: "Social", alt: "Social media post design sample" },
-  { src: work2, tag: "Video", alt: "Promotional video edit sample" },
-  { src: work3, tag: "Branding", alt: "Brand identity and logo design sample" },
-  { src: work4, tag: "Motion", alt: "Motion graphics animation sample" },
-];
+export default function HomePage() {
+  const [settings, setSettings] = useState<SiteSettings>({
+    theme: "proskill",
+    heroTitle: THEMES.proskill.heroTitle!,
+    heroSubtitle: THEMES.proskill.heroSubtitle!,
+    primaryColor: THEMES.proskill.primaryColor!,
+    accentColor: THEMES.proskill.accentColor!,
+    showIcons: true,
+  });
 
-const testimonials = [
-  { quote: "t1", name: "t1_name", initials: "SA", bg: "#f59e0b" },
-  { quote: "t2", name: "t2_name", initials: "KM", bg: "#3b82f6" },
-  { quote: "t3", name: "t3_name", initials: "LH", bg: "#8b5cf6" },
-] as const;
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-const faqs = [
-  ["faq_q1", "faq_a1"],
-  ["faq_q2", "faq_a2"],
-  ["faq_q3", "faq_a3"],
-  ["faq_q4", "faq_a4"],
-  ["faq_q5", "faq_a5"],
-  ["faq_q6", "faq_a6"],
-  ["faq_q7", "faq_a7"],
-  ["faq_q8", "faq_a8"],
-  ["faq_q9", "faq_a9"],
-  ["faq_q10", "faq_a10"],
-] as const;
+  const applyTheme = (theme: ThemeKey) => {
+    const t = THEMES[theme];
+    setSettings((prev) => ({
+      ...prev,
+      theme,
+      heroTitle: t.heroTitle ?? prev.heroTitle,
+      heroSubtitle: t.heroSubtitle ?? prev.heroSubtitle,
+      primaryColor: t.primaryColor ?? prev.primaryColor,
+      accentColor: t.accentColor ?? prev.accentColor,
+    }));
+  };
 
-const steps = [
-  { icon: MessageSquare, t: "step1_t", d: "step1_d" },
-  { icon: Palette, t: "step2_t", d: "step2_d" },
-  { icon: Send2, t: "step3_t", d: "step3_d" },
-  { icon: Rocket, t: "step4_t", d: "step4_d" },
-];
+  const bgClass =
+    settings.theme === "luxury"
+      ? "bg-[#050816] text-white"
+      : settings.theme === "proskill"
+      ? "bg-slate-950 text-white"
+      : "bg-white text-slate-900";
 
-function Index() {
-  const { t, lang } = useI18n();
-  const { settings } = useSettings();
-  const { credits, spend } = useCredits();
-  const brand = lang === "ar" ? settings.brandAr : settings.brandEn;
-  const offer = settings.offer;
-
-  // Live AI demo state
-  const genImages = useServerFn(generatePostImages);
-  const [demoBrief, setDemoBrief] = useState("");
-  const [demoBusy, setDemoBusy] = useState(false);
-  const [demoImg, setDemoImg] = useState<string | null>(null);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
-
-  async function runDemo(brief?: string) {
-    const b = (brief ?? demoBrief).trim();
-    if (!b) { toast.error(lang === "ar" ? "اكتب فكرة أولاً" : "Type an idea first"); return; }
-    if (credits < 1) { toast.error(t("out_of_credits")); return; }
-    setDemoBrief(b);
-    setDemoBusy(true);
-    setDemoImg(null);
-    try {
-      const res = await genImages({ data: { prompt: b, style: settings.defaultStyle, ratio: settings.defaultRatio, count: 1 } });
-      setDemoImg(res.images[0]?.url ?? null);
-      spend(1);
-    } catch (e: any) {
-      toast.error(e?.message ?? "Failed");
-    } finally {
-      setDemoBusy(false);
-    }
-  }
-
-  const examples = [t("demo_ex_1"), t("demo_ex_2"), t("demo_ex_3"), t("demo_ex_4")];
+  const cardClass =
+    settings.theme === "minimal"
+      ? "bg-white border border-slate-200 shadow-sm"
+      : "bg-slate-900/60 border border-slate-800 shadow-lg";
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader />
-
-      {/* OFFER BANNER */}
-      {offer.enabled && (
-        <a
-          href={waUrl(settings.whatsapp, promoMessage(settings, lang, offer.code, offer.discount))}
-          target="_blank" rel="noreferrer"
-          className="block border-b border-brand-amber/40 bg-gradient-to-r from-brand-amber/20 via-brand-pink/20 to-brand-purple/20 px-4 py-2.5 text-center text-sm font-medium hover:opacity-90"
-        >
-          <span className="inline-flex flex-wrap items-center justify-center gap-2">
-            <Tag className="h-4 w-4 text-brand-amber" />
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-amber">{t("promo_prefix")}</span>
-            <span>·</span>
-            <span>{lang === "ar" ? offer.titleAr : offer.titleEn}</span>
-            <span className="rounded-full bg-black/40 px-2 py-0.5 text-xs font-bold text-brand-amber">{offer.code}</span>
-            {offer.expiresAt && <Countdown to={offer.expiresAt} lang={lang} />}
-            <span className="inline-flex items-center gap-1 font-semibold text-brand-pink">{t("promo_cta")} <ArrowRight className="h-3 w-3 rtl:rotate-180" /></span>
-          </span>
-        </a>
-      )}
-
-      {/* HERO — Dark Studio Minimalist */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-background" />
-        <div className="absolute -left-32 top-32 -z-10 h-[28rem] w-[28rem] rounded-full bg-brand-purple/20 blur-[120px] animate-float-slow" />
-        <div className="absolute -right-32 bottom-0 -z-10 h-[28rem] w-[28rem] rounded-full bg-brand-pink/15 blur-[120px] animate-float-slow" />
-
-        <div className="mx-auto max-w-6xl px-4 pb-24 pt-14 sm:pt-20 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 backdrop-blur-md">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-amber opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-amber" />
+    <div className={`${bgClass} min-h-screen`}>
+      {/* Top bar */}
+      <nav className="flex items-center justify-between px-4 md:px-8 py-4 border-b border-slate-800/60">
+        <div className="flex items-center gap-2">
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-xl"
+            style={{ background: settings.accentColor }}
+          >
+            R
+          </div>
+          <div className="flex flex-col leading-tight">
+            <span className="font-semibold text-sm md:text-base">
+              RelaxFix UAE
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
-              {t("hero_kicker")}
+            <span className="text-[11px] md:text-xs text-slate-400">
+              Home Services • Abu Dhabi
             </span>
-          </span>
+          </div>
+        </div>
 
-          <h1 className="mx-auto mt-8 max-w-4xl font-display text-[2.25rem] font-extrabold leading-[1] tracking-tight sm:text-6xl lg:text-7xl">
-            <span className="block text-white">{t("hero_title_1")}</span>
-            <span className="mt-1 block bg-gradient-to-r from-brand-amber via-brand-pink to-brand-purple bg-clip-text text-transparent">
-              {t("hero_title_2")}
-            </span>
-          </h1>
+        <div className="flex items-center gap-2 md:gap-3">
+          <button
+            onClick={() => setIsPanelOpen(true)}
+            className="px-3 py-1.5 rounded-lg text-xs md:text-sm border border-slate-700 text-slate-200 hover:bg-slate-800 transition"
+          >
+            Dashboard
+          </button>
+          <a
+            href="https://wa.me/971501234567"
+            className="px-3 md:px-4 py-1.5 rounded-lg text-xs md:text-sm font-semibold text-white"
+            style={{ background: settings.accentColor }}
+          >
+            تواصل الآن
+          </a>
+        </div>
+      </nav>
 
-
-          <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-white/50 sm:text-base">
-            {t("hero_sub")}
+      {/* Hero */}
+      <section className="px-4 md:px-8 py-10 md:py-16 flex flex-col md:flex-row gap-10 items-center">
+        <div className="flex-1 space-y-4 md:space-y-6">
+          <p className="text-xs md:text-sm uppercase tracking-[0.2em] text-slate-400">
+            Home Services • Abu Dhabi
           </p>
-
-          <div className="mx-auto mt-10 flex w-full max-w-md items-start gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-5 text-start backdrop-blur-xl">
-            <div className="relative">
-              <div className="absolute -inset-2 -z-10 rounded-2xl bg-brand-amber/20 blur-2xl" />
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-amber to-brand-pink shadow-lg shadow-brand-amber/20">
-                <Gift className="h-6 w-6 text-black" />
-              </div>
-            </div>
-            <div>
-              <h4 className="flex items-center gap-2 text-sm font-bold text-white">
-                {t("welcome_credit_title")}
-                <span className="rounded bg-brand-amber/20 px-1.5 py-0.5 text-[8px] uppercase tracking-tighter text-brand-amber">
-                  {lang === "ar" ? "جديد" : "New"}
-                </span>
-              </h4>
-              <p className="mt-1 text-xs leading-snug text-white/50">
-                {lang === "ar"
-                  ? `لديك ${credits} محاولات مجانية بالذكاء الاصطناعي — جرّب الاستوديو الآن.`
-                  : `You have ${credits} free AI generations on us — try the studio now.`}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a href="#demo" className="group inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-brand-pink via-brand-purple to-brand-amber px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-brand-purple/20 transition-transform hover:scale-[1.02] active:scale-95">
-              <Wand2 className="h-4 w-4" /> {t("try_free")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+          <h1 className="text-3xl md:text-5xl font-bold leading-tight">
+            {settings.heroTitle}
+          </h1>
+          <p className="text-sm md:text-base text-slate-400 max-w-xl">
+            {settings.heroSubtitle}
+          </p>
+          <div className="flex flex-wrap gap-3 mt-4">
+            <a
+              href="https://wa.me/971501234567"
+              className="px-4 py-2 rounded-lg text-sm font-semibold text-white"
+              style={{ background: settings.accentColor }}
+            >
+              احجز خدمة الآن
             </a>
-            <a href="#work" className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-3.5 text-sm font-semibold text-white backdrop-blur hover:bg-white/[0.06]">
-              <Play className="h-4 w-4" /> {t("cta_portfolio")}
+            <a
+              href="#services"
+              className="px-4 py-2 rounded-lg text-sm font-semibold border border-slate-600 text-slate-200 hover:bg-slate-900/60 transition"
+            >
+              استكشف الخدمات
             </a>
           </div>
-
-          <div className="mx-auto mt-20 grid max-w-3xl grid-cols-2 gap-6 sm:grid-cols-4">
-            {[
-              { v: "500+", k: "stat_projects" },
-              { v: "120+", k: "stat_clients" },
-              { v: "8", k: "stat_years" },
-              { v: "4.9★", k: "stat_rating" },
-            ].map((s) => (
-              <div key={s.k}>
-                <div className="font-display text-3xl font-bold text-gradient sm:text-4xl">{s.v}</div>
-                <div className="mt-1 text-xs text-white/40">{t(s.k as never)}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* LIVE AI DEMO */}
-      <section id="demo" className="mx-auto max-w-6xl px-4 py-24">
-        <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("demo_kicker")}</span>
-          <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("demo_title")}</h2>
-          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{t("demo_sub")}</p>
-        </div>
-
-        <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          <div className="rounded-3xl border border-border bg-card p-6">
-            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("demo_examples")}</div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {examples.map((ex, i) => (
-                <button key={i} onClick={() => runDemo(ex)} disabled={demoBusy}
-                  className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium hover:border-brand-pink hover:bg-accent disabled:opacity-50">
-                  {ex}
-                </button>
-              ))}
-            </div>
-            <textarea
-              value={demoBrief}
-              onChange={(e) => setDemoBrief(e.target.value)}
-              placeholder={t("demo_placeholder")}
-              rows={3}
-              className="mt-4 w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand-pink"
-            />
-            <div className="mt-3 flex flex-wrap gap-2">
-              <button
-                onClick={() => runDemo()}
-                disabled={demoBusy}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-brand px-5 py-3 text-sm font-bold text-black glow disabled:opacity-50"
-              >
-                {demoBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
-                {demoBusy ? t("demo_btn_busy") : t("demo_btn")}
-              </button>
-              <Link to="/design" className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-accent">
-                {t("demo_open_studio")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
-              </Link>
-            </div>
-            <p className="mt-3 text-xs text-muted-foreground">
-              {lang === "ar" ? `الرصيد المتبقّي: ${credits} محاولة` : `Credits remaining: ${credits}`}
-            </p>
-          </div>
-
-          <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-purple/20 via-card to-brand-pink/10">
-            {!demoImg && !demoBusy && (
-              <div className="flex aspect-square items-center justify-center p-10 text-center">
-                <div>
-                  <Sparkles className="mx-auto h-12 w-12 text-brand-pink" />
-                  <p className="mt-4 text-sm text-muted-foreground">
-                    {lang === "ar" ? "هنا ستظهر معاينة الذكاء الاصطناعي الخاصّة بك" : "Your AI preview will appear here"}
-                  </p>
-                </div>
-              </div>
-            )}
-            {demoBusy && (
-              <div className="flex aspect-square items-center justify-center">
-                <div className="text-center">
-                  <Loader2 className="mx-auto h-10 w-10 animate-spin text-brand-pink" />
-                  <p className="mt-3 text-sm text-muted-foreground">{t("demo_btn_busy")}</p>
-                </div>
-              </div>
-            )}
-            {demoImg && (
-              <>
-                <img src={demoImg} alt="AI preview" className="aspect-square w-full object-cover" />
-                <div className="absolute inset-x-0 bottom-0 flex flex-wrap gap-2 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-4">
-                  <a href={waUrl(settings.whatsapp, shareDesignMessage(settings, lang, demoBrief, settings.defaultStyle, settings.defaultRatio))} target="_blank" rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366] px-3 py-1.5 text-xs font-bold text-black">
-                    <MessageCircle className="h-3.5 w-3.5" /> {t("demo_share")}
-                  </a>
-                  <a href={demoImg} download={`pixelreel-${Date.now()}.png`} className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-black">
-                    <ArrowRight className="h-3.5 w-3.5" /> {t("d_download")}
-                  </a>
-                  <Link to="/design" className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-3 py-1.5 text-xs font-bold text-white backdrop-blur">
-                    {t("demo_open_studio")}
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* SERVICES */}
-      <section id="services" className="border-y border-border bg-card/30 py-24">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("services_kicker")}</span>
-            <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("services_title")}</h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">{t("services_sub")}</p>
-          </div>
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {settings.services.map((srv) => {
-              const Icon = ICONS[srv.icon] ?? Sparkles;
-              const title = lang === "ar" ? srv.titleAr : srv.titleEn;
-              const desc = lang === "ar" ? srv.descAr : srv.descEn;
-              return (
-                <a
-                  key={srv.id}
-                  href={waUrl(settings.whatsapp, serviceMessage(settings, lang, srv))}
-                  target="_blank" rel="noreferrer"
-                  className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-brand-pink/50 hover:bg-accent"
-                >
-                  <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-brand opacity-0 blur-2xl transition-opacity group-hover:opacity-30" />
-                  <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-brand text-black">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="relative mt-5 text-lg font-semibold">{title}</h3>
-                  <p className="relative mt-2 text-sm text-muted-foreground">{desc}</p>
-                  <span className="relative mt-4 inline-flex items-center gap-1 text-xs font-semibold text-brand-pink">
-                    <MessageCircle className="h-3.5 w-3.5" />
-                    {lang === "ar" ? "اطلب الآن عبر واتساب" : "Order on WhatsApp"}
-                    <ArrowRight className="h-3 w-3 rtl:rotate-180" />
-                  </span>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* WHO WE ARE — About section */}
-      <section id="about" className="border-b border-border bg-background py-20">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 md:grid-cols-2 md:items-center">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">
-              {lang === "ar" ? "من نحن" : "Who we are"}
-            </span>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              {lang === "ar" ? "استوديو إماراتي يدمج الإبداع البشري بالذكاء الاصطناعي" : "A UAE studio blending human craft with AI"}
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
-              {lang === "ar"
-                ? "Pixel & Reel استوديو إبداعي مقره الإمارات، يجمع بين قوة الذكاء الاصطناعي وخبرة المصممين. نساعد العلامات التجارية في دبي وأبوظبي والشارقة على إنشاء محتوى يبيع — من منشورات السوشيال ميديا إلى الهويات البصرية الكاملة. أسّسه أيمن محروس، ويقدّم فريقنا نتائج سريعة، اقتصادية، واحترافية باللغتين العربية والإنجليزية."
-                : "Pixel & Reel is a UAE-based creative studio powered by AI and human expertise. We help brands across Dubai, Abu Dhabi, and Sharjah create content that converts — from social posts to full brand identities. Founded by Ayman Mahrous, our team delivers fast, affordable, and professional results in both Arabic and English."}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3">
-            {[
-              { v: "500+", k: lang === "ar" ? "مشروع" : "Projects" },
-              { v: "120+", k: lang === "ar" ? "عميل" : "Clients" },
-              { v: "8", k: lang === "ar" ? "سنوات خبرة" : "Years experience" },
-            ].map((s) => (
-              <div key={s.k} className="rounded-2xl border border-border bg-card p-6 text-center">
-                <div className="font-display text-4xl font-bold text-gradient">{s.v}</div>
-                <div className="mt-2 text-sm text-muted-foreground">{s.k}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ADD-ONS — boost AOV */}
-      {settings.addons?.length > 0 && (
-        <section className="border-b border-border bg-background py-16">
-          <div className="mx-auto max-w-6xl px-4">
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">
-                  {lang === "ar" ? "إضافات سريعة" : "Quick add-ons"}
-                </span>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-                  {lang === "ar" ? "أضف لمسة احترافية لمشروعك" : "Power-up your project"}
-                </h2>
-              </div>
-              <span className="text-xs text-muted-foreground">
-                {lang === "ar" ? "تسليم خلال 24-48 ساعة" : "Delivered in 24-48h"}
+          {settings.showIcons && (
+            <div className="flex flex-wrap gap-3 mt-6 items-center text-xs text-slate-400">
+              <span className="text-[11px] uppercase tracking-[0.2em]">
+                Trusted by
               </span>
+              <div className="flex gap-2">
+                <span className="px-2 py-1 rounded-full bg-slate-900/70 border border-slate-700">
+                  AC • Cleaning
+                </span>
+                <span className="px-2 py-1 rounded-full bg-slate-900/70 border border-slate-700">
+                  Plumbing
+                </span>
+                <span className="px-2 py-1 rounded-full bg-slate-900/70 border border-slate-700">
+                  Electrical
+                </span>
+              </div>
             </div>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {settings.addons.map((a) => {
-                const Icon = ICONS[a.icon] ?? Sparkles;
-                const name = lang === "ar" ? a.nameAr : a.nameEn;
-                return (
-                  <a
-                    key={a.id}
-                    href={waUrl(settings.whatsapp, genericMessage(settings, lang, `${lang === "ar" ? "إضافة" : "Add-on"}: ${name} — ${a.price}`))}
-                    target="_blank" rel="noreferrer"
-                    className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4 transition hover:-translate-y-0.5 hover:border-brand-pink/50"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-brand text-black">
-                        <Icon className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-semibold">{name}</div>
-                        <div className="text-xs text-brand-amber font-bold">{a.price}</div>
-                      </div>
-                    </div>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground rtl:rotate-180 group-hover:text-brand-pink" />
-                  </a>
-                );
-              })}
+          )}
+        </div>
+
+        <div className="flex-1 w-full md:w-auto">
+          <div
+            className={`${cardClass} rounded-2xl p-5 md:p-6 flex flex-col gap-4`}
+          >
+            <p className="text-xs text-slate-400">Next-Gen Home Services</p>
+            <h2 className="text-lg md:text-xl font-semibold">
+              Organized like a digital agency,
+              <br /> executed like a pro technician.
+            </h2>
+            <p className="text-xs md:text-sm text-slate-400">
+              Clear communication, fast response, and modern experience for
+              every service request.
+            </p>
+            <div className="grid grid-cols-2 gap-3 text-xs md:text-sm">
+              <div className="rounded-xl border border-slate-700/70 p-3">
+                <p className="text-slate-400 mb-1">Response Time</p>
+                <p className="font-semibold text-white">Under 30 minutes</p>
+              </div>
+              <div className="rounded-xl border border-slate-700/70 p-3">
+                <p className="text-slate-400 mb-1">Coverage</p>
+                <p className="font-semibold text-white">All Abu Dhabi</p>
+              </div>
+              <div className="rounded-xl border border-slate-700/70 p-3">
+                <p className="text-slate-400 mb-1">Customer Rating</p>
+                <p className="font-semibold text-white">4.9 / 5.0</p>
+              </div>
+              <div className="rounded-xl border border-slate-700/70 p-3">
+                <p className="text-slate-400 mb-1">Support</p>
+                <p className="font-semibold text-white">24 / 7</p>
+              </div>
             </div>
           </div>
-        </section>
-      )}
-
-
-
-      {/* PROCESS */}
-      <section className="mx-auto max-w-6xl px-4 py-24">
-        <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("process_kicker")}</span>
-          <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("process_title")}</h2>
         </div>
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((s, i) => (
-            <div key={i} className="relative rounded-2xl border border-border bg-card p-6">
-              <span className="absolute -top-3 left-6 rounded-full bg-gradient-brand px-3 py-1 text-xs font-bold text-black">0{i + 1}</span>
-              <s.icon className="h-7 w-7 text-brand-pink" />
-              <h3 className="mt-4 text-lg font-semibold">{t(s.t as never)}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{t(s.d as never)}</p>
+      </section>
+
+      {/* Services */}
+      <section id="services" className="px-4 md:px-8 pb-16">
+        <h2 className="text-2xl md:text-3xl font-bold mb-6">Our Services</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {[
+            {
+              title: "AC Repair & Maintenance",
+              desc: "Fast, professional AC services to keep your home cool all year.",
+            },
+            {
+              title: "Deep Cleaning",
+              desc: "Full home cleaning with attention to every detail.",
+            },
+            {
+              title: "Plumbing & Leaks",
+              desc: "Quick fixes for leaks, clogs, and plumbing issues.",
+            },
+            {
+              title: "Electrical Work",
+              desc: "Safe and certified electrical maintenance and installations.",
+            },
+            {
+              title: "Painting & Finishing",
+              desc: "High-quality painting for apartments, villas, and offices.",
+            },
+            {
+              title: "Pest Control",
+              desc: "Safe and effective pest control solutions.",
+            },
+          ].map((service) => (
+            <div
+              key={service.title}
+              className={`${cardClass} rounded-xl p-4 md:p-5 flex flex-col gap-2`}
+            >
+              <h3 className="font-semibold text-sm md:text-base">
+                {service.title}
+              </h3>
+              <p className="text-xs md:text-sm text-slate-400">
+                {service.desc}
+              </p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* WORK */}
-      <section id="work" className="border-y border-border bg-card/30 py-24">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("work_kicker")}</span>
-              <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("work_title")}</h2>
-            </div>
-            <Link to="/design" className="inline-flex items-center gap-1 text-sm font-medium text-brand-pink hover:underline">
-              {t("try_free")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
-            </Link>
-          </div>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {works.map((w, i) => (
-              <div key={i} className="group relative aspect-square overflow-hidden rounded-2xl border border-border">
-                <img src={w.src} alt={w.alt} width={800} height={800} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent" />
-                <span className="absolute bottom-4 left-4 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">{w.tag}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PRICING */}
-      <section id="pricing" className="mx-auto max-w-6xl px-4 py-24">
-        <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("pricing_kicker")}</span>
-          <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("pricing_title")}</h2>
-          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{t("pricing_sub")}</p>
-        </div>
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {settings.plans.map((p) => {
-            const name = lang === "ar" ? p.nameAr : p.nameEn;
-            const features = lang === "ar" ? p.featuresAr : p.featuresEn;
-            return (
-              <div key={p.id} className={`relative rounded-2xl border p-8 ${p.popular ? "border-brand-pink/60 bg-gradient-to-b from-brand-pink/10 to-card glow" : "border-border bg-card"}`}>
-                {p.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-brand px-3 py-1 text-xs font-bold text-black">
-                    {t("popular")}
-                  </span>
-                )}
-                <h3 className="text-lg font-semibold">{name}</h3>
-                <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-5xl font-bold">{p.price}</span>
-                  <span className="text-sm text-muted-foreground">{t("per_month")}</span>
-                </div>
-                <ul className="mt-6 space-y-3">
-                  {features.map((f, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-amber" />
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-8 space-y-2">
-                  {p.priceId && (
-                    <CheckoutButton
-                      priceId={p.priceId}
-                      label={lang === "ar" ? "ادفع ببطاقة الآن" : "Pay with card"}
-                      serviceSummary={name}
-                      className={p.popular ? "bg-gradient-brand text-black hover:opacity-90" : "bg-foreground text-background hover:opacity-90"}
-                    />
-                  )}
-                  <a href={waUrl(settings.whatsapp, planMessage(settings, lang, p))} target="_blank" rel="noreferrer"
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-xs font-semibold hover:bg-accent">
-                    <MessageCircle className="h-3.5 w-3.5" /> {t("pay_wa")}
-                  </a>
-                  <a href={tgUrl(settings.telegram, planMessage(settings, lang, p))} target="_blank" rel="noreferrer"
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-xs font-semibold hover:bg-accent">
-                    <Send className="h-3.5 w-3.5" /> {t("pay_tg")}
-                  </a>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section className="border-y border-border bg-card/30 py-24">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("testi_kicker")}</span>
-            <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("testi_title")}</h2>
-          </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {testimonials.map((q) => (
-              <div key={q.quote} className="rounded-2xl border border-border bg-card p-6">
-                <div className="flex gap-0.5 text-brand-amber">
-                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-                </div>
-                <p className="mt-4 text-base leading-relaxed">"{t(q.quote)}"</p>
-                <div className="mt-5 flex items-center gap-3">
-                  <span
-                    aria-hidden
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-bold text-white"
-                    style={{ backgroundColor: q.bg }}
-                  >
-                    {q.initials}
-                  </span>
-                  <p className="text-sm text-muted-foreground">{t(q.name)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="mx-auto max-w-3xl px-4 py-24">
-        <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber">{t("faq_kicker")}</span>
-          <h2 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">{t("faq_title")}</h2>
-        </div>
-        <div className="mt-10 space-y-3">
-          {faqs.map(([qk, ak], i) => {
-            const open = openFaq === i;
-            return (
-              <div key={qk} className={`overflow-hidden rounded-2xl border bg-card transition ${open ? "border-brand-pink/60" : "border-border"}`}>
-                <button onClick={() => setOpenFaq(open ? null : i)} className="flex w-full items-center justify-between gap-3 p-5 text-start">
-                  <span className="font-semibold">{t(qk as never)}</span>
-                  <ChevronDown className={`h-5 w-5 shrink-0 text-brand-pink transition-transform ${open ? "rotate-180" : ""}`} />
-                </button>
-                {open && <p className="border-t border-border px-5 py-4 text-sm text-muted-foreground">{t(ak as never)}</p>}
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
       {/* CTA */}
-      <section id="contact" className="mx-auto max-w-5xl px-4 py-24">
-        <div className="relative overflow-hidden rounded-3xl border border-brand-pink/40 bg-gradient-to-br from-brand-purple/20 via-brand-pink/10 to-brand-amber/10 p-10 text-center sm:p-16">
-          <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-brand-pink/30 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-brand-purple/30 blur-3xl" />
-          <h2 className="relative text-3xl font-bold sm:text-5xl">{t("cta_title")}</h2>
-          <p className="relative mx-auto mt-4 max-w-xl text-muted-foreground">{t("cta_sub")}</p>
-          <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <a href={waUrl(settings.whatsapp, genericMessage(settings, lang))} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-black glow hover:opacity-90">
-              <MessageCircle className="h-4 w-4" /> {t("cta_whatsapp")}
-            </a>
-            <a href={tgUrl(settings.telegram, genericMessage(settings, lang))} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#229ED9] px-6 py-3 text-sm font-semibold text-white hover:opacity-90">
-              <Send className="h-4 w-4" /> Telegram
-            </a>
-            <a href={`mailto:${settings.email}?subject=${encodeURIComponent("Project enquiry")}&body=${encodeURIComponent(genericMessage(settings, lang))}`} className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-6 py-3 text-sm font-semibold backdrop-blur hover:bg-accent">
-              <Mail className="h-4 w-4" /> {t("cta_email")}
-            </a>
-          </div>
-        </div>
+      <section
+        className="px-4 md:px-8 py-10 md:py-14 text-center"
+        style={{ background: settings.accentColor }}
+      >
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+          Ready to book your next service?
+        </h2>
+        <p className="text-sm md:text-base text-white/80 mb-5">
+          Send us a WhatsApp message and we&apos;ll respond in minutes.
+        </p>
+        <a
+          href="https://wa.me/971501234567"
+          className="inline-block px-6 py-2.5 rounded-lg bg-white text-sm md:text-base font-semibold"
+          style={{ color: settings.accentColor }}
+        >
+          تواصل عبر واتساب الآن
+        </a>
       </section>
 
-      <TestimonialsSection />
-
-      <LeadForm />
-
-
-
-
-      <footer className="border-t border-border py-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4">
-          <div className="flex items-center gap-2 text-base font-semibold">
-            <Sparkles className="h-5 w-5 text-brand-pink" />
-            {brand}
-          </div>
-
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
-            <a
-              href={`https://wa.me/${settings.whatsapp.replace(/\D/g, "")}`}
-              target="_blank" rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-2 text-sm font-medium text-foreground transition hover:border-brand-pink hover:text-brand-pink"
-            >
-              <span dir="ltr">+{settings.whatsapp.replace(/\D/g, "")}</span>
-            </a>
-            <a
-              href={`mailto:${settings.email}`}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-2 text-sm font-medium text-foreground transition hover:border-brand-purple hover:text-brand-purple"
-            >
-              <span dir="ltr">{settings.email}</span>
-            </a>
-          </div>
-
-          <p className="text-center text-xs text-muted-foreground">
-            © {new Date().getFullYear()} {brand} · {t("footer_rights")}
-          </p>
-          <p className="text-center text-sm font-semibold">
-            <span className="text-muted-foreground">Built by </span>
-            <span className="text-gradient">Ayman Mahrous</span>
-            <span className="text-muted-foreground"> · 2026</span>
-          </p>
-        </div>
+      {/* Footer */}
+      <footer className="px-4 md:px-8 py-5 text-xs md:text-sm text-slate-500 flex justify-between items-center">
+        <span>© {new Date().getFullYear()} RelaxFix UAE</span>
+        <span>Built for speed • Optimized for clients</span>
       </footer>
 
-      <a
-        href={waUrl(settings.whatsapp, genericMessage(settings, lang))}
-        target="_blank" rel="noreferrer"
-        aria-label="WhatsApp"
-        className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-black shadow-2xl shadow-black/40 transition hover:scale-110"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </a>
+      {/* Dashboard Panel */}
+      {isPanelOpen && (
+        <div className="fixed inset-0 bg-black/50 flex justify-end z-50">
+          <div className="w-[320px] md:w-[380px] h-full bg-slate-950 border-l border-slate-800 p-4 flex flex-col gap-4">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-sm font-semibold text-slate-100">
+                Site Dashboard
+              </h2>
+              <button
+                onClick={() => setIsPanelOpen(false)}
+                className="text-slate-400 text-xs hover:text-slate-200"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Theme selector */}
+            <div className="space-y-2">
+              <p className="text-xs text-slate-400">Theme</p>
+              <div className="flex gap-2">
+                {(["proskill", "luxury", "minimal"] as ThemeKey[]).map(
+                  (t) => (
+                    <button
+                      key={t}
+                      onClick={() => applyTheme(t)}
+                      className={`flex-1 px-2 py-1.5 rounded-lg text-xs border ${
+                        settings.theme === t
+                          ? "border-blue-500 bg-blue-500/10 text-blue-300"
+                          : "border-slate-700 text-slate-300 hover:bg-slate-900"
+                      }`}
+                    >
+                      {t === "proskill"
+                        ? "ProSkill"
+                        : t === "luxury"
+                        ? "Luxury"
+                        : "Minimal"}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+
+            {/* Hero title */}
+            <div className="space-y-1">
+              <p className="text-xs text-slate-400">Hero Title</p>
+              <textarea
+                className="w-full h-16 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 p-2"
+                value={settings.heroTitle}
+                onChange={(e) =>
+                  setSettings((prev) => ({
+                    ...prev,
+                    heroTitle: e.target.value,
+                  }))
+                }
+              />
+            </div>
+
+            {/* Hero subtitle */}
+            <div className="space-y-1">
+              <p className="text-xs text-slate-400">Hero Subtitle</p>
+              <textarea
+                className="w-full h-16 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-100 p-2"
+                value={settings.heroSubtitle}
+                onChange={(e) =>
+                  setSettings((prev) => ({
+                    ...prev,
+                    heroSubtitle: e.target.value,
+                  }))
+                }
+              />
+            </div>
+
+            {/* Toggle icons */}
+            <div className="flex items-center justify-between mt-1">
+              <span className="text-xs text-slate-400">
+                Show trusted icons
+              </span>
+              <button
+                onClick={() =>
+                  setSettings((prev) => ({
+                    ...prev,
+                    showIcons: !prev.showIcons,
+                  }))
+                }
+                className={`w-10 h-5 rounded-full flex items-center px-1 ${
+                  settings.showIcons ? "bg-blue-500" : "bg-slate-700"
+                }`}
+              >
+                <div
+                  className={`w-3.5 h-3.5 rounded-full bg-white transform transition ${
+                    settings.showIcons ? "translate-x-4" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+
+            <p className="mt-3 text-[11px] text-slate-500">
+              هذا مجرد Dashboard مبدئي داخل نفس الملف. لاحقًا نقدر نربطه
+              بقاعدة بيانات ونخليه كامل مثل SaaS.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
