@@ -1,3 +1,5 @@
+import { PortfolioPage } from "./portfolio";
+
 import { useState } from "react";
 
 type ThemeKey = "proskill" | "luxury" | "minimal";
