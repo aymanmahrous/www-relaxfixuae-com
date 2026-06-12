@@ -34,7 +34,7 @@ const THEMES: Record<ThemeKey, Partial<SiteSettings>> = {
   },
 };
 
-// هنا تعريف الـ routes
+// تعريف المسارات
 export const ROUTES = [
   {
     path: "/",
@@ -44,5 +44,5 @@ export const ROUTES = [
     path: "/portfolio",
     component: PortfolioPage,
   },
-  // أضف باقي الصفحات هنا بنفس الشكل
+  // باقي الصفحات بنفس الشكل
 ];
