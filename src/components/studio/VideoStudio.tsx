@@ -1,334 +1,176 @@
-import { useState } from "react";
-import { getVideoCreditCost } from "../../lib/credits";
+import { createFileRoute } from "@tanstack/react-router";
+import { useRef, useState } from "react";
+import { SiteHeader } from "@/components/site-header";
+import { useI18n } from "@/lib/i18n";
+import { Upload, Play, Scissors, Download, Sparkles, Film, Zap, MessageCircle } from "lucide-react";
+import { useSettings, waUrl } from "@/lib/settings";
+import { videoRequestMessage } from "@/lib/orderMessage";
 
-type Duration = 8 | 15 | 30;
-type Aspect = "9:16" | "16:9" | "1:1";
-type Provider = "kling" | "runway" | "hailuo";
-type Style =
-  | "Cinematic"
-  | "Luxury UAE"
-  | "Realistic"
-  | "Arabic Cultural"
-  | "Dynamic";
+export const Route = createFileRoute("/video")({
+  head: () => ({
+    meta: [
+      { title: "Video Studio — Relax Fix UAE" },
+      { name: "description", content: "Upload, trim, and request professional video edits, reels, and montages." },
+    ],
+  }),
+  component: VideoPage,
+});
 
-const UAE_TEMPLATES = [
-  {
-    id: "real_estate",
-    title: "جولة عقارية فاخرة",
-    prompt:
-      "Real estate property tour in Dubai Marina, cinematic drone shots, interior walkthrough, luxury vibe, Arabic overlay text.",
-  },
-  {
-    id: "hotel_resort",
-    title: "فندق ومنتجع في الإمارات",
-    prompt:
-      "Hotel & resort promo in Ras Al Khaimah, sunrise beach shots, pool, spa, family-friendly, Arabic/English captions.",
-  },
-  {
-    id: "restaurant_opening",
-    title: "افتتاح مطعم جديد",
-    prompt:
-      "Restaurant opening in Downtown Dubai, close-up food shots, chef in action, crowd, dynamic transitions, Arabic calligraphy.",
-  },
-  {
-    id: "ramadan_eid",
-    title: "عروض رمضان وعيد",
-    prompt:
-      "Ramadan & Eid offers, lanterns, crescent moon, family gathering, warm lighting, Arabic typography, gold accents.",
-  },
-  {
-    id: "luxury_brand",
-    title: "عرض علامة تجارية فاخرة",
-    prompt:
-      "Luxury brand showcase, product close-ups, slow motion, black & gold palette, Arabic luxury aesthetic.",
-  },
-];
+// ----------------------
+// CSS Animations
+// ----------------------
+const fadeIn = "animate-[fadeIn_0.8s_ease-out]";
+const slideUp = "animate-[slideUp_0.8s_ease-out]";
+const glow = "shadow-[0_0_25px_rgba(255,0,128,0.4)]";
 
-export function VideoStudio() {
-  const [prompt, setPrompt] = useState("");
-  const [duration, setDuration] = useState<Duration>(8);
-  const [aspect, setAspect] = useState<Aspect>("9:16");
-  const [provider, setProvider] = useState<Provider>("kling");
-  const [style, setStyle] = useState<Style>("Luxury UAE");
-  const [motionStrength, setMotionStrength] = useState("Medium");
-  const [cameraMovement, setCameraMovement] = useState("Smooth pans");
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+function VideoPage() {
+  const { t, lang } = useI18n();
+  const { settings } = useSettings();
+  const [url, setUrl] = useState<string | null>(null);
+  const [name, setName] = useState<string>("");
+  const [duration, setDuration] = useState(0);
+  const [start, setStart] = useState(0);
+  const [end, setEnd] = useState(0);
+  const ref = useRef<HTMLVideoElement>(null);
 
-  const credits = getVideoCreditCost(duration, provider);
-
-  async function enhancePrompt() {
-    if (!prompt.trim()) return;
-    setPrompt(
-      `Cinematic ${style} UAE commercial, ${prompt}, smooth camera, ${cameraMovement}, motion: ${motionStrength}, 4K, professional lighting, Arabic & English overlays.`
-    );
+  function onFile(f: File) {
+    const u = URL.createObjectURL(f);
+    setUrl(u);
+    setName(f.name);
   }
 
-  async function generateVideo() {
-    if (!prompt.trim()) return;
+  function onLoaded() {
+    const d = ref.current?.duration ?? 0;
+    setDuration(d);
+    setStart(0);
+    setEnd(d);
+  }
 
-    setLoading(true);
-    setProgress(0);
+  function preview() {
+    if (!ref.current) return;
+    ref.current.currentTime = start;
+    ref.current.play();
+    const tick = () => {
+      if (!ref.current) return;
+      if (ref.current.currentTime >= end) ref.current.pause();
+      else requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
 
-    for (let p = 10; p <= 100; p += 10) {
-      setProgress(p);
-      await new Promise((r) => setTimeout(r, 250));
-    }
-
-    const fakeUrl =
-      "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4";
-
-    setPreviewUrl(fakeUrl);
-    setLoading(false);
+  function downloadOriginal() {
+    if (!url) return;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name || "video.mp4";
+    a.click();
   }
 
   return (
-    <div className="space-y-4 mt-4 text-xs">
-      <div className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl p-4 flex flex-wrap justify-between gap-3">
-        <div>
-          <div className="text-[11px] text-[var(--text-muted)]">
-            Video Reels & Ads •{" "}
-            <span className="text-[var(--accent-gold)]">
-              {provider === "kling"
-                ? "Kling AI 2.0"
-                : provider === "runway"
-                ? "Runway Gen-3"
-                : "Hailuo Minimax"}
-            </span>
-          </div>
-          <div className="text-[11px] text-[var(--text-muted)]">
-            {duration} ثانية • {aspect} • {style}
-          </div>
-        </div>
+    <div className="min-h-screen bg-[#05050a] text-white">
+      <SiteHeader />
 
-        <div className="text-right">
-          <div className="text-[11px] text-[var(--text-muted)]">التكلفة:</div>
-          <div className="text-sm font-semibold text-[var(--accent-gold)]">
-            {credits} كريدت
-          </div>
-        </div>
-      </div>
+      {/* ---------------------- HERO ---------------------- */}
+      <section className={`px-6 py-20 text-center ${fadeIn}`}>
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
+          <span className="bg-gradient-to-r from-pink-500 to-purple-400 bg-clip-text text-transparent">
+            Video Editing Studio
+          </span>
+        </h1>
+        <p className="mt-4 text-slate-300 max-w-xl mx-auto">
+          احترافية في المونتاج، الريلز، القص، وتحسين الفيديوهات للسوشيال ميديا.
+        </p>
+      </section>
 
-      <div className="grid md:grid-cols-[1.3fr,0.9fr] gap-6">
-        <div className="space-y-3">
-          <label className="text-[11px] text-[var(--text-muted)]">
-            وصف الفيديو
-          </label>
-          <textarea
-            className="w-full min-h-[120px] bg-black/40 border border-[var(--border-subtle)] rounded-xl px-3 py-2"
-            placeholder="مثال: إعلان فيديو لمطعم في دبي بإضاءة سينمائية..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-          />
+      {/* ---------------------- SERVICES ---------------------- */}
+      <section className="px-6 max-w-6xl mx-auto py-10">
+        <h2 className={`text-2xl font-bold mb-6 ${slideUp}`}>خدمات الفيديو</h2>
 
-          <button
-            onClick={enhancePrompt}
-            className="text-[11px] text-[var(--accent-cyan)] underline"
-          >
-            تحسين البرومبت تلقائياً
-          </button>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <span className="text-[11px] text-[var(--text-muted)]">
-                المدة
-              </span>
-              <div className="flex gap-2 mt-1 flex-wrap">
-                {[8, 15, 30].map((d) => (
-                  <button
-                    key={d}
-                    onClick={() => setDuration(d as Duration)}
-                    className={`px-3 py-1.5 rounded-full border ${
-                      duration === d
-                        ? "border-[var(--accent-gold)] bg-[var(--accent-gold)]/10"
-                        : "border-[var(--border-subtle)]"
-                    }`}
-                  >
-                    {d} ثانية
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <span className="text-[11px] text-[var(--text-muted)]">
-                الأبعاد
-              </span>
-              <div className="flex gap-2 mt-1 flex-wrap">
-                {["9:16", "16:9", "1:1"].map((a) => (
-                  <button
-                    key={a}
-                    onClick={() => setAspect(a as Aspect)}
-                    className={`px-3 py-1.5 rounded-full border ${
-                      aspect === a
-                        ? "border-[var(--accent-cyan)] bg-[var(--accent-cyan)]/10"
-                        : "border-[var(--border-subtle)]"
-                    }`}
-                  >
-                    {a}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <span className="text-[11px] text-[var(--text-muted)]">
-                الموديل
-              </span>
-              <select
-                value={provider}
-                onChange={(e) => setProvider(e.target.value as Provider)}
-                className="w-full bg-black/40 border border-[var(--border-subtle)] rounded-lg px-3 py-2"
-              >
-                <option value="kling">Kling AI 2.0</option>
-                <option value="runway">Runway Gen-3</option>
-                <option value="hailuo">Hailuo Minimax</option>
-              </select>
-            </div>
-
-            <div>
-              <span className="text-[11px] text-[var(--text-muted)]">
-                الأسلوب
-              </span>
-              <select
-                value={style}
-                onChange={(e) => setStyle(e.target.value as Style)}
-                className="w-full bg-black/40 border border-[var(--border-subtle)] rounded-lg px-3 py-2"
-              >
-                <option>Cinematic</option>
-                <option>Luxury UAE</option>
-                <option>Realistic</option>
-                <option>Arabic Cultural</option>
-                <option>Dynamic</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <span className="text-[11px] text-[var(--text-muted)]">
-                قوة الحركة
-              </span>
-              <select
-                value={motionStrength}
-                onChange={(e) => setMotionStrength(e.target.value)}
-                className="w-full bg-black/40 border border-[var(--border-subtle)] rounded-lg px-3 py-2"
-              >
-                <option>Low</option>
-                <option>Medium</option>
-                <option>High</option>
-              </select>
-            </div>
-
-            <div>
-              <span className="text-[11px] text-[var(--text-muted)]">
-                حركة الكاميرا
-              </span>
-              <select
-                value={cameraMovement}
-                onChange={(e) => setCameraMovement(e.target.value)}
-                className="w-full bg-black/40 border border-[var(--border-subtle)] rounded-lg px-3 py-2"
-              >
-                <option>Smooth pans</option>
-                <option>Handheld dynamic</option>
-                <option>Drone aerial</option>
-                <option>Static subtle zoom</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <div className="text-[11px] text-[var(--text-muted)] mb-1">
-              قوالب جاهزة للسوق الإماراتي:
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {UAE_TEMPLATES.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => setPrompt(t.prompt)}
-                  className="px-3 py-1.5 rounded-full border border-[var(--border-subtle)] bg-black/40 hover:border-[var(--accent-cyan)]"
-                >
-                  {t.title}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center pt-3">
-            <div className="text-[11px] text-[var(--text-muted)]">
-              التكلفة:{" "}
-              <span className="text-[var(--accent-gold)]">{credits}</span> كريدت
-            </div>
-
-            <button
-              onClick={generateVideo}
-              disabled={loading}
-              className="px-4 py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium"
+        <div className="grid sm:grid-cols-3 gap-6">
+          {[
+            { icon: Film, label: "Montage" },
+            { icon: Zap, label: "Reels Editing" },
+            { icon: Sparkles, label: "Promo Video" },
+            { icon: Scissors, label: "Trim & Cut" },
+            { icon: Film, label: "Logo Reveal" },
+            { icon: Zap, label: "TikTok Optimization" },
+          ].map(({ icon: Icon, label }, i) => (
+            <div
+              key={i}
+              className={`rounded-xl bg-[#0b0b15] border border-pink-500/20 p-5 hover:border-pink-500/40 transition ${fadeIn}`}
             >
-              {loading ? "جاري التوليد..." : "توليد فيديو الآن"}
-            </button>
-          </div>
+              <Icon className="h-6 w-6 text-pink-400 mb-3" />
+              <p className="font-semibold">{label}</p>
+            </div>
+          ))}
         </div>
+      </section>
 
-        <div className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-2xl p-3 space-y-3">
-          <div className="text-[11px] text-[var(--text-muted)]">المعاينة</div>
+      {/* ---------------------- VIDEO TOOL ---------------------- */}
+      <main className="mx-auto max-w-5xl px-4 py-16">
+        <div className={`rounded-2xl border border-pink-500/20 bg-[#0b0b15] p-6 ${glow} ${fadeIn}`}>
+          {!url ? (
+            <label className="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-pink-500/40 bg-black/20 p-12 text-center hover:border-pink-400 transition">
+              <Upload className="h-8 w-8 text-pink-400" />
+              <span className="font-semibold">ارفع فيديو</span>
+              <input type="file" accept="video/*" className="hidden" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
+            </label>
+          ) : (
+            <div className="space-y-6">
+              <video ref={ref} src={url} controls onLoadedMetadata={onLoaded} className="w-full rounded-xl bg-black" />
 
-          {loading && (
-            <div className="space-y-2">
-              <div className="h-1.5 rounded-full bg-black/60 overflow-hidden">
-                <div
-                  className="h-full bg-[var(--accent-gold)] transition-all"
-                  style={{ width: `${progress}%` }}
-                />
+              {/* Ranges */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label>
+                  <span className="text-xs text-slate-400">Start</span>
+                  <input type="range" min={0} max={duration} step={0.1} value={start} onChange={(e) => setStart(Math.min(parseFloat(e.target.value), end))} className="w-full accent-pink-500" />
+                </label>
+                <label>
+                  <span className="text-xs text-slate-400">End</span>
+                  <input type="range" min={0} max={duration} step={0.1} value={end} onChange={(e) => setEnd(Math.max(parseFloat(e.target.value), start))} className="w-full accent-pink-500" />
+                </label>
               </div>
-              <div className="text-[11px] text-[var(--text-muted)]">
-                جاري التوليد… {progress}%
+
+              {/* Buttons */}
+              <div className="flex flex-wrap gap-3">
+                <button onClick={preview} className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 px-4 py-2 text-sm font-bold text-black">
+                  <Play className="h-4 w-4" /> Preview
+                </button>
+                <button onClick={downloadOriginal} className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-black px-4 py-2 text-sm font-semibold">
+                  <Download className="h-4 w-4" /> Download
+                </button>
+              </div>
+
+              {/* WhatsApp Requests */}
+              <div className="rounded-xl border border-pink-500/30 bg-pink-500/10 p-4">
+                <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-pink-300">
+                  <Sparkles className="h-4 w-4" /> AI Video Request
+                </div>
+
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {[
+                    { kind: "trim", icon: Scissors, label: "Trim Video" },
+                    { kind: "montage", icon: Film, label: "Montage" },
+                    { kind: "reel", icon: Zap, label: "Reel Edit" },
+                  ].map(({ kind, icon: Icon, label }) => (
+                    <a
+                      key={kind}
+                      href={waUrl(settings.whatsapp, videoRequestMessage(settings, lang, { fileName: name, duration, start, end, kind }))}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-black/40 p-3 text-sm font-semibold hover:border-pink-500 hover:bg-black/60 transition"
+                    >
+                      <Icon className="h-4 w-4 text-pink-400" />
+                      <span className="flex-1">{label}</span>
+                      <MessageCircle className="h-4 w-4 text-[#25D366]" />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           )}
-
-          <div className="aspect-video rounded-xl bg-black/60 border border-white/5 flex items-center justify-center">
-            {previewUrl ? (
-              <video
-                src={previewUrl}
-                controls
-                className="w-full h-full rounded-xl"
-              />
-            ) : (
-              <span className="text-[11px] text-[var(--text-muted)]">
-                سيتم عرض الفيديو هنا بعد التوليد.
-              </span>
-            )}
-          </div>
-
-          {previewUrl && (
-            <div className="flex flex-wrap gap-2">
-              <a
-                href={previewUrl}
-                download
-                className="px-3 py-1.5 rounded-full bg-[var(--accent-gold)] text-black"
-              >
-                تنزيل
-              </a>
-              <button
-                onClick={generateVideo}
-                className="px-3 py-1.5 rounded-full border border-[var(--accent-gold)] text-[var(--accent-gold)]"
-              >
-                توليد نسخة أخرى
-              </button>
-              <button className="px-3 py-1.5 rounded-full border border-[var(--border-subtle)]">
-                إضافة إلى مشروع
-              </button>
-              <button className="px-3 py-1.5 rounded-full border border-[var(--border-subtle)]">
-                مشاركة
-              </button>
-            </div>
-          )}
         </div>
-      </div>
+      </main>
     </div>
   );
 }
