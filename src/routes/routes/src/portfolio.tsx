@@ -15,8 +15,7 @@ export function PortfolioPage() {
           />
           <h2 className="text-lg font-semibold">Al Mawakib</h2>
           <p className="text-xs text-[var(--text-muted)]">
-            Social Media Design — حملات تنظيف وضيافة، محتوى ثنائي اللغة
-            (عربي/إنجليزي).
+            Social Media Design — حملات تنظيف وضيافة، محتوى ثنائي اللغة (عربي/إنجليزي).
           </p>
           <a
             href="https://wa.me/971588259848"
@@ -35,8 +34,7 @@ export function PortfolioPage() {
           />
           <h2 className="text-lg font-semibold">Relax Fix UAE</h2>
           <p className="text-xs text-[var(--text-muted)]">
-            Brand Identity + Ad Campaign — شعار الدرع، حملات تكييف وتنظيف،
-            إعلانات مكافحة الحشرات، نسخ عربية قوية.
+            Brand Identity + Ad Campaign — شعار الدرع، حملات تكييف وتنظيف، إعلانات مكافحة الحشرات، نسخ عربية قوية.
           </p>
           <a
             href="https://wa.me/971588259848"
@@ -55,8 +53,7 @@ export function PortfolioPage() {
           />
           <h2 className="text-lg font-semibold">Almasa Beauty</h2>
           <p className="text-xs text-[var(--text-muted)]">
-            Branding + Packaging + Typography — خطوط عربية، 3 مجموعات
-            تغليف، عرض فاخر.
+            Branding + Packaging + Typography — خطوط عربية، 3 مجموعات تغليف، عرض فاخر.
           </p>
           <a
             href="https://wa.me/971588259848"
