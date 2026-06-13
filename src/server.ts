@@ -1,109 +1,54 @@
-import "./lib/error-capture";
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
-import { consumeLastCapturedError } from "./lib/error-capture";
-import { renderErrorPage } from "./lib/error-page";
+dotenv.config();
 
-type ServerEntry = {
-  fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
-};
+const app = express();
+const PORT = process.env.PORT || 3001;
 
-let serverEntryPromise: Promise<ServerEntry> | undefined;
+app.use(cors());
+app.use(express.json());
 
-async function getServerEntry(): Promise<ServerEntry> {
-  if (!serverEntryPromise) {
-    serverEntryPromise = import("@tanstack/react-start/server-entry").then(
-      (m) => (m.default ?? m) as ServerEntry,
-    );
-  }
-  return serverEntryPromise;
-}
+// Telegram webhook endpoint اللي عندك
+app.post("/api/telegram-webhook", async (req, res) => {
+  // الكود اللي عندك حق التليجرام
+  res.json({ ok: true });
+});
 
-// ================= TELEGRAM CONFIG =================
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
-const CHAT_ID = process.env.TELEGRAM_CHAT_ID!;
-const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
-
-// إرسال إشعار إلى تليجرام
-async function sendTelegram(message: string) {
-  await fetch(`${TELEGRAM_API}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: message,
-    }),
-  });
-}
-
-// ================= NORMALIZE SSR ERRORS =================
-async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
-  if (response.status < 500) return response;
-  const contentType = response.headers.get("content-type") ?? "";
-  if (!contentType.includes("application/json")) return response;
-
-  const body = await response.clone().text();
-  if (!body.includes('"unhandled":true') || !body.includes('"message":"HTTPError"')) {
-    return response;
-  }
-
-  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
-  return new Response(renderErrorPage(), {
-    status: 500,
-    headers: { "content-type": "text/html; charset=utf-8" },
-  });
-}
-
-export default {
-  async fetch(request: Request, env: unknown, ctx: unknown) {
-    try {
-      const url = new URL(request.url);
-      const pathname = url.pathname;
-
-      // ================= TELEGRAM ROUTES =================
-
-      // إشعار من الموقع
-      if (request.method === "POST" && pathname === "/api/notify") {
-        const body = await request.json();
-        await sendTelegram(`🔔 إشعار جديد:\n${body.message}`);
-
-        return new Response(JSON.stringify({ ok: true }), {
-          status: 200,
-          headers: { "content-type": "application/json" },
-        });
-      }
-
-      // Webhook للبوت
-      if (request.method === "POST" && pathname === "/telegram/webhook") {
-        const update = await request.json();
-
-        if (update.message && update.message.text) {
-          const chatId = update.message.chat.id;
-          const text = update.message.text;
-
-          await fetch(`${TELEGRAM_API}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: `أهلاً 👋\nاستلمت رسالتك:\n${text}`,
-            }),
-          });
-        }
-
-        return new Response("OK", { status: 200 });
-      }
-
-      // ================= SSR HANDLER =================
-      const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
-
-    } catch (error) {
-      console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
+// Telegram notification endpoint - جديد
+app.post("/api/notify-telegram", async (req, res) => {
+  try {
+    const { message } = req.body;
+    
+    if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) {
+      console.error("Missing Telegram env vars");
+      return res.status(500).json({ error: "Telegram not configured" });
     }
-  },
-};
+
+    const telegramUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
+    const response = await fetch(telegramUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: process.env.TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: "HTML"
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error("Telegram API error");
+    }
+    
+    res.json({ ok: true });
+  } catch (error) {
+    console.error("Telegram notify error:", error);
+    res.status(500).json({ error: "Failed to send notification" });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
