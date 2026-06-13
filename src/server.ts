@@ -10,24 +10,17 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Telegram webhook endpoint اللي عندك
-app.post("/api/telegram-webhook", async (req, res) => {
-  // الكود اللي عندك حق التليجرام
-  res.json({ ok: true });
-});
-
-// Telegram notification endpoint - جديد
+// Telegram notification endpoint
 app.post("/api/notify-telegram", async (req, res) => {
   try {
     const { message } = req.body;
-    
-    if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) {
-      console.error("Missing Telegram env vars");
+
+    if (!process.env.TELEGRAM_BOT_TOKEN ||!process.env.TELEGRAM_CHAT_ID) {
       return res.status(500).json({ error: "Telegram not configured" });
     }
 
     const telegramUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
-    
+
     const response = await fetch(telegramUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -38,14 +31,11 @@ app.post("/api/notify-telegram", async (req, res) => {
       })
     });
 
-    if (!response.ok) {
-      throw new Error("Telegram API error");
-    }
-    
+    if (!response.ok) throw new Error("Telegram API error");
     res.json({ ok: true });
   } catch (error) {
-    console.error("Telegram notify error:", error);
-    res.status(500).json({ error: "Failed to send notification" });
+    console.error("Telegram error:", error);
+    res.status(500).json({ error: "Failed" });
   }
 });
 
